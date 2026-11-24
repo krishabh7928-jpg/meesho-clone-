@@ -253,17 +253,29 @@ app.post('/api/coupons/apply', (req, res) => {
   }
 });
 
-// Root fallback to index.html for SPA routing
+// Root fallback to index.html for SPA routing (with explicit static asset defense)
 app.get('*', (req, res) => {
+  if (req.path.endsWith('.css')) {
+    return res.type('text/css').sendFile(path.join(__dirname, 'style.css'));
+  }
+  if (req.path.endsWith('.js')) {
+    const filename = path.basename(req.path);
+    return res.type('application/javascript').sendFile(path.join(__dirname, filename));
+  }
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Start Server
-app.listen(PORT, () => {
-  console.log(`\n======================================================`);
-  console.log(`  🛍️  Meesho Clone Full-Stack Server Running`);
-  console.log(`  🌐  Local URL:   http://localhost:${PORT}`);
-  console.log(`  🗄️  Database:    SQLite (data/meesho.db)`);
-  console.log(`  ⚡  REST API:    http://localhost:${PORT}/api/health`);
-  console.log(`======================================================\n`);
-});
+// Start Server when executed directly (node server.js)
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`\n======================================================`);
+    console.log(`  🛍️  Meesho Clone Full-Stack Server Running`);
+    console.log(`  🌐  Local URL:   http://localhost:${PORT}`);
+    console.log(`  🗄️  Database:    SQLite (data/meesho.db)`);
+    console.log(`  ⚡  REST API:    http://localhost:${PORT}/api/health`);
+    console.log(`======================================================\n`);
+  });
+}
+
+// Export Express app for Vercel Serverless Functions
+module.exports = app;
