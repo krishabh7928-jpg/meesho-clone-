@@ -1,0 +1,25 @@
+{
+  "name": "meesho-clone-backend",
+  "version": "1.0.0",
+  "description": "Meesho Clone - Full-Stack E-Commerce Web Application (Node.js, Express & SQLite)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "generate-ppt": "node generate_ppt.js"
+  },
+  "keywords": [
+    "meesho",
+    "ecommerce",
+    "express",
+    "sqlite",
+    "btech-project"
+  ],
+  "author": "Rishabh Kumar",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "pptxgenjs": "^3.12.0"
+  }
+}
