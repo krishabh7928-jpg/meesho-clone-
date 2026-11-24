@@ -8,6 +8,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { PRODUCTS_DATA } = require('./products_data');
 
 const DB_DIR = path.join(__dirname, 'data');
 if (!fs.existsSync(DB_DIR)) {
@@ -17,361 +18,8 @@ if (!fs.existsSync(DB_DIR)) {
 const SQLITE_FILE = path.join(DB_DIR, 'meesho.db');
 const JSON_BACKUP_FILE = path.join(DB_DIR, 'meesho_store.json');
 
-// Initial seed catalog (22 authentic Meesho products)
-const SEED_PRODUCTS = [
-  {
-    id: 1,
-    name: "Charvi Sensational Embroidered Rayon Anarkali Kurta Set",
-    category: "Women Ethnic",
-    price: 649,
-    original_price: 1999,
-    discount: 67,
-    rating: 4.4,
-    reviews_count: 4820,
-    image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=600&q=80",
-    description: "Gorgeous Rayon Anarkali Kurta paired with matching Palazzos and chiffon printed dupatta. Features delicate golden Zari embroidery around the neckline. Perfect for festivals, family functions, and festive celebrations.",
-    popularity: 98,
-    stock: 15,
-    badge: "M-Trusted",
-    tags: "trending,bestseller,ethnic,kurti,saree"
-  },
-  {
-    id: 2,
-    name: "Aishani Alluring Pure Kanjeevaram Jacquard Silk Saree",
-    category: "Women Ethnic",
-    price: 899,
-    original_price: 2999,
-    discount: 70,
-    rating: 4.6,
-    reviews_count: 6120,
-    image: "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=600&q=80",
-    description: "Traditional South Indian Kanjeevaram woven soft silk saree embellished with rich temple border and designer Zari pallu. Includes 0.8m unstitched contrast designer blouse piece.",
-    popularity: 99,
-    stock: 8,
-    badge: "Trending",
-    tags: "trending,ethnic,saree,bestseller"
-  },
-  {
-    id: 3,
-    name: "Kashvi Pretty Floral Pure Cotton Maxi Tiered Dress",
-    category: "Women Western",
-    price: 479,
-    original_price: 1299,
-    discount: 63,
-    rating: 4.3,
-    reviews_count: 1820,
-    image: "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?auto=format&fit=crop&w=600&q=80",
-    description: "Breathable pure cotton tiered maxi dress with flattering puff sleeves and a matching tie-up fabric belt. Comfortable for summer outings, brunches, and college wear.",
-    popularity: 88,
-    stock: 12,
-    badge: "60%+ OFF",
-    tags: "western,casual,dress"
-  },
-  {
-    id: 4,
-    name: "Trendy Men's Cotton Linen Mandarin Collar Casual Shirt",
-    category: "Men",
-    price: 429,
-    original_price: 1199,
-    discount: 64,
-    rating: 4.3,
-    reviews_count: 2810,
-    image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=600&q=80",
-    description: "Premium breathable cotton-linen blend casual shirt with modern Mandarin collar and roll-up sleeves. Soft washed fabric for supreme all-day comfort in tropical climates.",
-    popularity: 91,
-    stock: 20,
-    badge: "Hot Deal",
-    tags: "trending,menswear,shirt"
-  },
-  {
-    id: 5,
-    name: "Urbano Men's Slim Fit Stretchable Denim Jeans (Dark Indigo)",
-    category: "Men",
-    price: 599,
-    original_price: 1699,
-    discount: 65,
-    rating: 4.2,
-    reviews_count: 2980,
-    image: "https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=600&q=80",
-    description: "Authentic heavy-duty cotton denim with 2% elastane for unrestricted stretch and flexibility. Features classic 5-pocket styling and scratch-resistant brass zip fly.",
-    popularity: 87,
-    stock: 14,
-    badge: "M-Trusted",
-    tags: "bestseller,jeans,menswear"
-  },
-  {
-    id: 6,
-    name: "Streetwear Men's Oversized Graphic Print Cotton T-Shirt",
-    category: "Men",
-    price: 279,
-    original_price: 799,
-    discount: 65,
-    rating: 4.5,
-    reviews_count: 5320,
-    image: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=600&q=80",
-    description: "100% bio-washed 220 GSM combed cotton oversized streetwear t-shirt with aesthetic typography graphic print. Non-shrinkable and colorfast wash guarantee.",
-    popularity: 95,
-    stock: 25,
-    badge: "Under ₹299",
-    tags: "streetwear,casual,under299"
-  },
-  {
-    id: 7,
-    name: "Rajasthani Handcrafted Floral Embroidered Ethnic Mojari Juttis",
-    category: "Bags & Footwear",
-    price: 349,
-    original_price: 999,
-    discount: 65,
-    rating: 4.5,
-    reviews_count: 3890,
-    image: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80",
-    description: "Handcrafted authentic Jaipuri leather mojari juttis featuring rich silk thread embroidery and foam cushion footbed for all-day festive comfort. Pairs gracefully with sarees and kurtas.",
-    popularity: 94,
-    stock: 18,
-    badge: "M-Trusted",
-    tags: "footwear,ethnic,juttis,shoes"
-  },
-  {
-    id: 8,
-    name: "Women's Textured Vegan Leather Crossbody Shoulder Handbag",
-    category: "Bags & Footwear",
-    price: 499,
-    original_price: 1499,
-    discount: 66,
-    rating: 4.4,
-    reviews_count: 4120,
-    image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=600&q=80",
-    description: "Elegant textured vegan leather shoulder bag with detachable crossbody strap. Features spacious dual compartments, interior zippered pocket, and polished gold-tone hardware.",
-    popularity: 93,
-    stock: 11,
-    badge: "Trending",
-    tags: "trending,bag,handbag,fashion"
-  },
-  {
-    id: 9,
-    name: "AeroTune True Wireless Earbuds with ENC & 45h Playtime",
-    category: "Electronics",
-    price: 799,
-    original_price: 2499,
-    discount: 68,
-    rating: 4.5,
-    reviews_count: 7730,
-    image: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&w=600&q=80",
-    description: "Crystal-clear calls powered by Quad Mic Environmental Noise Cancellation (ENC). Ultra-low 40ms gaming latency, 13mm dynamic bass drivers, and IPX5 splash resistance.",
-    popularity: 99,
-    stock: 22,
-    badge: "M-Trusted",
-    tags: "trending,bestseller,gadget,audio"
-  },
-  {
-    id: 10,
-    name: "PulseFit 1.96\" AMOLED Smartwatch with BT Calling & SpO2",
-    category: "Electronics",
-    price: 1199,
-    original_price: 3999,
-    discount: 70,
-    rating: 4.4,
-    reviews_count: 3920,
-    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80",
-    description: "Vibrant always-on AMOLED display with 600 nits peak brightness. Built-in speaker and mic for wrist calling, 120+ sports tracking modes, 24/7 heart rate and blood oxygen monitoring.",
-    popularity: 96,
-    stock: 9,
-    badge: "Trending",
-    tags: "trending,smartwatch,fitness"
-  },
-  {
-    id: 11,
-    name: "FastCharge 20,000mAh Power Bank with 22.5W Two-Way QC",
-    category: "Electronics",
-    price: 899,
-    original_price: 2199,
-    discount: 59,
-    rating: 4.6,
-    reviews_count: 3190,
-    image: "https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?auto=format&fit=crop&w=600&q=80",
-    description: "High-density Lithium-Polymer cell with dual USB output and Type-C PD input/output. Charges smartphones up to 4 times on a single refill. 12-layer advanced circuit protection.",
-    popularity: 88,
-    stock: 14,
-    badge: "Hot Deal",
-    tags: "electronics,charger,travel"
-  },
-  {
-    id: 12,
-    name: "Non-Stick 3-Piece Granite Kitchen Cookware Set",
-    category: "Home & Kitchen",
-    price: 999,
-    original_price: 2999,
-    discount: 66,
-    rating: 4.7,
-    reviews_count: 4680,
-    image: "https://images.unsplash.com/photo-1584990347449-a292886f4553?auto=format&fit=crop&w=600&q=80",
-    description: "5-layer scratch-resistant German granite coating. Set includes 24cm Dosa Tawa, 24cm Frying Pan, and 2.5L Kadhai with tempered glass lid. Induction and gas stove compatible.",
-    popularity: 93,
-    stock: 7,
-    badge: "M-Trusted",
-    tags: "bestseller,kitchen,cookware"
-  },
-  {
-    id: 13,
-    name: "100% Pure Cotton Jaipuri Floral Double Bedsheet with 2 Pillows",
-    category: "Home & Kitchen",
-    price: 369,
-    original_price: 999,
-    discount: 63,
-    rating: 4.3,
-    reviews_count: 5610,
-    image: "https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?auto=format&fit=crop&w=600&q=80",
-    description: "King size (90x100 inches) 180 TC breathable cotton bedsheet. Fade-resistant reactive digital printing with soft skin-friendly texture. Machine washable.",
-    popularity: 92,
-    stock: 30,
-    badge: "Trending",
-    tags: "trending,homedecor,bedsheet"
-  },
-  {
-    id: 14,
-    name: "Stainless Steel Insulated 1000ml Thermal Water Bottle",
-    category: "Home & Kitchen",
-    price: 299,
-    original_price: 899,
-    discount: 67,
-    rating: 4.5,
-    reviews_count: 3980,
-    image: "https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=600&q=80",
-    description: "Double-walled vacuum insulation keeps liquids icy cold for 24 hours or piping hot for 12 hours. Made of food-grade 304 stainless steel with leak-proof screw cap.",
-    popularity: 89,
-    stock: 22,
-    badge: "Under ₹299",
-    tags: "kitchen,fitness,bottle,under299"
-  },
-  {
-    id: 15,
-    name: "Vitamin C Glow Serum 30ml with Hyaluronic Acid & Ferulic",
-    category: "Beauty & Health",
-    price: 279,
-    original_price: 699,
-    discount: 60,
-    rating: 4.6,
-    reviews_count: 8890,
-    image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=600&q=80",
-    description: "Advanced brightening facial serum formulated with 10% stable Vitamin C and multi-molecular Hyaluronic Acid. Fades dark spots, sun damage, and boosts radiant glowing skin.",
-    popularity: 97,
-    stock: 16,
-    badge: "M-Trusted",
-    tags: "bestseller,skincare,beauty,under299"
-  },
-  {
-    id: 16,
-    name: "Velvet Matte Liquid Lipstick Combo Set of 4 Shades",
-    category: "Beauty & Health",
-    price: 299,
-    original_price: 999,
-    discount: 70,
-    rating: 4.3,
-    reviews_count: 4520,
-    image: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&w=600&q=80",
-    description: "Smudge-proof, waterproof, 12-hour transfer-proof matte liquid lipsticks infused with Vitamin E and Jojoba oil. Includes 4 universally flattering Indian skin tone shades (Nude, Berry, Red, Coral).",
-    popularity: 92,
-    stock: 14,
-    badge: "Under ₹299",
-    tags: "trending,makeup,cosmetics,under299"
-  },
-  {
-    id: 17,
-    name: "Organic Arabica Coffee Face & Body Scrub (100g)",
-    category: "Beauty & Health",
-    price: 199,
-    original_price: 499,
-    discount: 60,
-    rating: 4.4,
-    reviews_count: 2710,
-    image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80",
-    description: "Exfoliating raw coffee scrub with cold-pressed coconut oil. Gently removes dead skin cells, tan, and reduces cellulite appearance. 100% vegan and cruelty-free.",
-    popularity: 85,
-    stock: 28,
-    badge: "Under ₹199",
-    tags: "skincare,beauty,under299"
-  },
-  {
-    id: 18,
-    name: "Ethnic Kundan & Pearl Gold-Plated Choker Jewellery Set",
-    category: "Jewellery & Accessories",
-    price: 449,
-    original_price: 1499,
-    discount: 70,
-    rating: 4.5,
-    reviews_count: 4170,
-    image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=600&q=80",
-    description: "Handcrafted traditional bridal Kundan necklace with matching Jhumka earrings and Maang Tikka. High-polish micron gold plating with cluster pearl drops.",
-    popularity: 95,
-    stock: 12,
-    badge: "M-Trusted",
-    tags: "jewellery,ethnic,bestseller"
-  },
-  {
-    id: 19,
-    name: "Polarized UV400 Protection Classic Aviator Sunglasses",
-    category: "Jewellery & Accessories",
-    price: 249,
-    original_price: 799,
-    discount: 68,
-    rating: 4.4,
-    reviews_count: 5290,
-    image: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=600&q=80",
-    description: "Timeless teardrop aviator frame with tri-acetate polarized lenses that block 100% of UVA & UVB rays. Feather-light metallic frame with comfortable silicone nose pads.",
-    popularity: 91,
-    stock: 19,
-    badge: "Under ₹299",
-    tags: "accessories,sunglasses,under299"
-  },
-  {
-    id: 20,
-    name: "Men's Genuine Leather Slim RFID-Blocking Bifold Wallet",
-    category: "Jewellery & Accessories",
-    price: 299,
-    original_price: 899,
-    discount: 66,
-    rating: 4.6,
-    reviews_count: 3340,
-    image: "https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=600&q=80",
-    description: "Crafted from top-grain oil-waxed leather. Integrated RFID electromagnetic shielding protects your credit cards from unauthorized digital scans. Features 8 card slots and 2 currency pockets.",
-    popularity: 88,
-    stock: 15,
-    badge: "Under ₹299",
-    tags: "accessories,wallet,leather,under299"
-  },
-  {
-    id: 21,
-    name: "Universal Ergonomic Aluminum Laptop & Tablet Stand",
-    category: "Electronics",
-    price: 399,
-    original_price: 1099,
-    discount: 63,
-    rating: 4.7,
-    reviews_count: 4510,
-    image: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&w=600&q=80",
-    description: "Solid CNC aluminum alloy riser with 6-level adjustable angles to relieve neck pain. Foldable portable design with non-slip silicone pads and heat ventilation hollow frame.",
-    popularity: 90,
-    stock: 24,
-    badge: "Top Rated",
-    tags: "electronics,workfromhome,laptop"
-  },
-  {
-    id: 22,
-    name: "Women's Printed Georgette Party Wear Anarkali Gown",
-    category: "Women Ethnic",
-    price: 549,
-    original_price: 1799,
-    discount: 69,
-    rating: 4.5,
-    reviews_count: 3210,
-    image: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=600&q=80",
-    description: "Flowy micro-georgette festive Anarkali gown with digital floral prints and crepe lining. Includes matching dupatta with lace border.",
-    popularity: 94,
-    stock: 16,
-    badge: "Trending",
-    tags: "ethnic,anarkali,gown,trending"
-  }
-];
+// Comprehensive seed catalog (65 authentic products across 11 categories)
+const SEED_PRODUCTS = PRODUCTS_DATA;
 
 const SEED_COUPONS = [
   { code: 'MEESHONEW', discount: 150, type: 'flat', min_order: 499, description: 'Flat ₹150 OFF on first order' },
@@ -411,7 +59,8 @@ function initializeSqliteSchema(db) {
       popularity INTEGER DEFAULT 50,
       stock INTEGER DEFAULT 10,
       badge TEXT,
-      tags TEXT
+      tags TEXT,
+      created_at TEXT DEFAULT '2026-11-20T00:00:00Z'
     );
 
     CREATE TABLE IF NOT EXISTS coupons (
@@ -450,23 +99,37 @@ function initializeSqliteSchema(db) {
     );
   `);
 
-  // Seed Products if table is empty
+  // Ensure created_at column exists in products table if table already existed
+  try {
+    const tableInfo = db.prepare("PRAGMA table_info(products)").all();
+    const hasCreatedAt = tableInfo.some(col => col.name === 'created_at');
+    if (!hasCreatedAt) {
+      db.exec("ALTER TABLE products ADD COLUMN created_at TEXT DEFAULT '2026-11-20T00:00:00Z'");
+    }
+  } catch (err) {
+    console.warn('Could not check/add created_at column:', err.message);
+  }
+
+  // Seed or upgrade Products catalog in SQLite
   const countRow = db.prepare('SELECT COUNT(*) as count FROM products').get();
-  if (countRow.count === 0) {
-    console.log('⚡ Seeding initial Meesho product catalog to SQLite...');
-    const insertProduct = db.prepare(`
-      INSERT INTO products (id, name, category, price, original_price, discount, rating, reviews_count, image, description, popularity, stock, badge, tags)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  const sampleProduct = countRow.count > 0 ? db.prepare('SELECT category FROM products WHERE id = 1').get() : null;
+  const needsUpgrade = countRow.count < SEED_PRODUCTS.length || (sampleProduct && sampleProduct.category === 'Women Ethnic');
+
+  if (needsUpgrade) {
+    console.log(`⚡ Seeding/Upgrading Meesho product catalog in SQLite (${SEED_PRODUCTS.length} products)...`);
+    const upsertProduct = db.prepare(`
+      INSERT OR REPLACE INTO products (id, name, category, price, original_price, discount, rating, reviews_count, image, description, popularity, stock, badge, tags, created_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
 
     for (const p of SEED_PRODUCTS) {
-      insertProduct.run(
-        p.id, p.name, p.category, p.price, p.original_price, p.discount,
-        p.rating, p.reviews_count, p.image, p.description, p.popularity,
-        p.stock, p.badge, p.tags
+      upsertProduct.run(
+        p.id, p.name, p.category, p.price, p.original_price || p.originalPrice, p.discount,
+        p.rating, p.reviews_count || p.reviewsCount, p.image, p.description, p.popularity,
+        p.stock, p.badge, p.tags, p.created_at || '2026-11-20T00:00:00Z'
       );
     }
-    console.log(`✓ Seeded ${SEED_PRODUCTS.length} products.`);
+    console.log(`✓ Seeded ${SEED_PRODUCTS.length} products in SQLite.`);
   }
 
   // Seed Coupons
@@ -496,9 +159,13 @@ function getProducts({ category, search, sort, viewFilter } = {}) {
   }
 
   if (search && search.trim() !== '') {
-    query += ' AND (name LIKE ? OR category LIKE ? OR description LIKE ? OR tags LIKE ?)';
-    const term = `%${search.trim()}%`;
-    params.push(term, term, term, term);
+    // Smart multi-keyword tokenized search across name, category, description, and tags
+    const tokens = search.trim().toLowerCase().split(/\s+/).filter(t => t.length > 0);
+    for (const token of tokens) {
+      query += ' AND (LOWER(name) LIKE ? OR LOWER(category) LIKE ? OR LOWER(description) LIKE ? OR LOWER(tags) LIKE ?)';
+      const term = `%${token}%`;
+      params.push(term, term, term, term);
+    }
   }
 
   if (viewFilter === 'trending') {
@@ -524,6 +191,9 @@ function getProducts({ category, search, sort, viewFilter } = {}) {
     case 'discount':
       query += ' ORDER BY discount DESC';
       break;
+    case 'newest':
+      query += ' ORDER BY created_at DESC, id DESC';
+      break;
     case 'popular':
     default:
       query += ' ORDER BY popularity DESC';
@@ -536,6 +206,7 @@ function getProducts({ category, search, sort, viewFilter } = {}) {
     ...r,
     originalPrice: r.original_price,
     reviewsCount: r.reviews_count,
+    createdAt: r.created_at,
     tags: r.tags ? r.tags.split(',') : []
   }));
 }
@@ -547,13 +218,68 @@ function getProductById(id) {
     ...row,
     originalPrice: row.original_price,
     reviewsCount: row.reviews_count,
+    createdAt: row.created_at,
     tags: row.tags ? row.tags.split(',') : []
   };
 }
 
 function getCategories() {
-  const rows = sqliteDb.prepare('SELECT category, COUNT(*) as count FROM products GROUP BY category').all();
+  const rows = sqliteDb.prepare('SELECT category, COUNT(*) as count FROM products GROUP BY category ORDER BY count DESC').all();
   return rows;
+}
+
+function getSearchSuggestions(query, limit = 6) {
+  if (!query || query.trim() === '') {
+    return { query: '', products: [], categories: [], keywords: [] };
+  }
+  const q = query.trim().toLowerCase();
+  const allProds = getProducts();
+
+  const productMatches = [];
+  const categoryMatches = new Set();
+  const keywordSuggestions = new Set();
+
+  for (const p of allProds) {
+    const nameLower = p.name.toLowerCase();
+    const catLower = p.category.toLowerCase();
+    const tagsLower = (p.tags || []).join(' ').toLowerCase();
+
+    const matchesName = nameLower.includes(q);
+    const matchesCat = catLower.includes(q);
+    const matchesTags = tagsLower.includes(q);
+
+    if (matchesName || matchesCat || matchesTags) {
+      if (productMatches.length < limit) {
+        productMatches.push({
+          id: p.id,
+          name: p.name,
+          category: p.category,
+          price: p.price,
+          originalPrice: p.originalPrice,
+          image: p.image,
+          badge: p.badge,
+          rating: p.rating
+        });
+      }
+      if (matchesCat) {
+        categoryMatches.add(p.category);
+      }
+      if (p.tags) {
+        for (const t of p.tags) {
+          if (t.toLowerCase().includes(q) && t.toLowerCase() !== q) {
+            keywordSuggestions.add(t);
+          }
+        }
+      }
+    }
+  }
+
+  return {
+    query,
+    products: productMatches,
+    categories: Array.from(categoryMatches).slice(0, 4),
+    keywords: Array.from(keywordSuggestions).slice(0, 5)
+  };
 }
 
 function getCart(sessionId = 'default') {
@@ -639,7 +365,7 @@ function toggleWishlist(sessionId = 'default', productId) {
 function createOrder(orderData) {
   const { orderId, orderDate, customer, paymentMethod, totalAmount, items } = orderData;
   sqliteDb.prepare(`
-    INSERT INTO orders (order_id, order_date, customer_name, customer_phone, customer_address, payment_method, total_amount, items_json)
+    INSERT OR REPLACE INTO orders (order_id, order_date, customer_name, customer_phone, customer_address, payment_method, total_amount, items_json)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
   `).run(
     orderId,
@@ -704,6 +430,7 @@ module.exports = {
   getProducts,
   getProductById,
   getCategories,
+  getSearchSuggestions,
   getCart,
   addToCart,
   updateCartQty,

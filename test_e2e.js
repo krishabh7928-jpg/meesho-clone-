@@ -28,11 +28,27 @@ function assertTest(name, condition, details = '') {
 
 // 1. Database & Catalog Verification
 const products = db.getProducts();
-assertTest('SQLite Products Loaded', products.length === 22, `${products.length} products found`);
+assertTest('SQLite Products Loaded', products.length >= 65, `${products.length} products found`);
 assertTest('Product Pricing Validity', products.every(p => p.price > 0 && p.price < p.originalPrice), 'All prices < originalPrice');
 
 const categories = db.getCategories();
-assertTest('Categories Count', categories.length === 8, `${categories.length} departments found`);
+assertTest('Categories Count (11 Requested Categories)', categories.length === 11, `${categories.length} departments found: ${categories.map(c => c.category).join(', ')}`);
+
+// 1b. Smart Search & Newest Sort Verification
+const smartSearchResult = db.getProducts({ search: 'cotton shirt' });
+assertTest('Smart Search (Multi-token "cotton shirt")', smartSearchResult.length > 0, `${smartSearchResult.length} relevant items matched`);
+
+const partialSearchResult = db.getProducts({ search: 'smart' });
+assertTest('Partial Search ("smart")', partialSearchResult.length > 0, `${partialSearchResult.length} matches found`);
+
+const suggestionsResult = db.getSearchSuggestions('ear');
+assertTest('Live Search Suggestions API', suggestionsResult && suggestionsResult.products.length > 0, `${suggestionsResult.products.length} products, ${suggestionsResult.categories.length} categories suggested`);
+
+const newestSorted = db.getProducts({ sort: 'newest' });
+assertTest('Newest First Sorting', newestSorted.length >= 2 && newestSorted[0].createdAt >= newestSorted[newestSorted.length - 1].createdAt, 'Sorted descending by date');
+
+const categoryFiltered = db.getProducts({ category: "Women's Wear" });
+assertTest('Category Filter ("Women\'s Wear")', categoryFiltered.length > 0 && categoryFiltered.every(p => p.category === "Women's Wear"), `${categoryFiltered.length} items`);
 
 // 2. Cart Operations Test
 const sessionId = 'test_session_' + Date.now();
@@ -67,7 +83,7 @@ assertTest('Invalid Coupon Handling', invalidCoupon.valid === false, 'Blocked in
 
 // 5. Checkout & Order Persistence Test
 const testOrderData = {
-  orderId: 'MEESHO-ORD-2026-99999',
+  orderId: 'MEESHO-ORD-TEST-' + Math.floor(10000 + Math.random() * 90000),
   orderDate: '24 Nov 2026',
   customer: {
     name: 'Rishabh Kumar',

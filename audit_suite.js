@@ -74,13 +74,13 @@ expectedTables.forEach(t => {
 
 // Check Products Table Count & Columns
 const products = sqlite.prepare("SELECT * FROM products").all();
-recordAudit('DB Data', 'Products seeded count is 22', products.length === 22, `${products.length} products`);
+recordAudit('DB Data', 'Products seeded count is 65', products.length >= 65, `${products.length} products`);
 recordAudit('DB Data', 'Product Price Integrity', products.every(p => p.price > 0 && p.original_price > p.price), 'All prices realistic & discounted');
 recordAudit('DB Data', 'Product Stock Availability', products.every(p => p.stock > 0), 'All products have positive stock');
 
 // Check Categories Diversity
 const categories = sqlite.prepare("SELECT category, COUNT(*) as c FROM products GROUP BY category").all();
-recordAudit('DB Data', 'Categories Diversity', categories.length === 8, `${categories.length} departments: ${categories.map(c => c.category).join(', ')}`);
+recordAudit('DB Data', 'Categories Diversity (11 Categories)', categories.length === 11, `${categories.length} departments: ${categories.map(c => c.category).join(', ')}`);
 
 // Check Coupons Table
 const coupons = sqlite.prepare("SELECT * FROM coupons").all();
@@ -92,12 +92,16 @@ recordAudit('DB Data', 'Coupons Table Seeded', coupons.length >= 3, `${coupons.l
 console.log('\n--- SECTION 3: BUSINESS LOGIC & API ENDPOINTS VERIFICATION ---');
 
 // Test 1: Category Filter API
-const ethnicProducts = db.getProducts({ category: 'Women Ethnic' });
-recordAudit('API Logic', 'Category Filter (Women Ethnic)', ethnicProducts.every(p => p.category === 'Women Ethnic') && ethnicProducts.length > 0, `${ethnicProducts.length} items`);
+const ethnicProducts = db.getProducts({ category: "Women's Wear" });
+recordAudit('API Logic', "Category Filter (Women's Wear)", ethnicProducts.every(p => p.category === "Women's Wear") && ethnicProducts.length > 0, `${ethnicProducts.length} items`);
 
-// Test 2: Search Filter API
-const searchResult = db.getProducts({ search: 'Saree' });
-recordAudit('API Logic', 'Search Query (Saree)', searchResult.length > 0 && searchResult.some(p => p.name.includes('Saree')), `${searchResult.length} matches`);
+// Test 2: Smart Search Multi-Token API
+const searchResult = db.getProducts({ search: 'cotton shirt' });
+recordAudit('API Logic', 'Smart Search Query ("cotton shirt")', searchResult.length > 0, `${searchResult.length} matches`);
+
+// Test 2b: Search Suggestions API
+const suggestions = db.getSearchSuggestions('ear');
+recordAudit('API Logic', 'Live Search Suggestions API', suggestions.products.length > 0 && suggestions.categories.length > 0, `${suggestions.products.length} product matches`);
 
 // Test 3: Sorting API
 const sortedAsc = db.getProducts({ sort: 'price-asc' });
@@ -113,6 +117,9 @@ for (let i = 0; i < sortedDesc.length - 1; i++) {
   if (sortedDesc[i].price < sortedDesc[i+1].price) isDesc = false;
 }
 recordAudit('API Logic', 'Sort Price: High to Low', isDesc, `Highest ₹${sortedDesc[0].price} to Lowest ₹${sortedDesc[sortedDesc.length-1].price}`);
+
+const sortedNewest = db.getProducts({ sort: 'newest' });
+recordAudit('API Logic', 'Sort: Newest First', sortedNewest.length > 0 && sortedNewest[0].createdAt >= sortedNewest[sortedNewest.length - 1].createdAt, 'Newest timestamp first');
 
 // Test 4: View Filter Tabs API
 const under299 = db.getProducts({ viewFilter: 'under299' });

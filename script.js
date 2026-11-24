@@ -11,362 +11,11 @@
   'use strict';
 
   // ==========================================================================
-  // 1. MEESHO PRODUCT DATABASE (22 Authentic Indian E-Commerce Products)
+  // 1. MEESHO PRODUCT DATABASE (65 Authentic Products Across 11 Categories)
   // ==========================================================================
-  const PRODUCTS_DATA = [
-    {
-      id: 1,
-      name: "Charvi Sensational Embroidered Rayon Anarkali Kurta Set",
-      category: "Women Ethnic",
-      price: 649,
-      originalPrice: 1999,
-      discount: 67,
-      rating: 4.4,
-      reviewsCount: 4820,
-      image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=600&q=80",
-      description: "Gorgeous Rayon Anarkali Kurta paired with matching Palazzos and chiffon printed dupatta. Features delicate golden Zari embroidery around the neckline. Perfect for festivals, family functions, and festive celebrations.",
-      popularity: 98,
-      stock: 15,
-      badge: "M-Trusted",
-      tags: ["trending", "bestseller", "ethnic", "kurti", "saree"]
-    },
-    {
-      id: 2,
-      name: "Aishani Alluring Pure Kanjeevaram Jacquard Silk Saree",
-      category: "Women Ethnic",
-      price: 899,
-      originalPrice: 2999,
-      discount: 70,
-      rating: 4.6,
-      reviewsCount: 6120,
-      image: "https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=600&q=80",
-      description: "Traditional South Indian Kanjeevaram woven soft silk saree embellished with rich temple border and designer Zari pallu. Includes 0.8m unstitched contrast designer blouse piece.",
-      popularity: 99,
-      stock: 8,
-      badge: "Trending",
-      tags: ["trending", "ethnic", "saree", "bestseller"]
-    },
-    {
-      id: 3,
-      name: "Kashvi Pretty Floral Pure Cotton Maxi Tiered Dress",
-      category: "Women Western",
-      price: 479,
-      originalPrice: 1299,
-      discount: 63,
-      rating: 4.3,
-      reviewsCount: 1820,
-      image: "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?auto=format&fit=crop&w=600&q=80",
-      description: "Breathable pure cotton tiered maxi dress with flattering puff sleeves and a matching tie-up fabric belt. Comfortable for summer outings, brunches, and college wear.",
-      popularity: 88,
-      stock: 12,
-      badge: "60%+ OFF",
-      tags: ["western", "casual", "dress"]
-    },
-    {
-      id: 4,
-      name: "Trendy Men's Cotton Linen Mandarin Collar Casual Shirt",
-      category: "Men",
-      price: 429,
-      originalPrice: 1199,
-      discount: 64,
-      rating: 4.3,
-      reviewsCount: 2810,
-      image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=600&q=80",
-      description: "Premium breathable cotton-linen blend casual shirt with modern Mandarin collar and roll-up sleeves. Soft washed fabric for supreme all-day comfort in tropical climates.",
-      popularity: 91,
-      stock: 20,
-      badge: "Hot Deal",
-      tags: ["trending", "menswear", "shirt"]
-    },
-    {
-      id: 5,
-      name: "Urbano Men's Slim Fit Stretchable Denim Jeans (Dark Indigo)",
-      category: "Men",
-      price: 599,
-      originalPrice: 1699,
-      discount: 65,
-      rating: 4.2,
-      reviewsCount: 2980,
-      image: "https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=600&q=80",
-      description: "Authentic heavy-duty cotton denim with 2% elastane for unrestricted stretch and flexibility. Features classic 5-pocket styling and scratch-resistant brass zip fly.",
-      popularity: 87,
-      stock: 14,
-      badge: "M-Trusted",
-      tags: ["bestseller", "jeans", "menswear"]
-    },
-    {
-      id: 6,
-      name: "Streetwear Men's Oversized Graphic Print Cotton T-Shirt",
-      category: "Men",
-      price: 279,
-      originalPrice: 799,
-      discount: 65,
-      rating: 4.5,
-      reviewsCount: 5320,
-      image: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=600&q=80",
-      description: "100% bio-washed 220 GSM combed cotton oversized streetwear t-shirt with aesthetic typography graphic print. Non-shrinkable and colorfast wash guarantee.",
-      popularity: 95,
-      stock: 25,
-      badge: "Under ₹299",
-      tags: ["streetwear", "casual", "under299"]
-    },
-    {
-      id: 7,
-      name: "Rajasthani Handcrafted Floral Embroidered Ethnic Mojari Juttis",
-      category: "Bags & Footwear",
-      price: 349,
-      originalPrice: 999,
-      discount: 65,
-      rating: 4.5,
-      reviewsCount: 3890,
-      image: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=600&q=80",
-      description: "Handcrafted authentic Jaipuri leather mojari juttis featuring rich silk thread embroidery and foam cushion footbed for all-day festive comfort. Pairs gracefully with sarees and kurtas.",
-      popularity: 94,
-      stock: 18,
-      badge: "M-Trusted",
-      tags: ["footwear", "ethnic", "juttis", "shoes"]
-    },
-    {
-      id: 8,
-      name: "Women's Textured Vegan Leather Crossbody Shoulder Handbag",
-      category: "Bags & Footwear",
-      price: 499,
-      originalPrice: 1499,
-      discount: 66,
-      rating: 4.4,
-      reviewsCount: 4120,
-      image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=600&q=80",
-      description: "Elegant textured vegan leather shoulder bag with detachable crossbody strap. Features spacious dual compartments, interior zippered pocket, and polished gold-tone hardware.",
-      popularity: 93,
-      stock: 11,
-      badge: "Trending",
-      tags: ["trending", "bag", "handbag", "fashion"]
-    },
-    {
-      id: 9,
-      name: "AeroTune True Wireless Earbuds with ENC & 45h Playtime",
-      category: "Electronics",
-      price: 799,
-      originalPrice: 2499,
-      discount: 68,
-      rating: 4.5,
-      reviewsCount: 7730,
-      image: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&w=600&q=80",
-      description: "Crystal-clear calls powered by Quad Mic Environmental Noise Cancellation (ENC). Ultra-low 40ms gaming latency, 13mm dynamic bass drivers, and IPX5 splash resistance.",
-      popularity: 99,
-      stock: 22,
-      badge: "M-Trusted",
-      tags: ["trending", "bestseller", "gadget", "audio"]
-    },
-    {
-      id: 10,
-      name: "PulseFit 1.96\" AMOLED Smartwatch with BT Calling & SpO2",
-      category: "Electronics",
-      price: 1199,
-      originalPrice: 3999,
-      discount: 70,
-      rating: 4.4,
-      reviewsCount: 3920,
-      image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80",
-      description: "Vibrant always-on AMOLED display with 600 nits peak brightness. Built-in speaker and mic for wrist calling, 120+ sports tracking modes, 24/7 heart rate and blood oxygen monitoring.",
-      popularity: 96,
-      stock: 9,
-      badge: "Trending",
-      tags: ["trending", "smartwatch", "fitness"]
-    },
-    {
-      id: 11,
-      name: "FastCharge 20,000mAh Power Bank with 22.5W Two-Way QC",
-      category: "Electronics",
-      price: 899,
-      originalPrice: 2199,
-      discount: 59,
-      rating: 4.6,
-      reviewsCount: 3190,
-      image: "https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?auto=format&fit=crop&w=600&q=80",
-      description: "High-density Lithium-Polymer cell with dual USB output and Type-C PD input/output. Charges smartphones up to 4 times on a single refill. 12-layer advanced circuit protection.",
-      popularity: 88,
-      stock: 14,
-      badge: "Hot Deal",
-      tags: ["electronics", "charger", "travel"]
-    },
-    {
-      id: 12,
-      name: "Non-Stick 3-Piece Granite Kitchen Cookware Set",
-      category: "Home & Kitchen",
-      price: 999,
-      originalPrice: 2999,
-      discount: 66,
-      rating: 4.7,
-      reviewsCount: 4680,
-      image: "https://images.unsplash.com/photo-1584990347449-a292886f4553?auto=format&fit=crop&w=600&q=80",
-      description: "5-layer scratch-resistant German granite coating. Set includes 24cm Dosa Tawa, 24cm Frying Pan, and 2.5L Kadhai with tempered glass lid. Induction and gas stove compatible.",
-      popularity: 93,
-      stock: 7,
-      badge: "M-Trusted",
-      tags: ["bestseller", "kitchen", "cookware"]
-    },
-    {
-      id: 13,
-      name: "100% Pure Cotton Jaipuri Floral Double Bedsheet with 2 Pillows",
-      category: "Home & Kitchen",
-      price: 369,
-      originalPrice: 999,
-      discount: 63,
-      rating: 4.3,
-      reviewsCount: 5610,
-      image: "https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?auto=format&fit=crop&w=600&q=80",
-      description: "King size (90x100 inches) 180 TC breathable cotton bedsheet. Fade-resistant reactive digital printing with soft skin-friendly texture. Machine washable.",
-      popularity: 92,
-      stock: 30,
-      badge: "Trending",
-      tags: ["trending", "homedecor", "bedsheet"]
-    },
-    {
-      id: 14,
-      name: "Stainless Steel Insulated 1000ml Thermal Water Bottle",
-      category: "Home & Kitchen",
-      price: 299,
-      originalPrice: 899,
-      discount: 67,
-      rating: 4.5,
-      reviewsCount: 3980,
-      image: "https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=600&q=80",
-      description: "Double-walled vacuum insulation keeps liquids icy cold for 24 hours or piping hot for 12 hours. Made of food-grade 304 stainless steel with leak-proof screw cap.",
-      popularity: 89,
-      stock: 22,
-      badge: "Under ₹299",
-      tags: ["kitchen", "fitness", "bottle", "under299"]
-    },
-    {
-      id: 15,
-      name: "Vitamin C Glow Serum 30ml with Hyaluronic Acid & Ferulic",
-      category: "Beauty & Health",
-      price: 279,
-      originalPrice: 699,
-      discount: 60,
-      rating: 4.6,
-      reviewsCount: 8890,
-      image: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=600&q=80",
-      description: "Advanced brightening facial serum formulated with 10% stable Vitamin C and multi-molecular Hyaluronic Acid. Fades dark spots, sun damage, and boosts radiant glowing skin.",
-      popularity: 97,
-      stock: 16,
-      badge: "M-Trusted",
-      tags: ["bestseller", "skincare", "beauty", "under299"]
-    },
-    {
-      id: 16,
-      name: "Velvet Matte Liquid Lipstick Combo Set of 4 Shades",
-      category: "Beauty & Health",
-      price: 299,
-      originalPrice: 999,
-      discount: 70,
-      rating: 4.3,
-      reviewsCount: 4520,
-      image: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&w=600&q=80",
-      description: "Smudge-proof, waterproof, 12-hour transfer-proof matte liquid lipsticks infused with Vitamin E and Jojoba oil. Includes 4 universally flattering Indian skin tone shades (Nude, Berry, Red, Coral).",
-      popularity: 92,
-      stock: 14,
-      badge: "Under ₹299",
-      tags: ["trending", "makeup", "cosmetics", "under299"]
-    },
-    {
-      id: 17,
-      name: "Organic Arabica Coffee Face & Body Scrub (100g)",
-      category: "Beauty & Health",
-      price: 199,
-      originalPrice: 499,
-      discount: 60,
-      rating: 4.4,
-      reviewsCount: 2710,
-      image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80",
-      description: "Exfoliating raw coffee scrub with cold-pressed coconut oil. Gently removes dead skin cells, tan, and reduces cellulite appearance. 100% vegan and cruelty-free.",
-      popularity: 85,
-      stock: 28,
-      badge: "Under ₹199",
-      tags: ["skincare", "beauty", "under299"]
-    },
-    {
-      id: 18,
-      name: "Ethnic Kundan & Pearl Gold-Plated Choker Jewellery Set",
-      category: "Jewellery & Accessories",
-      price: 449,
-      originalPrice: 1499,
-      discount: 70,
-      rating: 4.5,
-      reviewsCount: 4170,
-      image: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=600&q=80",
-      description: "Handcrafted traditional bridal Kundan necklace with matching Jhumka earrings and Maang Tikka. High-polish micron gold plating with cluster pearl drops.",
-      popularity: 95,
-      stock: 12,
-      badge: "M-Trusted",
-      tags: ["jewellery", "ethnic", "bestseller"]
-    },
-    {
-      id: 19,
-      name: "Polarized UV400 Protection Classic Aviator Sunglasses",
-      category: "Jewellery & Accessories",
-      price: 249,
-      originalPrice: 799,
-      discount: 68,
-      rating: 4.4,
-      reviewsCount: 5290,
-      image: "https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=600&q=80",
-      description: "Timeless teardrop aviator frame with tri-acetate polarized lenses that block 100% of UVA & UVB rays. Feather-light metallic frame with comfortable silicone nose pads.",
-      popularity: 91,
-      stock: 19,
-      badge: "Under ₹299",
-      tags: ["accessories", "sunglasses", "under299"]
-    },
-    {
-      id: 20,
-      name: "Men's Genuine Leather Slim RFID-Blocking Bifold Wallet",
-      category: "Jewellery & Accessories",
-      price: 299,
-      originalPrice: 899,
-      discount: 66,
-      rating: 4.6,
-      reviewsCount: 3340,
-      image: "https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=600&q=80",
-      description: "Crafted from top-grain oil-waxed leather. Integrated RFID electromagnetic shielding protects your credit cards from unauthorized digital scans. Features 8 card slots and 2 currency pockets.",
-      popularity: 88,
-      stock: 15,
-      badge: "Under ₹299",
-      tags: ["accessories", "wallet", "leather", "under299"]
-    },
-    {
-      id: 21,
-      name: "Universal Ergonomic Aluminum Laptop & Tablet Stand",
-      category: "Electronics",
-      price: 399,
-      originalPrice: 1099,
-      discount: 63,
-      rating: 4.7,
-      reviewsCount: 4510,
-      image: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&w=600&q=80",
-      description: "Solid CNC aluminum alloy riser with 6-level adjustable angles to relieve neck pain. Foldable portable design with non-slip silicone pads and heat ventilation hollow frame.",
-      popularity: 90,
-      stock: 24,
-      badge: "Top Rated",
-      tags: ["electronics", "workfromhome", "laptop"]
-    },
-    {
-      id: 22,
-      name: "Women's Printed Georgette Party Wear Anarkali Gown",
-      category: "Women Ethnic",
-      price: 549,
-      originalPrice: 1799,
-      discount: 69,
-      rating: 4.5,
-      reviewsCount: 3210,
-      image: "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=600&q=80",
-      description: "Flowy micro-georgette festive Anarkali gown with digital floral prints and crepe lining. Includes matching dupatta with lace border.",
-      popularity: 94,
-      stock: 16,
-      badge: "Trending",
-      tags: ["ethnic", "anarkali", "gown", "trending"]
-    }
-  ];
+  const PRODUCTS_DATA = (typeof window !== 'undefined' && Array.isArray(window.PRODUCTS_DATA) && window.PRODUCTS_DATA.length > 0)
+    ? window.PRODUCTS_DATA
+    : (typeof require !== 'undefined' ? require('./products_data').PRODUCTS_DATA : []);
 
   // SVG Fallback Data URI in case of network issue
   const FALLBACK_IMAGE = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'><rect fill='%23fcebf5' width='400' height='400'/><text fill='%239f2089' font-family='sans-serif' font-size='22' font-weight='900' x='50%25' y='48%25' text-anchor='middle'>meesho</text><text fill='%2364748b' font-family='sans-serif' font-size='13' x='50%25' y='55%25' text-anchor='middle'>Trusted Supplier Product</text></svg>";
@@ -458,7 +107,11 @@
     // Product Catalog
     productGrid: document.getElementById('product-grid'),
     emptyCatalogState: document.getElementById('empty-catalog-state'),
+    emptyStateTitle: document.getElementById('empty-state-title'),
+    emptyStateDesc: document.getElementById('empty-state-desc'),
     emptyResetBtn: document.getElementById('empty-reset-btn'),
+    relatedProductGrid: document.getElementById('related-product-grid'),
+    relatedProductsSection: document.getElementById('related-products-section'),
     resultsCount: document.getElementById('results-count'),
     activeCategoryTag: document.getElementById('active-category-tag'),
     activeSearchTag: document.getElementById('active-search-tag'),
@@ -581,6 +234,162 @@
   // ==========================================================================
   // 6. MEESHO CATALOG & FILTER ENGINE
   // ==========================================================================
+  
+  // Reusable Product Card Template
+  function createProductCardHtml(p) {
+    const isWishlisted = STATE.wishlist.includes(p.id);
+    const isLowStock = p.stock <= 8;
+
+    let badgeClass = 'card-badge';
+    if (p.badge === 'M-Trusted' || p.badge === 'Bestseller') badgeClass += ' card-badge-bestseller';
+    if (p.badge === 'Trending') badgeClass += ' card-badge-trending';
+
+    return `
+      <article class="product-card" data-id="${p.id}">
+        <div class="card-image-box" onclick="window.Meesho.openProductModal(${p.id})">
+          <img 
+            src="${p.image}" 
+            alt="${p.name}" 
+            class="card-img" 
+            loading="lazy"
+            onerror="this.onerror=null; this.src='${FALLBACK_IMAGE}';"
+          />
+          ${p.badge ? `<span class="${badgeClass}">${p.badge}</span>` : ''}
+          
+          <button 
+            type="button" 
+            class="card-wishlist-btn ${isWishlisted ? 'active' : ''}" 
+            data-id="${p.id}" 
+            onclick="event.stopPropagation(); window.Meesho.toggleWishlist(${p.id});"
+            aria-label="${isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}"
+            title="${isWishlisted ? 'Remove from Wishlist' : 'Add to Wishlist'}"
+          >
+            <i class="${isWishlisted ? 'fa-solid fa-heart' : 'fa-regular fa-heart'}"></i>
+          </button>
+
+          <button 
+            type="button" 
+            class="card-quickview-btn" 
+            onclick="event.stopPropagation(); window.Meesho.openProductModal(${p.id});"
+          >
+            <i class="fa-regular fa-eye"></i> Quick View
+          </button>
+        </div>
+
+        <div class="card-content">
+          <div class="card-category-row">
+            <span class="card-category">${p.category}</span>
+            <span class="card-stock-pill ${isLowStock ? 'card-stock-low' : ''}">
+              ${isLowStock ? `Only ${p.stock} left!` : 'In Stock'}
+            </span>
+          </div>
+
+          <h3 class="card-title" onclick="window.Meesho.openProductModal(${p.id})" title="${p.name}">
+            ${p.name}
+          </h3>
+
+          <div class="card-rating-row">
+            <span class="rating-badge">
+              <i class="fa-solid fa-star"></i> ${p.rating}
+            </span>
+            <span class="reviews-count">(${Number(p.reviewsCount || p.reviews_count || 0).toLocaleString('en-IN')} Reviews)</span>
+          </div>
+
+          <div class="card-price-row">
+            <span class="price-current">${formatINR(p.price)}</span>
+            <span class="price-original">${formatINR(p.originalPrice || p.original_price)}</span>
+            <span class="price-discount">${p.discount}% off</span>
+          </div>
+
+          <div class="card-delivery-tag">
+            <i class="fa-solid fa-truck-fast"></i>
+            <span>Free Delivery</span>
+          </div>
+
+          <button 
+            type="button" 
+            class="card-add-cart-btn" 
+            onclick="window.Meesho.addToCart(${p.id}, 1, true)"
+            aria-label="Add ${p.name} to cart"
+          >
+            <i class="fa-solid fa-bag-shopping"></i> Add to Cart
+          </button>
+        </div>
+      </article>
+    `;
+  }
+
+  // Smart Multi-Token Search Matcher with Relevance Scoring
+  function evaluateSearchMatch(product, rawQuery) {
+    if (!rawQuery || rawQuery.trim() === '') {
+      return { isMatch: true, score: product.popularity || 50 };
+    }
+
+    const query = rawQuery.trim().toLowerCase();
+    const tokens = query.split(/\s+/).filter(Boolean);
+    const name = (product.name || '').toLowerCase();
+    const cat = (product.category || '').toLowerCase();
+    const desc = (product.description || '').toLowerCase();
+    const tags = Array.isArray(product.tags) 
+      ? product.tags.map(t => t.toLowerCase()) 
+      : (typeof product.tags === 'string' ? product.tags.toLowerCase().split(',') : []);
+    const tagsText = tags.join(' ');
+
+    let score = 0;
+
+    // Full query whole-phrase checks
+    if (name === query) score += 200;
+    else if (name.startsWith(query)) score += 120;
+    else if (name.includes(query)) score += 80;
+
+    if (cat === query) score += 100;
+    else if (cat.includes(query)) score += 60;
+
+    if (tagsText.includes(query)) score += 50;
+    if (desc.includes(query)) score += 25;
+
+    // Token-by-token checks
+    let allTokensMatched = true;
+
+    for (const token of tokens) {
+      let tokenMatched = false;
+
+      if (name.includes(token)) {
+        tokenMatched = true;
+        score += 35;
+      }
+      if (tags.some(t => t.includes(token))) {
+        tokenMatched = true;
+        score += 30;
+      }
+      if (cat.includes(token)) {
+        tokenMatched = true;
+        score += 25;
+      }
+      if (desc.includes(token)) {
+        tokenMatched = true;
+        score += 15;
+      }
+
+      // Partial / Prefix match for user typing partial words (e.g. "kurt", "shir", "snee")
+      const words = name.split(/[\s,.-]+/);
+      if (words.some(w => w.startsWith(token))) {
+        tokenMatched = true;
+        score += 20;
+      }
+
+      if (!tokenMatched) {
+        allTokensMatched = false;
+        break;
+      }
+    }
+
+    return {
+      isMatch: allTokensMatched,
+      score: score + (product.popularity || 50) * 0.1
+    };
+  }
+
   function applyFiltersAndSort() {
     let result = [...STATE.products];
 
@@ -589,15 +398,19 @@
       result = result.filter(p => p.category === STATE.activeCategory);
     }
 
-    // 2. Search Query Filter
-    if (STATE.searchQuery.trim() !== '') {
-      const q = STATE.searchQuery.toLowerCase().trim();
-      result = result.filter(p => 
-        p.name.toLowerCase().includes(q) ||
-        p.category.toLowerCase().includes(q) ||
-        p.description.toLowerCase().includes(q) ||
-        (p.tags && p.tags.some(t => t.toLowerCase().includes(q)))
-      );
+    // 2. Smart Search Query Filter with Relevance Scoring
+    const searchActive = STATE.searchQuery.trim() !== '';
+    if (searchActive) {
+      const scoredItems = [];
+      for (const p of result) {
+        const evalResult = evaluateSearchMatch(p, STATE.searchQuery);
+        if (evalResult.isMatch) {
+          scoredItems.push({ product: p, score: evalResult.score });
+        }
+      }
+      // Sort by relevance score initially
+      scoredItems.sort((a, b) => b.score - a.score);
+      result = scoredItems.map(item => item.product);
     }
 
     // 3. View Filter Tab (all, trending, bestseller/M-trusted, discounted, under299)
@@ -611,24 +424,29 @@
       result = result.filter(p => p.price <= 299);
     }
 
-    // 4. Sorting
-    switch (STATE.sortBy) {
-      case 'price-asc':
-        result.sort((a, b) => a.price - b.price);
-        break;
-      case 'price-desc':
-        result.sort((a, b) => b.price - a.price);
-        break;
-      case 'rating':
-        result.sort((a, b) => b.rating - a.rating);
-        break;
-      case 'discount':
-        result.sort((a, b) => b.discount - a.discount);
-        break;
-      case 'popular':
-      default:
-        result.sort((a, b) => b.popularity - a.popularity);
-        break;
+    // 4. Sorting (if not default popular during search, or if user picked explicit sort)
+    if (!searchActive || STATE.sortBy !== 'popular') {
+      switch (STATE.sortBy) {
+        case 'price-asc':
+          result.sort((a, b) => a.price - b.price);
+          break;
+        case 'price-desc':
+          result.sort((a, b) => b.price - a.price);
+          break;
+        case 'rating':
+          result.sort((a, b) => b.rating - a.rating);
+          break;
+        case 'discount':
+          result.sort((a, b) => b.discount - a.discount);
+          break;
+        case 'newest':
+          result.sort((a, b) => new Date(b.createdAt || b.created_at || 0) - new Date(a.createdAt || a.created_at || 0) || b.id - a.id);
+          break;
+        case 'popular':
+        default:
+          result.sort((a, b) => b.popularity - a.popularity);
+          break;
+      }
     }
 
     STATE.filteredProducts = result;
@@ -636,101 +454,44 @@
     updateToolbarInfo();
   }
 
+  function renderRelatedProducts() {
+    if (!DOM.relatedProductGrid) return;
+    const recommendations = STATE.products
+      .filter(p => p.badge === 'M-Trusted' || p.badge === 'Trending' || p.badge === 'Bestseller' || p.popularity >= 93)
+      .slice(0, 8);
+
+    DOM.relatedProductGrid.innerHTML = recommendations.map(p => createProductCardHtml(p)).join('');
+  }
+
   function renderCatalog() {
     if (!DOM.productGrid) return;
 
     if (STATE.filteredProducts.length === 0) {
       DOM.productGrid.innerHTML = '';
-      if (DOM.emptyCatalogState) DOM.emptyCatalogState.hidden = false;
+      if (DOM.emptyCatalogState) {
+        DOM.emptyCatalogState.hidden = false;
+        if (DOM.emptyStateTitle) {
+          if (STATE.searchQuery.trim() !== '') {
+            DOM.emptyStateTitle.textContent = `No Matching Products Found for "${STATE.searchQuery}"`;
+          } else {
+            DOM.emptyStateTitle.textContent = 'No Matching Products Found';
+          }
+        }
+        if (DOM.emptyStateDesc) {
+          if (STATE.searchQuery.trim() !== '') {
+            DOM.emptyStateDesc.textContent = `We couldn't find any items matching "${STATE.searchQuery}". Try checking for typos, searching broader keywords, or click any of the popular search suggestions below.`;
+          } else {
+            DOM.emptyStateDesc.textContent = "We couldn't find any items matching your active category or filters. Try resetting your filters to explore all available products.";
+          }
+        }
+        renderRelatedProducts();
+      }
       return;
     }
 
     if (DOM.emptyCatalogState) DOM.emptyCatalogState.hidden = true;
 
-    const html = STATE.filteredProducts.map(p => {
-      const isWishlisted = STATE.wishlist.includes(p.id);
-      const isLowStock = p.stock <= 8;
-
-      let badgeClass = 'card-badge';
-      if (p.badge === 'M-Trusted' || p.badge === 'Bestseller') badgeClass += ' card-badge-bestseller';
-      if (p.badge === 'Trending') badgeClass += ' card-badge-trending';
-
-      return `
-        <article class="product-card" data-id="${p.id}">
-          <div class="card-image-box" onclick="window.Meesho.openProductModal(${p.id})">
-            <img 
-              src="${p.image}" 
-              alt="${p.name}" 
-              class="card-img" 
-              loading="lazy"
-              onerror="this.onerror=null; this.src='${FALLBACK_IMAGE}';"
-            />
-            ${p.badge ? `<span class="${badgeClass}">${p.badge}</span>` : ''}
-            
-            <button 
-              type="button" 
-              class="card-wishlist-btn ${isWishlisted ? 'active' : ''}" 
-              data-id="${p.id}" 
-              onclick="event.stopPropagation(); window.Meesho.toggleWishlist(${p.id});"
-              aria-label="${isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}"
-              title="${isWishlisted ? 'Remove from Wishlist' : 'Add to Wishlist'}"
-            >
-              <i class="${isWishlisted ? 'fa-solid fa-heart' : 'fa-regular fa-heart'}"></i>
-            </button>
-
-            <button 
-              type="button" 
-              class="card-quickview-btn" 
-              onclick="event.stopPropagation(); window.Meesho.openProductModal(${p.id});"
-            >
-              <i class="fa-regular fa-eye"></i> Quick View
-            </button>
-          </div>
-
-          <div class="card-content">
-            <div class="card-category-row">
-              <span class="card-category">${p.category}</span>
-              <span class="card-stock-pill ${isLowStock ? 'card-stock-low' : ''}">
-                ${isLowStock ? `Only ${p.stock} left!` : 'In Stock'}
-              </span>
-            </div>
-
-            <h3 class="card-title" onclick="window.Meesho.openProductModal(${p.id})" title="${p.name}">
-              ${p.name}
-            </h3>
-
-            <div class="card-rating-row">
-              <span class="rating-badge">
-                <i class="fa-solid fa-star"></i> ${p.rating}
-              </span>
-              <span class="reviews-count">(${Number(p.reviewsCount).toLocaleString('en-IN')} Reviews)</span>
-            </div>
-
-            <div class="card-price-row">
-              <span class="price-current">${formatINR(p.price)}</span>
-              <span class="price-original">${formatINR(p.originalPrice)}</span>
-              <span class="price-discount">${p.discount}% off</span>
-            </div>
-
-            <div class="card-delivery-tag">
-              <i class="fa-solid fa-truck-fast"></i>
-              <span>Free Delivery</span>
-            </div>
-
-            <button 
-              type="button" 
-              class="card-add-cart-btn" 
-              onclick="window.Meesho.addToCart(${p.id}, 1, true)"
-              aria-label="Add ${p.name} to cart"
-            >
-              <i class="fa-solid fa-bag-shopping"></i> Add to Cart
-            </button>
-          </div>
-        </article>
-      `;
-    }).join('');
-
-    DOM.productGrid.innerHTML = html;
+    DOM.productGrid.innerHTML = STATE.filteredProducts.map(p => createProductCardHtml(p)).join('');
   }
 
   function updateToolbarInfo() {
@@ -1545,63 +1306,214 @@
   }
 
   // ==========================================================================
-  // 12. LIVE SEARCH & QUICK AUTOCOMPLETE
+  // 12. LIVE SMART SEARCH & AUTOCOMPLETE ENGINE
   // ==========================================================================
+  let searchDebounceTimer = null;
+  let activeSuggestionIndex = -1;
+
+  function highlightMatch(text, query) {
+    if (!query || !text) return text || '';
+    const cleanQ = query.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    if (!cleanQ) return text;
+    const regex = new RegExp(`(${cleanQ})`, 'gi');
+    return text.replace(regex, '<mark>$1</mark>');
+  }
+
+  function scrollToCatalog() {
+    const catalogSec = document.getElementById('products-section');
+    if (catalogSec) {
+      catalogSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
   function handleSearchInput(e) {
     const query = e.target.value;
     STATE.searchQuery = query;
 
     if (query.trim().length > 0) {
       DOM.clearSearchBtn.style.display = 'block';
-      showSearchSuggestions(query);
     } else {
       DOM.clearSearchBtn.style.display = 'none';
       hideSearchSuggestions();
     }
 
-    applyFiltersAndSort();
+    clearTimeout(searchDebounceTimer);
+    searchDebounceTimer = setTimeout(() => {
+      if (query.trim().length > 0) {
+        showSearchSuggestions(query);
+      }
+      applyFiltersAndSort();
+    }, 150);
+  }
+
+  function handleSearchKeydown(e) {
+    if (DOM.searchSuggestions && !DOM.searchSuggestions.hidden) {
+      const items = DOM.searchSuggestions.querySelectorAll('.suggestion-item');
+      if (items.length > 0) {
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          activeSuggestionIndex = (activeSuggestionIndex + 1) % items.length;
+          items.forEach((item, idx) => {
+            item.classList.toggle('selected', idx === activeSuggestionIndex);
+          });
+          items[activeSuggestionIndex].scrollIntoView({ block: 'nearest' });
+          return;
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          activeSuggestionIndex = (activeSuggestionIndex - 1 + items.length) % items.length;
+          items.forEach((item, idx) => {
+            item.classList.toggle('selected', idx === activeSuggestionIndex);
+          });
+          items[activeSuggestionIndex].scrollIntoView({ block: 'nearest' });
+          return;
+        } else if (e.key === 'Enter') {
+          if (activeSuggestionIndex >= 0 && items[activeSuggestionIndex]) {
+            e.preventDefault();
+            items[activeSuggestionIndex].click();
+            return;
+          }
+        } else if (e.key === 'Escape') {
+          hideSearchSuggestions();
+          return;
+        }
+      }
+    }
+
+    if (e.key === 'Enter') {
+      hideSearchSuggestions();
+      applyFiltersAndSort();
+      scrollToCatalog();
+    }
   }
 
   function showSearchSuggestions(query) {
     const q = query.toLowerCase().trim();
-    const matches = STATE.products.filter(p => 
-      p.name.toLowerCase().includes(q) ||
-      p.category.toLowerCase().includes(q)
-    ).slice(0, 5);
-
-    if (matches.length === 0) {
+    if (!q) {
       hideSearchSuggestions();
       return;
     }
 
-    const html = matches.map(p => `
-      <div class="suggestion-item" onclick="window.Meesho.selectSearchSuggestion('${p.name.replace(/'/g, "\\'")}')">
-        <img 
-          src="${p.image}" 
-          alt="${p.name}" 
-          class="suggestion-thumb"
-          onerror="this.onerror=null; this.src='${FALLBACK_IMAGE}';"
-        />
-        <div class="suggestion-details">
-          <span class="suggestion-title">${p.name}</span>
-          <span class="suggestion-meta">${p.category} • ${formatINR(p.price)}</span>
+    activeSuggestionIndex = -1;
+
+    // 1. Direct product matches evaluated via smart token matcher
+    const productMatches = STATE.products.filter(p => {
+      const evalRes = evaluateSearchMatch(p, q);
+      return evalRes.isMatch;
+    }).slice(0, 5);
+
+    // 2. Matching categories (e.g. searching "mob" matches Mobiles, "foot" matches Footwear)
+    const allCategories = [...new Set(STATE.products.map(p => p.category))];
+    const matchingCategories = allCategories
+      .filter(cat => cat.toLowerCase().includes(q))
+      .slice(0, 2);
+
+    // 3. Matching tags/keywords for instant suggestions
+    const matchingKeywords = new Set();
+    for (const p of STATE.products) {
+      const tags = Array.isArray(p.tags) ? p.tags : (typeof p.tags === 'string' ? p.tags.split(',') : []);
+      for (const t of tags) {
+        const cleanT = t.trim().toLowerCase();
+        if (cleanT.includes(q) && cleanT !== q) {
+          matchingKeywords.add(cleanT);
+        }
+      }
+    }
+    const keywordsList = Array.from(matchingKeywords).slice(0, 3);
+
+    if (productMatches.length === 0 && matchingCategories.length === 0 && keywordsList.length === 0) {
+      hideSearchSuggestions();
+      return;
+    }
+
+    let html = '';
+
+    // A. Category Suggestions
+    if (matchingCategories.length > 0) {
+      html += '<div class="suggestion-section-title"><i class="fa-solid fa-layer-group"></i> Department Suggestions</div>';
+      html += matchingCategories.map(cat => `
+        <div class="suggestion-item suggestion-category-item" onclick="window.Meesho.selectCategorySuggestion('${cat.replace(/'/g, "\\'")}')">
+          <div class="suggestion-icon"><i class="fa-solid fa-layer-group"></i></div>
+          <div class="suggestion-details">
+            <span class="suggestion-title">In <strong>${highlightMatch(cat, query)}</strong></span>
+            <span class="suggestion-meta">Filter by ${cat}</span>
+          </div>
         </div>
-      </div>
-    `).join('');
+      `).join('');
+    }
+
+    // B. Keyword Suggestions
+    if (keywordsList.length > 0) {
+      html += '<div class="suggestion-section-title"><i class="fa-solid fa-fire"></i> Popular Searches</div>';
+      html += keywordsList.map(kw => `
+        <div class="suggestion-item suggestion-keyword-item" onclick="window.Meesho.selectSearchSuggestion('${kw.replace(/'/g, "\\'")}')">
+          <div class="suggestion-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+          <div class="suggestion-details">
+            <span class="suggestion-title">${highlightMatch(kw, query)}</span>
+            <span class="suggestion-meta">Search Meesho catalog</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // C. Product Suggestions
+    if (productMatches.length > 0) {
+      html += '<div class="suggestion-section-title"><i class="fa-solid fa-bag-shopping"></i> Matching Products</div>';
+      html += productMatches.map(p => `
+        <div class="suggestion-item" onclick="window.Meesho.selectSearchSuggestion('${p.name.replace(/'/g, "\\'")}')">
+          <img 
+            src="${p.image}" 
+            alt="${p.name}" 
+            class="suggestion-thumb"
+            onerror="this.onerror=null; this.src='${FALLBACK_IMAGE}';"
+          />
+          <div class="suggestion-details">
+            <span class="suggestion-title">${highlightMatch(p.name, query)}</span>
+            <span class="suggestion-meta">
+              <span>${formatINR(p.price)}</span>
+              <span class="suggestion-cat-badge">${p.category}</span>
+            </span>
+          </div>
+        </div>
+      `).join('');
+    }
 
     DOM.searchSuggestions.innerHTML = html;
     DOM.searchSuggestions.hidden = false;
   }
 
   function hideSearchSuggestions() {
+    activeSuggestionIndex = -1;
     if (DOM.searchSuggestions) DOM.searchSuggestions.hidden = true;
   }
 
   function selectSearchSuggestion(productName) {
     DOM.searchInput.value = productName;
     STATE.searchQuery = productName;
+    DOM.clearSearchBtn.style.display = 'block';
     hideSearchSuggestions();
     applyFiltersAndSort();
+    scrollToCatalog();
+  }
+
+  function selectCategorySuggestion(categoryName) {
+    DOM.searchInput.value = '';
+    STATE.searchQuery = '';
+    DOM.clearSearchBtn.style.display = 'none';
+    STATE.activeCategory = categoryName;
+    hideSearchSuggestions();
+
+    // Synchronize Category Navigation bar
+    const catNavButtons = document.querySelectorAll('.category-nav-item');
+    catNavButtons.forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-category') === categoryName);
+    });
+
+    if (DOM.categorySelect) {
+      DOM.categorySelect.value = categoryName;
+    }
+
+    applyFiltersAndSort();
+    scrollToCatalog();
   }
 
   function clearSearch() {
@@ -1618,6 +1530,7 @@
   // ==========================================================================
   function attachEventListeners() {
     DOM.searchInput.addEventListener('input', handleSearchInput);
+    DOM.searchInput.addEventListener('keydown', handleSearchKeydown);
     DOM.clearSearchBtn.addEventListener('click', clearSearch);
 
     document.addEventListener('click', (e) => {
@@ -1636,10 +1549,14 @@
         const cat = btn.getAttribute('data-category');
         STATE.activeCategory = cat;
         STATE.viewFilter = 'all';
+        catNavButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        if (DOM.categorySelect) DOM.categorySelect.value = cat;
         DOM.viewFilterTabs.forEach(t => t.classList.remove('active'));
         const allTab = document.querySelector('.filter-tab[data-view="all"]');
         if (allTab) allTab.classList.add('active');
         applyFiltersAndSort();
+        scrollToCatalog();
       });
     });
 
@@ -1648,9 +1565,12 @@
       card.addEventListener('click', () => {
         const cat = card.getAttribute('data-category');
         STATE.activeCategory = cat;
+        catNavButtons.forEach(b => {
+          b.classList.toggle('active', b.getAttribute('data-category') === cat);
+        });
+        if (DOM.categorySelect) DOM.categorySelect.value = cat;
         applyFiltersAndSort();
-        const catalogSec = document.getElementById('products-section');
-        if (catalogSec) catalogSec.scrollIntoView({ behavior: 'smooth' });
+        scrollToCatalog();
       });
     });
 
@@ -1660,9 +1580,12 @@
         e.preventDefault();
         const cat = link.getAttribute('data-category');
         STATE.activeCategory = cat;
+        catNavButtons.forEach(b => {
+          b.classList.toggle('active', b.getAttribute('data-category') === cat);
+        });
+        if (DOM.categorySelect) DOM.categorySelect.value = cat;
         applyFiltersAndSort();
-        const catalogSec = document.getElementById('products-section');
-        if (catalogSec) catalogSec.scrollIntoView({ behavior: 'smooth' });
+        scrollToCatalog();
       });
     });
 
@@ -1675,13 +1598,30 @@
         if (cat) {
           STATE.activeCategory = cat;
           STATE.viewFilter = 'all';
+          catNavButtons.forEach(b => {
+            b.classList.toggle('active', b.getAttribute('data-category') === cat);
+          });
+          if (DOM.categorySelect) DOM.categorySelect.value = cat;
         } else if (filter === 'under299') {
           STATE.viewFilter = 'under299';
         }
 
         applyFiltersAndSort();
-        const catalogSec = document.getElementById('products-section');
-        if (catalogSec) catalogSec.scrollIntoView({ behavior: 'smooth' });
+        scrollToCatalog();
+      });
+    });
+
+    // Popular Search Suggestion Chips in Empty State
+    document.querySelectorAll('.search-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const query = chip.getAttribute('data-query');
+        if (query) {
+          DOM.searchInput.value = query;
+          STATE.searchQuery = query;
+          DOM.clearSearchBtn.style.display = 'block';
+          applyFiltersAndSort();
+          scrollToCatalog();
+        }
       });
     });
 
@@ -1697,6 +1637,9 @@
     if (DOM.categorySelect) {
       DOM.categorySelect.addEventListener('change', (e) => {
         STATE.activeCategory = e.target.value;
+        catNavButtons.forEach(b => {
+          b.classList.toggle('active', b.getAttribute('data-category') === e.target.value);
+        });
         applyFiltersAndSort();
       });
     }
@@ -1716,9 +1659,14 @@
       DOM.searchInput.value = '';
       DOM.clearSearchBtn.style.display = 'none';
       if (DOM.sortSelect) DOM.sortSelect.value = 'popular';
+      if (DOM.categorySelect) DOM.categorySelect.value = 'All';
       DOM.viewFilterTabs.forEach(t => t.classList.remove('active'));
       const allTab = document.querySelector('.filter-tab[data-view="all"]');
       if (allTab) allTab.classList.add('active');
+      catNavButtons.forEach(b => {
+        b.classList.toggle('active', b.getAttribute('data-category') === 'All');
+      });
+      hideSearchSuggestions();
       applyFiltersAndSort();
       showToast('Filters reset to default', 'info');
     };
@@ -1911,6 +1859,7 @@
     openAccount: openAccountModal,
     closeAccount: closeAccountModal,
     selectSearchSuggestion,
+    selectCategorySuggestion,
     showToast
   };
 

@@ -66,6 +66,19 @@ app.get('/api/products', (req, res) => {
   }
 });
 
+// 2b. Live Search Suggestions (Autocomplete - Defined before :id param route)
+app.get('/api/products/suggestions', (req, res) => {
+  try {
+    const q = req.query.q || req.query.search || '';
+    const limit = parseInt(req.query.limit, 10) || 6;
+    const suggestions = db.getSearchSuggestions(q, limit);
+    res.json({ success: true, ...suggestions });
+  } catch (err) {
+    console.error('Error fetching search suggestions:', err);
+    res.status(500).json({ success: false, error: 'Error fetching search suggestions' });
+  }
+});
+
 // 3. Single Product Details
 app.get('/api/products/:id', (req, res) => {
   try {
