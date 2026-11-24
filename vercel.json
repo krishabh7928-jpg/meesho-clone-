@@ -8,6 +8,7 @@
         "includeFiles": [
           "style.css",
           "script.js",
+          "products_data.js",
           "index.html",
           "data/**"
         ]
@@ -19,6 +20,10 @@
     },
     {
       "src": "script.js",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "products_data.js",
       "use": "@vercel/static"
     },
     {
@@ -42,6 +47,14 @@
     {
       "src": "/script.js",
       "dest": "/script.js",
+      "headers": {
+        "content-type": "application/javascript; charset=utf-8",
+        "cache-control": "public, max-age=0, must-revalidate"
+      }
+    },
+    {
+      "src": "/products_data.js",
+      "dest": "/products_data.js",
       "headers": {
         "content-type": "application/javascript; charset=utf-8",
         "cache-control": "public, max-age=0, must-revalidate"
