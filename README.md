@@ -63,7 +63,7 @@ All high-resolution screenshots are located in the `screenshots/` directory:
 ## 🚀 Installation & How to Run the Project
 
 ### Prerequisites
-- [Node.js](https://nodejs.org/) (Version 18+, 20+, or 22+; verified on Node v24.22.0)
+- [Node.js](https://nodejs.org/) (**v24+ required** for native `node:sqlite` `DatabaseSync`; verified on Node v24.22.0)
 - Modern web browser (Google Chrome, Microsoft Edge, Mozilla Firefox)
 
 ---

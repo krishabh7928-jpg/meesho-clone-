@@ -13,7 +13,7 @@ const path = require('path');
 const fs = require('fs');
 
 const pptx = new pptxgen();
-pptx.layout = 'LAYOUT_16x9';
+pptx.layout = 'LAYOUT_WIDE'; // 13.333" x 7.5" widescreen 16:9 canvas matching slide coordinates
 
 // Color Palette Constants - Myntra Brand Design System
 const COLOR_PRIMARY = 'FF3F6C';    // Myntra Signature Pink/Coral
@@ -78,7 +78,7 @@ s1.addText('A Modern, Responsive Multi-Brand Fashion Shopping Platform with Expr
 
 // Info Card
 s1.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
-  x: 0.8, y: 3.3, w: 11.7, h: 3.4,
+  x: 0.8, y: 3.3, w: 11.7, h: 3.6,
   fill: { color: COLOR_WHITE }, line: { color: COLOR_BORDER, width: 1 }, rectRadius: 0.2
 });
 
@@ -91,13 +91,13 @@ s1.addText([
   { text: '• Student Name: ', options: { bold: true } },
   { text: 'Rishabh Kumar\n' },
   { text: '• Technology Stack: ', options: { bold: true } },
-  { text: 'Semantic HTML5, Responsive CSS3 (Grid & Flexbox), Vanilla JavaScript (ES6+), Node.js, Express.js REST API, SQLite Embedded Database\n' },
+  { text: 'Semantic HTML5, Responsive CSS3 (Grid & Flexbox), Vanilla JavaScript (ES6+), Node.js v24, Express.js REST API, SQLite Embedded Database\n' },
   { text: '• Key Fashion Features: ', options: { bold: true } },
   { text: '5 Core Departments (Men, Women, Kids, Beauty, Home), Top Brands Spotlight, Brand & Size Filters, Resilient Dual-Mode Fallback\n' },
   { text: '• Academic Session: ', options: { bold: true } },
   { text: '2026\n' }
 ], {
-  x: 1.2, y: 3.45, w: 11.0, h: 3.1,
+  x: 1.2, y: 3.45, w: 11.0, h: 3.35,
   fontSize: 11, fontFace: 'Arial', color: COLOR_DARK
 });
 
@@ -218,7 +218,7 @@ s4.addText('Application Tier\n(Express REST API)', {
   fontSize: 14, fontFace: 'Arial', bold: true, color: COLOR_ACCENT, align: 'center'
 });
 s4.addText([
-  { text: '• Node.js Runtime: ', options: { bold: true } },
+  { text: '• Node.js v24 Runtime: ', options: { bold: true } },
   { text: 'High-concurrency non-blocking event loop execution.\n\n' },
   { text: '• Express.js Framework: ', options: { bold: true } },
   { text: 'REST API routing, query parser (brand, size, price), static asset delivery, CORS middleware.\n\n' },
@@ -279,12 +279,12 @@ const techTable = [
   ],
   [
     { text: 'Backend Server' },
-    { text: 'Node.js & Express.js' },
+    { text: 'Node.js v24 & Express.js' },
     { text: 'RESTful API routing, multi-parameter filtering, JSON serialization, static asset serving, CORS middleware.' }
   ],
   [
     { text: 'Database' },
-    { text: 'SQLite (Node DatabaseSync)' },
+    { text: 'SQLite (Node v24 DatabaseSync)' },
     { text: 'Self-contained zero-config SQL engine. 75 fashion products seeded across 5 departments with brand and sizes columns.' }
   ],
   [
@@ -432,8 +432,8 @@ const apiTable = [
 ];
 
 s7.addTable(apiTable, {
-  x: 0.8, y: 1.6, w: 11.7, h: 4.9,
-  fontSize: 9, fontFace: 'Arial', color: COLOR_DARK,
+  x: 0.8, y: 1.55, w: 11.7, h: 5.2,
+  fontSize: 8.5, fontFace: 'Arial', color: COLOR_DARK,
   border: { color: COLOR_BORDER, pt: 1 },
   colW: [1.6, 2.7, 3.8, 3.6]
 });
@@ -495,11 +495,11 @@ const snap1Path = path.join(SCREENSHOTS_DIR, '01_desktop_home.png');
 if (fs.existsSync(snap1Path)) {
   s9.addImage({
     path: snap1Path,
-    x: 0.8, y: 1.6, w: 5.7, h: 3.8
+    x: 0.8, y: 1.6, w: 5.7, h: 3.56
   });
 }
 s9.addText('01. Desktop Homepage: Myntra Branding, Hero Carousel & Brand Spotlight', {
-  x: 0.8, y: 5.6, w: 5.7, h: 0.6,
+  x: 0.8, y: 5.35, w: 5.7, h: 0.6,
   fontSize: 11, fontFace: 'Arial', bold: true, color: COLOR_PRIMARY, align: 'center'
 });
 
@@ -507,11 +507,11 @@ const snap2Path = path.join(SCREENSHOTS_DIR, '04_smart_search_suggestions.png');
 if (fs.existsSync(snap2Path)) {
   s9.addImage({
     path: snap2Path,
-    x: 6.8, y: 1.6, w: 5.7, h: 3.8
+    x: 6.8, y: 1.6, w: 5.7, h: 3.56
   });
 }
 s9.addText('02. Smart Search Autocomplete with Brand Priority & Matched Highlighting', {
-  x: 6.8, y: 5.6, w: 5.7, h: 0.6,
+  x: 6.8, y: 5.35, w: 5.7, h: 0.6,
   fontSize: 11, fontFace: 'Arial', bold: true, color: COLOR_PRIMARY, align: 'center'
 });
 
@@ -525,11 +525,11 @@ const snap3Path = path.join(SCREENSHOTS_DIR, '03_product_catalog_grid.png');
 if (fs.existsSync(snap3Path)) {
   s10.addImage({
     path: snap3Path,
-    x: 0.8, y: 1.6, w: 5.7, h: 3.8
+    x: 0.8, y: 1.6, w: 5.7, h: 3.56
   });
 }
 s10.addText('03. 4-Column Grid: 3:4 Cards, Brand Titles, Ratings & Size Pills', {
-  x: 0.8, y: 5.6, w: 5.7, h: 0.6,
+  x: 0.8, y: 5.35, w: 5.7, h: 0.6,
   fontSize: 11, fontFace: 'Arial', bold: true, color: COLOR_PRIMARY, align: 'center'
 });
 
@@ -537,11 +537,11 @@ const snap4Path = path.join(SCREENSHOTS_DIR, '05_cart_drawer.png');
 if (fs.existsSync(snap4Path)) {
   s10.addImage({
     path: snap4Path,
-    x: 6.8, y: 1.6, w: 5.7, h: 3.8
+    x: 6.8, y: 1.6, w: 5.7, h: 3.56
   });
 }
 s10.addText('04. Slide-Over Shopping Bag: Free Delivery Tracker & MYNTRA200 Coupon', {
-  x: 6.8, y: 5.6, w: 5.7, h: 0.6,
+  x: 6.8, y: 5.35, w: 5.7, h: 0.6,
   fontSize: 11, fontFace: 'Arial', bold: true, color: COLOR_PRIMARY, align: 'center'
 });
 
@@ -577,7 +577,7 @@ const snapMobPath = path.join(SCREENSHOTS_DIR, '07_mobile_view.png');
 if (fs.existsSync(snapMobPath)) {
   s11.addImage({
     path: snapMobPath,
-    x: 4.8, y: 1.6, w: 2.5, h: 4.8
+    x: 4.94, y: 1.6, w: 2.22, h: 4.8
   });
 }
 
@@ -660,9 +660,9 @@ const vivaItems = [
 ];
 
 vivaItems.forEach((v, idx) => {
-  const y = 1.6 + idx * 1.65;
+  const y = 1.6 + idx * 1.75;
   s13.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
-    x: 0.8, y, w: 11.7, h: 1.45,
+    x: 0.8, y, w: 11.7, h: 1.55,
     fill: { color: COLOR_WHITE }, line: { color: COLOR_BORDER, width: 1 }, rectRadius: 0.12
   });
 
@@ -672,7 +672,7 @@ vivaItems.forEach((v, idx) => {
   });
 
   s13.addText(v.a, {
-    x: 1.1, y: y + 0.55, w: 11.1, h: 0.75,
+    x: 1.1, y: y + 0.55, w: 11.1, h: 0.85,
     fontSize: 10, fontFace: 'Arial', color: COLOR_DARK, lineSpacing: 14
   });
 });
