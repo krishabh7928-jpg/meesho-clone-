@@ -109,7 +109,7 @@ All high-resolution screenshots are located in the `screenshots/` directory:
 ## 📁 Project Directory Structure
 
 ```
-myntra-fashion-website/
+myntra-fashion-ecommerce/
 │
 ├── index.html                                 # Semantic HTML5 frontend markup & modal templates
 ├── style.css                                  # Myntra design system (#ff3f6c, CSS Grid, mobile dock)
