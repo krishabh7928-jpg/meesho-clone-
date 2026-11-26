@@ -145,6 +145,12 @@ function initializeSqliteSchema(db) {
       );
     }
     console.log(`✓ Seeded ${SEED_PRODUCTS.length} fashion products in SQLite.`);
+  } else {
+    // Keep product image URLs synced with SEED_PRODUCTS without disturbing orders/cart/wishlist
+    const syncImg = db.prepare('UPDATE products SET image = ? WHERE id = ? AND image != ?');
+    for (const p of SEED_PRODUCTS) {
+      syncImg.run(p.image, p.id, p.image);
+    }
   }
 
   // Seed / Upgrade Coupons

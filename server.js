@@ -221,9 +221,12 @@ app.post('/api/orders', (req, res) => {
       return res.status(400).json({ success: false, error: 'Order must contain at least 1 item' });
     }
 
-    // Generate Unique Order ID
+    // Use validated client Order ID if supplied so client confirmation and SQLite stay identical
+    const incomingId = typeof req.body.orderId === 'string' && /^MYN-ORD-2026-\d{4,6}$/.test(req.body.orderId)
+      ? req.body.orderId
+      : null;
     const randomSuffix = Math.floor(10000 + Math.random() * 90000);
-    const orderId = `MYN-ORD-2026-${randomSuffix}`;
+    const orderId = incomingId || `MYN-ORD-2026-${randomSuffix}`;
     const orderDate = new Date().toLocaleDateString('en-IN', {
       day: 'numeric',
       month: 'short',

@@ -117,8 +117,8 @@ s2.addText('What is Myntra Fashion Platform?', {
 });
 s2.addText([
   { text: 'The Myntra Fashion Platform is a production-grade, full-stack fashion e-commerce web application inspired by India’s premier fashion lifestyle destination, Myntra (myntra.com).\n\n' },
-  { text: 'It features an authentic fashion design language: signature `#ff3f6c` palette, 3:4 portrait product cards, floating glassmorphic rating pills (`★ 4.4 | 5.4k`), apparel size selectors (`S`, `M`, `L`, `XL`, `XXL`), and top brand spotlights (Roadster, HRX, Anouk, Libas, WROGN, Mango, Levi\'s, Maybelline, D\'Decor).\n\n' },
-  { text: 'Spans 75 curated fashion products across 5 core departments (Men, Women, Kids, Beauty, Home & Living) with multi-faceted filtering, coupon engine (`MYNTRA200`), slide-over bag drawer, and dual-mode execution.' }
+  { text: 'It features an authentic fashion design language: signature #FF3F6C palette, 3:4 portrait product cards, floating glassmorphic rating pills (★ 4.4 | 5.4k), apparel size selectors (S, M, L, XL, XXL), and top brand spotlights (Roadster, HRX, Anouk, Libas, WROGN, Mango, Levi\'s, Maybelline, D\'Decor).\n\n' },
+  { text: 'Spans 75 curated fashion products across 5 core departments (Men, Women, Kids, Beauty, Home & Living) with multi-faceted filtering, coupon engine (MYNTRA200), slide-over bag drawer, and dual-mode execution.' }
 ], {
   x: 1.1, y: 2.35, w: 5.0, h: 4.0,
   fontSize: 11, fontFace: 'Arial', color: COLOR_DARK, lineSpacing: 16
@@ -136,7 +136,7 @@ s2.addText([
   { text: '1. Modern Myntra Fashion UI/UX: ', options: { bold: true, color: COLOR_PRIMARY } },
   { text: 'Clean typography, banner carousel, 5 fashion departments, brand tiles, and sticky mobile dock.\n\n' },
   { text: '2. Multi-Faceted Dynamic Filtering: ', options: { bold: true, color: COLOR_PRIMARY } },
-  { text: 'Filter instantly by Category, Brand, Apparel Size (`S`-`XXL`), Price Range, and Sorting criteria.\n\n' },
+  { text: 'Filter instantly by Category, Brand, Apparel Size (S-XXL), Price Range, and Sorting criteria.\n\n' },
   { text: '3. Smart Search & Live Autocomplete: ', options: { bold: true, color: COLOR_PRIMARY } },
   { text: 'Multi-token conjunction search with brand-priority weighting and highlighted suggestion tokens.\n\n' },
   { text: '4. Resilient 3-Tier Dual-Mode Architecture: ', options: { bold: true, color: COLOR_PRIMARY } },
@@ -200,7 +200,7 @@ s4.addText([
   { text: '• Semantic HTML5: ', options: { bold: true } },
   { text: 'Accessible structure, announcement ticker, modals, and SVG brand marks.\n\n' },
   { text: '• Responsive CSS3: ', options: { bold: true } },
-  { text: 'Myntra palette (`#ff3f6c`), 3:4 portrait cards, CSS Grid (4-col desktop, 2-col mobile), Flexbox.\n\n' },
+  { text: 'Myntra palette (#FF3F6C), 3:4 portrait cards, CSS Grid (4-col desktop, 2-col mobile), Flexbox.\n\n' },
   { text: '• Vanilla JavaScript (ES6+): ', options: { bold: true } },
   { text: 'Multi-faceted filter engine, tokenized autocomplete, slide-over bag, and LocalStorage sync.' }
 ], {
@@ -223,7 +223,7 @@ s4.addText([
   { text: '• Express.js Framework: ', options: { bold: true } },
   { text: 'REST API routing, query parser (brand, size, price), static asset delivery, CORS middleware.\n\n' },
   { text: '• Business Logic Engine: ', options: { bold: true } },
-  { text: 'Brand extraction, size matching, coupon validation (`MYNTRA200`), order generator.' }
+  { text: 'Brand extraction, size matching, coupon validation (MYNTRA200), order generator.' }
 ], {
   x: 5.0, y: 2.6, w: 3.4, h: 3.8,
   fontSize: 10.5, fontFace: 'Arial', color: COLOR_DARK
@@ -240,11 +240,11 @@ s4.addText('Database Tier\n(SQLite Embedded)', {
 });
 s4.addText([
   { text: '• SQLite Database: ', options: { bold: true } },
-  { text: 'Zero-config embedded relational store (`data/fashion.db`) via Node `DatabaseSync`.\n\n' },
+  { text: 'Zero-config embedded relational store (data/fashion.db) via Node DatabaseSync.\n\n' },
   { text: '• Normalized Tables: ', options: { bold: true } },
   { text: '5 relational tables with brand and sizes columns.\n\n' },
   { text: '• Dual-Mode Fallback: ', options: { bold: true } },
-  { text: 'In-browser `products_data.js` and `localStorage` guarantee 100% offline uptime.' }
+  { text: 'In-browser products_data.js and localStorage guarantee 100% offline uptime.' }
 ], {
   x: 9.2, y: 2.6, w: 3.2, h: 3.8,
   fontSize: 10.5, fontFace: 'Arial', color: COLOR_DARK
@@ -270,7 +270,7 @@ const techTable = [
   [
     { text: 'Styling' },
     { text: 'CSS3 (Variables, Grid, Flexbox)' },
-    { text: 'Myntra design system (`#ff3f6c`), 3:4 portrait card ratio, glassmorphic badges, sticky mobile dock, zero CSS framework bloat.' }
+    { text: 'Myntra design system (#FF3F6C), 3:4 portrait card ratio, glassmorphic badges, sticky mobile dock, zero CSS framework bloat.' }
   ],
   [
     { text: 'Client Logic' },
@@ -320,7 +320,7 @@ const schemas = [
   },
   {
     table: 'cart_items',
-    fields: 'id (PK, AUTO)\nsession_id (TEXT)\nproduct_id (FK -> products)\nquantity (INT)\nUNIQUE(session_id, product_id)',
+    fields: 'id (PK, AUTO)\nsession_id (TEXT)\nproduct_id (FK -> products)\nquantity (INT)\nsize (TEXT)\nUNIQUE(session_id, product_id)',
     records: 'Session-Scoped Bag'
   },
   {
@@ -331,7 +331,7 @@ const schemas = [
   {
     table: 'coupons',
     fields: 'code (PK, TEXT)\ndiscount (INT)\ntype (TEXT)\nmin_order (INT)\ndescription (TEXT)',
-    records: 'MYNTRA200, MYNTRA10, FESTIVE20'
+    records: '5 Active Promo Coupons'
   }
 ];
 
@@ -408,14 +408,20 @@ const apiTable = [
   [
     { text: 'GET / POST', options: { bold: true, color: COLOR_PRIMARY } },
     { text: '/api/cart' },
-    { text: 'Body: { productId, quantity }' },
-    { text: '200 OK: Synchronizes user shopping bag items with SQLite database.' }
+    { text: 'Body: { productId, quantity, size }' },
+    { text: '200 OK: Synchronizes user shopping bag items & sizes with SQLite database.' }
   ],
   [
-    { text: 'POST', options: { bold: true, color: COLOR_PRIMARY } },
+    { text: 'GET / POST', options: { bold: true, color: COLOR_PRIMARY } },
+    { text: '/api/wishlist' },
+    { text: 'Body: { productId }' },
+    { text: '200 OK: Toggles and fetches session-scoped wishlist favorites in SQLite.' }
+  ],
+  [
+    { text: 'GET / POST', options: { bold: true, color: COLOR_PRIMARY } },
     { text: '/api/orders' },
-    { text: 'Body: { customer, payment, items, totalAmount }' },
-    { text: '201 Created: Validates PIN code/phone, generates Order ID, saves to SQLite.' }
+    { text: 'Body: { orderId, customer, paymentMethod, items, totalAmount }' },
+    { text: '201 Created: Validates name, phone & address, saves order, fetches history.' }
   ],
   [
     { text: 'POST', options: { bold: true, color: COLOR_PRIMARY } },
@@ -608,8 +614,8 @@ const testCases = [
   { test: 'System Audit Suite', result: '36 / 36 PASSED (100%)', desc: 'Verified 24 DOM containers, SQLite tables, coupon engine (MYNTRA200), and API endpoints.' },
   { test: 'End-to-End Test Suite', result: '26 / 26 PASSED (100%)', desc: 'Verified 75 fashion products, discounts, cart add/update/remove, and SQLite orders.' },
   { test: 'Feature Improvement Suite', result: '37 / 37 PASSED (100%)', desc: 'Verified brand filters, size matching, price sorting, and Unsplash CDN image delivery.' },
-  { test: 'Overall Test Score', result: '168 / 168 PASSED (100%)', desc: 'Zero test failures across all 4 independent test suites with 0 console warnings or errors.' },
-  { test: 'Dual-Mode Parity Check', result: '100% MATCH', desc: 'Full-stack Express + SQLite and Standalone LocalStorage yield identical search & cart results.' }
+  { test: 'Headless Browser E2E', result: 'ALL CHECKS PASSED', desc: 'Verified live UI flows, responsive viewports (390px, 768px, 1440px), and 0 console errors.' },
+  { test: 'Overall Automated Score', result: '168 / 168 PASSED (100%)', desc: 'Zero test failures across all 4 Node suites plus full browser E2E verification.' }
 ];
 
 const testTable = [
@@ -645,7 +651,7 @@ const vivaItems = [
   },
   {
     q: 'Q2. How is Dual-Mode Resilience implemented and why is it critical?',
-    a: 'On startup, the client asynchronously queries `/api/health`. If Node.js and Express are running, it syncs with the SQLite database (`data/fashion.db`). If the server is offline or the evaluator simply double-clicks `index.html`, it seamlessly falls back to `products_data.js` and `localStorage`. This ensures 100% uptime during college viva demonstrations.'
+    a: 'On startup, the client asynchronously queries /api/health. If Node.js and Express are running, it syncs with the SQLite database (data/fashion.db). If the server is offline or the evaluator simply double-clicks index.html, it seamlessly falls back to products_data.js and localStorage. This ensures 100% uptime during college viva demonstrations.'
   },
   {
     q: 'Q3. How does the Multi-Faceted Filter and Smart Search engine operate?',

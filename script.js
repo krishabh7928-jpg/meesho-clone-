@@ -839,15 +839,16 @@
     }
   }
 
-  function updateCartItemQty(productId, delta) {
-    const itemIndex = STATE.cart.findIndex(i => i.product.id === productId);
+  function updateCartItemQty(productId, delta, size = null) {
+    const itemIndex = STATE.cart.findIndex(i => i.product.id === productId && (!size || (i.size || 'M') === size));
     if (itemIndex === -1) return;
 
+    const itemSize = size || STATE.cart[itemIndex].size || 'M';
     const currentQty = STATE.cart[itemIndex].quantity;
     const newQty = currentQty + delta;
 
     if (newQty <= 0) {
-      removeFromCart(productId);
+      removeFromCart(productId, itemSize);
     } else {
       if (newQty > STATE.cart[itemIndex].product.stock) {
         showToast(`Sorry, only ${STATE.cart[itemIndex].product.stock} items are in stock!`, 'warning');
@@ -868,14 +869,15 @@
     }
   }
 
-  function removeFromCart(productId) {
-    const item = STATE.cart.find(i => i.product.id === productId);
-    STATE.cart = STATE.cart.filter(i => i.product.id !== productId);
+  function removeFromCart(productId, size = null) {
+    const item = STATE.cart.find(i => i.product.id === productId && (!size || (i.size || 'M') === size));
+    STATE.cart = STATE.cart.filter(i => !(i.product.id === productId && (!size || (i.size || 'M') === size)));
     saveToStorage('myntra_cart', STATE.cart);
     updateCartBadges();
     renderCartDrawer();
 
-    if (STATE.isBackendConnected) {
+    const stillHasSameProduct = STATE.cart.some(i => i.product.id === productId);
+    if (STATE.isBackendConnected && !stillHasSameProduct) {
       fetch(`/api/cart/${productId}`, {
         method: 'DELETE',
         headers: { 'x-session-id': STATE.sessionId }
@@ -883,7 +885,7 @@
     }
 
     if (item) {
-      showToast(`Removed <strong>${item.product.name.slice(0, 24)}...</strong> from Bag`, 'info');
+      showToast(`Removed <strong>${escapeHTML(item.product.name.slice(0, 24))}...</strong> from Bag`, 'info');
     }
   }
 
@@ -994,14 +996,14 @@
               <button 
                 type="button" 
                 class="qty-btn" 
-                onclick="window.Myntra.updateCartQty(${item.product.id}, -1)" 
+                onclick="window.Myntra.updateCartQty(${item.product.id}, -1, '${escapeHTML(item.size || 'M')}')" 
                 aria-label="Decrease quantity"
               >-</button>
               <span class="qty-value">${item.quantity}</span>
               <button 
                 type="button" 
                 class="qty-btn" 
-                onclick="window.Myntra.updateCartQty(${item.product.id}, 1)" 
+                onclick="window.Myntra.updateCartQty(${item.product.id}, 1, '${escapeHTML(item.size || 'M')}')" 
                 aria-label="Increase quantity"
               >+</button>
             </div>
@@ -1009,7 +1011,7 @@
             <button 
               type="button" 
               class="cart-item-remove-btn" 
-              onclick="window.Myntra.removeFromCart(${item.product.id})"
+              onclick="window.Myntra.removeFromCart(${item.product.id}, '${escapeHTML(item.size || 'M')}')"
               aria-label="Remove item"
             >
               <i class="fa-regular fa-trash-can"></i> Remove
@@ -1359,6 +1361,8 @@
 
     STATE.cart = [];
     STATE.appliedCoupon = null;
+    if (DOM.cartCouponInput) DOM.cartCouponInput.value = '';
+    if (DOM.couponMsg) DOM.couponMsg.innerHTML = '';
     saveToStorage('myntra_cart', STATE.cart);
     updateCartBadges();
 
@@ -1425,17 +1429,17 @@
       <div class="order-history-card">
         <div class="order-history-header">
           <div>
-            <strong class="text-pink">${order.orderId}</strong>
+            <strong class="text-pink">${escapeHTML(order.orderId)}</strong>
             <span style="margin: 0 0.5rem;">•</span>
-            <span>${order.date}</span>
+            <span>${escapeHTML(order.date)}</span>
           </div>
           <span class="badge-pill bg-success-soft">ORDER CONFIRMED</span>
         </div>
         <div class="order-history-items">
-          ${order.items.map(i => `${i.product.name} (x${i.quantity})`).join(', ')}
+          ${(Array.isArray(order.items) ? order.items : []).map(i => `${escapeHTML((i.product && i.product.name) || i.name || 'Fashion Item')} (x${i.quantity || 1})`).join(', ')}
         </div>
         <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; font-size: 0.88rem; font-weight: 700;">
-          <span>Paid via ${order.paymentMethod}</span>
+          <span>Paid via ${escapeHTML(order.paymentMethod || 'Cash On Delivery')}</span>
           <span class="text-pink">${formatINR(order.totalAmount)}</span>
         </div>
       </div>
@@ -1576,9 +1580,9 @@
         <div class="suggestion-group">
           <div class="suggestion-group-title"><i class="fa-solid fa-tags"></i> Top Brands</div>
           ${Array.from(brandMatches).slice(0, 3).map(b => `
-            <div class="suggestion-item" data-type="brand" data-val="${b}">
+            <div class="suggestion-item" data-type="brand" data-val="${escapeHTML(b)}">
               <div class="suggestion-text">
-                <strong>${highlightMatch(b, query)}</strong>
+                <strong>${highlightMatch(escapeHTML(b), query)}</strong>
                 <span class="suggestion-sub">Explore Brand Store</span>
               </div>
               <i class="fa-solid fa-arrow-right suggestion-arrow"></i>
@@ -1594,9 +1598,9 @@
         <div class="suggestion-group">
           <div class="suggestion-group-title"><i class="fa-solid fa-layer-group"></i> Fashion Departments</div>
           ${Array.from(categoryMatches).slice(0, 3).map(c => `
-            <div class="suggestion-item" data-type="category" data-val="${c}">
+            <div class="suggestion-item" data-type="category" data-val="${escapeHTML(c)}">
               <div class="suggestion-text">
-                <strong>${highlightMatch(c, query)}</strong>
+                <strong>${highlightMatch(escapeHTML(c), query)}</strong>
                 <span class="suggestion-sub">View department styles</span>
               </div>
               <i class="fa-solid fa-arrow-right suggestion-arrow"></i>
@@ -1616,7 +1620,7 @@
               <img src="${p.image}" class="suggestion-thumb" alt="${escapeHTML(p.name)}" />
               <div class="suggestion-text">
                 <span class="suggestion-brand">${escapeHTML(p.brand || '')}</span>
-                <span class="suggestion-name">${highlightMatch(p.name, query)}</span>
+                <span class="suggestion-name">${highlightMatch(escapeHTML(p.name), query)}</span>
                 <span class="suggestion-price">${formatINR(p.price)} <small>(${p.discount}% OFF)</small></span>
               </div>
             </div>
@@ -1965,12 +1969,18 @@
     document.querySelectorAll('.acc-tab-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.acc-tab-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.acc-tab-content').forEach(c => c.classList.remove('active'));
+        document.querySelectorAll('.acc-tab-content').forEach(c => {
+          c.classList.remove('active');
+          c.hidden = true;
+        });
 
         btn.classList.add('active');
         const tabId = btn.getAttribute('data-tab');
         const content = document.getElementById(`acc-${tabId}-tab`);
-        if (content) content.classList.add('active');
+        if (content) {
+          content.classList.add('active');
+          content.hidden = false;
+        }
       });
     });
 
@@ -2092,6 +2102,35 @@
           }
         } catch (e) {
           console.warn('Using local product catalog fallback:', e);
+        }
+
+        // Hydrate cart & wishlist from SQLite if localStorage is empty for this session
+        try {
+          if (STATE.cart.length === 0) {
+            const cartRes = await fetch('/api/cart', { headers: { 'x-session-id': STATE.sessionId } });
+            if (cartRes.ok) {
+              const cartData = await cartRes.json();
+              if (Array.isArray(cartData.items) && cartData.items.length > 0) {
+                STATE.cart = cartData.items;
+                saveToStorage('myntra_cart', STATE.cart);
+                updateCartBadges();
+              }
+            }
+          }
+          if (STATE.wishlist.length === 0) {
+            const wishRes = await fetch('/api/wishlist', { headers: { 'x-session-id': STATE.sessionId } });
+            if (wishRes.ok) {
+              const wishData = await wishRes.json();
+              if (Array.isArray(wishData.wishlist) && wishData.wishlist.length > 0) {
+                STATE.wishlist = wishData.wishlist;
+                saveToStorage('myntra_wishlist', STATE.wishlist);
+                updateWishlistBadges();
+                renderCatalog();
+              }
+            }
+          }
+        } catch (e) {
+          console.warn('Cart/wishlist backend hydration skipped:', e);
         }
 
         console.log(`%c[Full-Stack API Connected]%c Node.js + Express + SQLite Database active`, 'color: #00e676; font-weight: bold;', 'color: #333;');
