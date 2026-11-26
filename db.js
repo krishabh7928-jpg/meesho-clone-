@@ -1,6 +1,6 @@
 /**
  * ============================================================================
- * Meesho Clone - Database Layer (SQLite + Resilient JSON Fallback)
+ * Myntra - Database Layer (SQLite + Resilient JSON Fallback)
  * Technology: Native Node.js SQLite (DatabaseSync)
  * Author: Senior Backend Engineer / B.Tech Project Showcase
  * ============================================================================
@@ -16,15 +16,17 @@ if (!fs.existsSync(DB_DIR)) {
 }
 
 const SQLITE_FILE = path.join(DB_DIR, 'meesho.db');
-const JSON_BACKUP_FILE = path.join(DB_DIR, 'meesho_store.json');
+const JSON_BACKUP_FILE = path.join(DB_DIR, 'myntra_store.json');
 
-// Comprehensive seed catalog (65 authentic products across 11 categories)
+// Comprehensive seed catalog (75 authentic fashion products across 5 categories)
 const SEED_PRODUCTS = PRODUCTS_DATA;
 
 const SEED_COUPONS = [
+  { code: 'MYNTRA200', discount: 200, type: 'flat', min_order: 799, description: 'Flat ₹200 OFF on order above ₹799' },
+  { code: 'MYNTRA10', discount: 10, type: 'percent', min_order: 499, description: 'Extra 10% OFF on all fashion orders' },
+  { code: 'FESTIVE20', discount: 20, type: 'percent', min_order: 599, description: 'Extra 20% OFF on Ethnic & Festive Wear' },
   { code: 'MEESHONEW', discount: 150, type: 'flat', min_order: 499, description: 'Flat ₹150 OFF on first order' },
   { code: 'MEESHO100', discount: 100, type: 'flat', min_order: 299, description: 'Flat ₹100 OFF on any order above ₹299' },
-  { code: 'FESTIVE20', discount: 20, type: 'percent', min_order: 599, description: 'Extra 20% OFF on Sarees & Fashion' },
   { code: 'FREEDEL', discount: 40, type: 'delivery', min_order: 0, description: 'Free Delivery on any order' }
 ];
 
@@ -48,6 +50,7 @@ function initializeSqliteSchema(db) {
     CREATE TABLE IF NOT EXISTS products (
       id INTEGER PRIMARY KEY,
       name TEXT NOT NULL,
+      brand TEXT DEFAULT '',
       category TEXT NOT NULL,
       price INTEGER NOT NULL,
       original_price INTEGER NOT NULL,
@@ -56,6 +59,7 @@ function initializeSqliteSchema(db) {
       reviews_count INTEGER DEFAULT 0,
       image TEXT NOT NULL,
       description TEXT,
+      sizes TEXT DEFAULT '["S","M","L","XL"]',
       popularity INTEGER DEFAULT 50,
       stock INTEGER DEFAULT 10,
       badge TEXT,
@@ -88,6 +92,7 @@ function initializeSqliteSchema(db) {
       session_id TEXT NOT NULL,
       product_id INTEGER NOT NULL,
       quantity INTEGER DEFAULT 1,
+      size TEXT DEFAULT 'M',
       UNIQUE(session_id, product_id)
     );
 
@@ -99,49 +104,57 @@ function initializeSqliteSchema(db) {
     );
   `);
 
-  // Ensure created_at column exists in products table if table already existed
+  // Ensure brand and sizes columns exist if table was previously created with older schema
   try {
     const tableInfo = db.prepare("PRAGMA table_info(products)").all();
+    const hasBrand = tableInfo.some(col => col.name === 'brand');
+    if (!hasBrand) {
+      db.exec("ALTER TABLE products ADD COLUMN brand TEXT DEFAULT ''");
+    }
+    const hasSizes = tableInfo.some(col => col.name === 'sizes');
+    if (!hasSizes) {
+      db.exec("ALTER TABLE products ADD COLUMN sizes TEXT DEFAULT '[\"S\",\"M\",\"L\",\"XL\"]'");
+    }
     const hasCreatedAt = tableInfo.some(col => col.name === 'created_at');
     if (!hasCreatedAt) {
       db.exec("ALTER TABLE products ADD COLUMN created_at TEXT DEFAULT '2026-11-20T00:00:00Z'");
     }
   } catch (err) {
-    console.warn('Could not check/add created_at column:', err.message);
+    console.warn('Could not check/add columns:', err.message);
   }
 
   // Seed or upgrade Products catalog in SQLite
   const countRow = db.prepare('SELECT COUNT(*) as count FROM products').get();
-  const sampleProduct = countRow.count > 0 ? db.prepare('SELECT category FROM products WHERE id = 1').get() : null;
-  const needsUpgrade = countRow.count < SEED_PRODUCTS.length || (sampleProduct && sampleProduct.category === 'Women Ethnic');
+  const sampleProduct = countRow.count > 0 ? db.prepare('SELECT brand, category FROM products WHERE id = 1').get() : null;
+  const needsUpgrade = countRow.count < SEED_PRODUCTS.length || !sampleProduct || !sampleProduct.brand || sampleProduct.brand === '';
 
   if (needsUpgrade) {
-    console.log(`⚡ Seeding/Upgrading Meesho product catalog in SQLite (${SEED_PRODUCTS.length} products)...`);
-    const upsertProduct = db.prepare(`
-      INSERT OR REPLACE INTO products (id, name, category, price, original_price, discount, rating, reviews_count, image, description, popularity, stock, badge, tags, created_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    console.log(`⚡ Seeding/Upgrading Myntra Fashion catalog in SQLite (${SEED_PRODUCTS.length} products)...`);
+    // Delete existing products to avoid stale categories
+    db.exec('DELETE FROM products');
+    const insertProduct = db.prepare(`
+      INSERT INTO products (id, name, brand, category, price, original_price, discount, rating, reviews_count, image, description, sizes, popularity, stock, badge, tags, created_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
 
     for (const p of SEED_PRODUCTS) {
-      upsertProduct.run(
-        p.id, p.name, p.category, p.price, p.original_price || p.originalPrice, p.discount,
-        p.rating, p.reviews_count || p.reviewsCount, p.image, p.description, p.popularity,
+      const sizesJson = Array.isArray(p.sizes) ? JSON.stringify(p.sizes) : JSON.stringify(["S", "M", "L", "XL"]);
+      insertProduct.run(
+        p.id, p.name, p.brand || '', p.category, p.price, p.original_price || p.originalPrice, p.discount,
+        p.rating, p.reviews_count || p.reviewsCount, p.image, p.description, sizesJson, p.popularity,
         p.stock, p.badge, p.tags, p.created_at || '2026-11-20T00:00:00Z'
       );
     }
-    console.log(`✓ Seeded ${SEED_PRODUCTS.length} products in SQLite.`);
+    console.log(`✓ Seeded ${SEED_PRODUCTS.length} fashion products in SQLite.`);
   }
 
-  // Seed Coupons
-  const couponCount = db.prepare('SELECT COUNT(*) as count FROM coupons').get();
-  if (couponCount.count === 0) {
-    const insertCoupon = db.prepare(`
-      INSERT INTO coupons (code, discount, type, min_order, description)
-      VALUES (?, ?, ?, ?, ?)
-    `);
-    for (const c of SEED_COUPONS) {
-      insertCoupon.run(c.code, c.discount, c.type, c.min_order, c.description);
-    }
+  // Seed / Upgrade Coupons
+  const insertCoupon = db.prepare(`
+    INSERT OR REPLACE INTO coupons (code, discount, type, min_order, description)
+    VALUES (?, ?, ?, ?, ?)
+  `);
+  for (const c of SEED_COUPONS) {
+    insertCoupon.run(c.code, c.discount, c.type, c.min_order, c.description);
   }
 }
 
@@ -149,33 +162,53 @@ function initializeSqliteSchema(db) {
 // Public Database Access Functions
 // --------------------------------------------------------------------------
 
-function getProducts({ category, search, sort, viewFilter } = {}) {
+function getProducts({ category, search, sort, viewFilter, brand, size, priceMin, priceMax } = {}) {
   let query = 'SELECT * FROM products WHERE 1=1';
   const params = [];
 
   if (category && category !== 'All') {
-    query += ' AND category = ?';
+    query += ' AND LOWER(category) = LOWER(?)';
     params.push(category);
   }
 
+  if (brand && brand !== 'All') {
+    query += ' AND LOWER(brand) = LOWER(?)';
+    params.push(brand);
+  }
+
+  if (size && size !== 'All') {
+    query += ' AND sizes LIKE ?';
+    params.push(`%"${size}"%`);
+  }
+
+  if (priceMin !== undefined && priceMin !== null && !isNaN(priceMin)) {
+    query += ' AND price >= ?';
+    params.push(Number(priceMin));
+  }
+
+  if (priceMax !== undefined && priceMax !== null && !isNaN(priceMax)) {
+    query += ' AND price <= ?';
+    params.push(Number(priceMax));
+  }
+
   if (search && search.trim() !== '') {
-    // Smart multi-keyword tokenized search across name, category, description, and tags
+    // Smart multi-keyword tokenized search across name, brand, category, description, and tags
     const tokens = search.trim().toLowerCase().split(/\s+/).filter(t => t.length > 0);
     for (const token of tokens) {
-      query += ' AND (LOWER(name) LIKE ? OR LOWER(category) LIKE ? OR LOWER(description) LIKE ? OR LOWER(tags) LIKE ?)';
+      query += ' AND (LOWER(name) LIKE ? OR LOWER(brand) LIKE ? OR LOWER(category) LIKE ? OR LOWER(description) LIKE ? OR LOWER(tags) LIKE ?)';
       const term = `%${token}%`;
-      params.push(term, term, term, term);
+      params.push(term, term, term, term, term);
     }
   }
 
   if (viewFilter === 'trending') {
     query += " AND (badge = 'Trending' OR tags LIKE '%trending%')";
   } else if (viewFilter === 'bestseller') {
-    query += " AND (badge = 'M-Trusted' OR badge = 'Bestseller' OR tags LIKE '%bestseller%')";
+    query += " AND (badge = 'Best Seller' OR tags LIKE '%bestseller%')";
   } else if (viewFilter === 'discounted') {
-    query += ' AND discount >= 65';
-  } else if (viewFilter === 'under299') {
-    query += ' AND price <= 299';
+    query += ' AND discount >= 50';
+  } else if (viewFilter === 'under999') {
+    query += ' AND price <= 999';
   }
 
   switch (sort) {
@@ -201,24 +234,39 @@ function getProducts({ category, search, sort, viewFilter } = {}) {
   }
 
   const rows = sqliteDb.prepare(query).all(...params);
-  // Transform column original_price to camelCase for frontend compatibility
-  return rows.map(r => ({
-    ...r,
-    originalPrice: r.original_price,
-    reviewsCount: r.reviews_count,
-    createdAt: r.created_at,
-    tags: r.tags ? r.tags.split(',') : []
-  }));
+  return rows.map(r => {
+    let parsedSizes = [];
+    try {
+      parsedSizes = r.sizes ? JSON.parse(r.sizes) : ['S', 'M', 'L', 'XL'];
+    } catch {
+      parsedSizes = r.sizes ? r.sizes.split(',') : ['S', 'M', 'L', 'XL'];
+    }
+    return {
+      ...r,
+      originalPrice: r.original_price,
+      reviewsCount: r.reviews_count,
+      createdAt: r.created_at,
+      sizes: parsedSizes,
+      tags: r.tags ? r.tags.split(',') : []
+    };
+  });
 }
 
 function getProductById(id) {
   const row = sqliteDb.prepare('SELECT * FROM products WHERE id = ?').get(id);
   if (!row) return null;
+  let parsedSizes = [];
+  try {
+    parsedSizes = row.sizes ? JSON.parse(row.sizes) : ['S', 'M', 'L', 'XL'];
+  } catch {
+    parsedSizes = row.sizes ? row.sizes.split(',') : ['S', 'M', 'L', 'XL'];
+  }
   return {
     ...row,
     originalPrice: row.original_price,
     reviewsCount: row.reviews_count,
     createdAt: row.created_at,
+    sizes: parsedSizes,
     tags: row.tags ? row.tags.split(',') : []
   };
 }
@@ -228,31 +276,40 @@ function getCategories() {
   return rows;
 }
 
+function getBrands() {
+  const rows = sqliteDb.prepare("SELECT brand, COUNT(*) as count FROM products WHERE brand != '' GROUP BY brand ORDER BY count DESC").all();
+  return rows;
+}
+
 function getSearchSuggestions(query, limit = 6) {
   if (!query || query.trim() === '') {
-    return { query: '', products: [], categories: [], keywords: [] };
+    return { query: '', products: [], categories: [], brands: [], keywords: [] };
   }
   const q = query.trim().toLowerCase();
   const allProds = getProducts();
 
   const productMatches = [];
   const categoryMatches = new Set();
+  const brandMatches = new Set();
   const keywordSuggestions = new Set();
 
   for (const p of allProds) {
     const nameLower = p.name.toLowerCase();
+    const brandLower = (p.brand || '').toLowerCase();
     const catLower = p.category.toLowerCase();
     const tagsLower = (p.tags || []).join(' ').toLowerCase();
 
     const matchesName = nameLower.includes(q);
+    const matchesBrand = brandLower.includes(q);
     const matchesCat = catLower.includes(q);
     const matchesTags = tagsLower.includes(q);
 
-    if (matchesName || matchesCat || matchesTags) {
+    if (matchesName || matchesBrand || matchesCat || matchesTags) {
       if (productMatches.length < limit) {
         productMatches.push({
           id: p.id,
           name: p.name,
+          brand: p.brand,
           category: p.category,
           price: p.price,
           originalPrice: p.originalPrice,
@@ -263,6 +320,9 @@ function getSearchSuggestions(query, limit = 6) {
       }
       if (matchesCat) {
         categoryMatches.add(p.category);
+      }
+      if (matchesBrand && p.brand) {
+        brandMatches.add(p.brand);
       }
       if (p.tags) {
         for (const t of p.tags) {
@@ -278,13 +338,14 @@ function getSearchSuggestions(query, limit = 6) {
     query,
     products: productMatches,
     categories: Array.from(categoryMatches).slice(0, 4),
+    brands: Array.from(brandMatches).slice(0, 4),
     keywords: Array.from(keywordSuggestions).slice(0, 5)
   };
 }
 
 function getCart(sessionId = 'default') {
   const rows = sqliteDb.prepare(`
-    SELECT c.quantity, p.* 
+    SELECT c.quantity, c.size, p.* 
     FROM cart_items c
     JOIN products p ON c.product_id = p.id
     WHERE c.session_id = ?
@@ -293,6 +354,7 @@ function getCart(sessionId = 'default') {
   return rows.map(r => ({
     product: {
       id: r.id,
+      brand: r.brand,
       name: r.name,
       category: r.category,
       price: r.price,
@@ -304,18 +366,19 @@ function getCart(sessionId = 'default') {
       stock: r.stock,
       badge: r.badge
     },
-    quantity: r.quantity
+    quantity: r.quantity,
+    size: r.size || 'M'
   }));
 }
 
-function addToCart(sessionId = 'default', productId, quantity = 1) {
+function addToCart(sessionId = 'default', productId, quantity = 1, size = 'M') {
   const existing = sqliteDb.prepare('SELECT * FROM cart_items WHERE session_id = ? AND product_id = ?').get(sessionId, productId);
   if (existing) {
     sqliteDb.prepare('UPDATE cart_items SET quantity = quantity + ? WHERE session_id = ? AND product_id = ?')
       .run(quantity, sessionId, productId);
   } else {
-    sqliteDb.prepare('INSERT INTO cart_items (session_id, product_id, quantity) VALUES (?, ?, ?)')
-      .run(sessionId, productId, quantity);
+    sqliteDb.prepare('INSERT INTO cart_items (session_id, product_id, quantity, size) VALUES (?, ?, ?, ?)')
+      .run(sessionId, productId, quantity, size);
   }
   return getCart(sessionId);
 }
@@ -430,6 +493,7 @@ module.exports = {
   getProducts,
   getProductById,
   getCategories,
+  getBrands,
   getSearchSuggestions,
   getCart,
   addToCart,

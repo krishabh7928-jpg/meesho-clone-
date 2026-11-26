@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Meesho Clone - Online Shopping for Quality Products at Lowest Prices. Discover trendy sarees, kurtis, men's wear, electronics, home decor & beauty essentials." />
-  <meta name="theme-color" content="#9f2089" />
-  <title>Meesho Clone | Lowest Prices &amp; Best Quality Online Shopping</title>
+  <meta name="description" content="Myntra - Online Shopping for Men, Women, Kids Fashion, Beauty & Home. India's favorite fashion store with 100% original brands and effortless shopping." />
+  <meta name="theme-color" content="#ff3f6c" />
+  <title>Myntra | Online Shopping for Men, Women, Kids Fashion, Beauty &amp; Home</title>
 
-  <!-- Google Fonts: Plus Jakarta Sans for a clean, modern aesthetic -->
+  <!-- Google Fonts: Assistant & Plus Jakarta Sans for crisp Myntra typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
 
   <!-- Font Awesome CDN for e-commerce icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -20,31 +20,31 @@
 </head>
 <body>
   <!-- ==============================================
-       1. TOP PROMOTIONAL ANNOUNCEMENT BAR (MEESHO STYLE)
+       1. TOP PROMOTIONAL ANNOUNCEMENT BAR (MYNTRA STYLE)
   ============================================== -->
   <div class="announcement-bar" role="banner">
     <div class="container announcement-content">
       <div class="announcement-ticker">
-        <span class="badge-pill">MEESHO MAHAMAHOTSAV</span>
-        <span>⚡ Extra <strong>₹150 OFF</strong> on 1st Order • Code: <strong class="coupon-code">MEESHONEW</strong></span>
+        <span class="badge-pill">BIG FASHION FESTIVAL</span>
+        <span>🎉 FLAT <strong>₹200 OFF</strong> on 1st Order • Code: <strong class="coupon-code">MYNTRA200</strong></span>
         <span class="ticker-divider">•</span>
-        <span>🚚 Free Delivery Across 26,000+ PIN Codes</span>
+        <span>✨ 100% Original Products Guaranteed</span>
         <span class="ticker-divider">•</span>
-        <span>💵 Cash on Delivery (COD) Available</span>
+        <span>🚚 Free Shipping on Orders Above ₹799</span>
         <span class="ticker-divider">•</span>
-        <span>🔄 7-Day Easy Doorstep Returns</span>
+        <span>🔄 14-Day Easy Returns &amp; Exchanges</span>
       </div>
       <div class="announcement-links">
         <span class="connection-status-pill" id="backend-status-pill" title="Backend Server & SQLite Status"><span class="status-dot"></span> Full-Stack Mode</span>
-        <a href="#app-download" class="announcement-link"><i class="fa-solid fa-mobile-screen"></i> Download App</a>
-        <a href="#supplier-banner" class="announcement-link"><i class="fa-solid fa-store"></i> Become a Supplier</a>
+        <a href="#app-download" class="announcement-link"><i class="fa-solid fa-mobile-screen"></i> Myntra App</a>
+        <a href="#trust-section" class="announcement-link"><i class="fa-solid fa-crown"></i> Myntra Insider</a>
         <a href="#help-section" class="announcement-link"><i class="fa-solid fa-headset"></i> Customer Care</a>
       </div>
     </div>
   </div>
 
   <!-- ==============================================
-       2. PRIMARY HEADER & NAVIGATION (AUTHENTIC MEESHO CLONE)
+       2. PRIMARY HEADER & NAVIGATION (MYNTRA FASHION)
   ============================================== -->
   <header class="main-header" id="header">
     <div class="container header-container">
@@ -53,22 +53,40 @@
         <i class="fa-solid fa-bars"></i>
       </button>
 
-      <!-- Meesho Brand Logo -->
-      <a href="#" class="brand-logo meesho-logo-wrap" aria-label="Meesho Clone Home">
-        <span class="meesho-logo-text">meesho</span>
-        <span class="meesho-clone-badge">CLONE</span>
+      <!-- Myntra Iconic Logo -->
+      <a href="#" class="brand-logo myntra-logo-wrap" aria-label="Myntra Home">
+        <div class="myntra-brand-mark">
+          <svg viewBox="0 0 40 32" class="myntra-m-svg" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 32L10.5 5.5L18.5 24L24 14L32 32H23.5L18.5 20.5L13 32H0Z" fill="#FF3F6C"/>
+            <path d="M18.5 24L24 14L32 32H40L28 5L20 22L18.5 24Z" fill="#F26A10"/>
+            <path d="M10.5 5.5L18.5 24L20 22L13 7L10.5 5.5Z" fill="#FFC107"/>
+          </svg>
+          <span class="myntra-logo-text">myntra</span>
+        </div>
       </a>
 
-      <!-- Meesho Search Bar -->
+      <!-- Primary Department Navigation (Desktop) -->
+      <nav class="main-nav-departments" aria-label="Primary Departments">
+        <ul class="nav-department-list">
+          <li><button class="nav-dept-btn" data-category="Men">MEN</button></li>
+          <li><button class="nav-dept-btn" data-category="Women">WOMEN</button></li>
+          <li><button class="nav-dept-btn" data-category="Kids">KIDS</button></li>
+          <li><button class="nav-dept-btn" data-category="Beauty">BEAUTY</button></li>
+          <li><button class="nav-dept-btn" data-category="Home">HOME &amp; LIVING</button></li>
+          <li><span class="studio-badge">STUDIO <span class="new-pill">NEW</span></span></li>
+        </ul>
+      </nav>
+
+      <!-- Myntra Search Bar -->
       <div class="search-container">
         <div class="search-input-wrapper">
           <i class="fa-solid fa-magnifying-glass search-icon"></i>
           <input 
             type="text" 
             id="search-input" 
-            placeholder="Try Saree, Kurti, Shoes or Search by Product Code..." 
+            placeholder="Search for products, brands and more..." 
             autocomplete="off"
-            aria-label="Search Meesho catalog"
+            aria-label="Search Myntra catalog"
           />
           <button id="clear-search-btn" class="clear-search-btn" aria-label="Clear search input" title="Clear search">
             <i class="fa-solid fa-xmark"></i>
@@ -80,18 +98,6 @@
 
       <!-- Header Action Buttons -->
       <div class="header-actions">
-        <!-- Download App Link (Desktop) -->
-        <a href="#app-download" class="header-action-btn desktop-only-btn" title="Download Meesho App">
-          <i class="fa-solid fa-mobile-screen-button"></i>
-          <span class="action-label">Download App</span>
-        </a>
-
-        <!-- Become a Supplier Link (Desktop) -->
-        <a href="#supplier-banner" class="header-action-btn desktop-only-btn" title="Sell on Meesho">
-          <i class="fa-solid fa-store"></i>
-          <span class="action-label">Supplier</span>
-        </a>
-
         <!-- Profile / Account Button -->
         <button class="header-action-btn" id="account-btn" aria-label="My Account" title="My Profile">
           <i class="fa-regular fa-user"></i>
@@ -107,33 +113,27 @@
           <span class="action-label">Wishlist</span>
         </button>
 
-        <!-- Cart Button with Badge -->
-        <button class="header-action-btn cart-btn-highlight" id="cart-btn" aria-label="Shopping Cart" title="View Cart">
+        <!-- Bag / Cart Button with Badge -->
+        <button class="header-action-btn cart-btn-highlight" id="cart-btn" aria-label="Shopping Bag" title="View Bag">
           <div class="badge-wrapper">
             <i class="fa-solid fa-bag-shopping"></i>
             <span class="badge-counter" id="cart-count">0</span>
           </div>
-          <span class="action-label">Cart</span>
+          <span class="action-label">Bag</span>
         </button>
       </div>
     </div>
 
-    <!-- Category Navigation Strip (Classic Meesho Hierarchy) -->
+    <!-- Category Sub-Navigation Strip (Men, Women, Kids, Beauty, Home, All) -->
     <nav class="category-nav" id="category-nav" aria-label="Category Navigation">
       <div class="container category-nav-container">
         <ul class="category-nav-list" id="category-nav-list">
-          <li><button class="category-nav-item active" data-category="All"><i class="fa-solid fa-border-all"></i> All Products</button></li>
-          <li><button class="category-nav-item" data-category="Fashion"><i class="fa-solid fa-shirt"></i> Fashion</button></li>
-          <li><button class="category-nav-item" data-category="Women's Wear"><i class="fa-solid fa-person-dress"></i> Women's Wear</button></li>
-          <li><button class="category-nav-item" data-category="Men's Wear"><i class="fa-solid fa-user-tie"></i> Men's Wear</button></li>
-          <li><button class="category-nav-item" data-category="Electronics"><i class="fa-solid fa-headphones"></i> Electronics</button></li>
-          <li><button class="category-nav-item" data-category="Mobiles"><i class="fa-solid fa-mobile-screen-button"></i> Mobiles</button></li>
-          <li><button class="category-nav-item" data-category="Home & Kitchen"><i class="fa-solid fa-house"></i> Home &amp; Kitchen</button></li>
+          <li><button class="category-nav-item active" data-category="All"><i class="fa-solid fa-border-all"></i> All Fashion</button></li>
+          <li><button class="category-nav-item" data-category="Men"><i class="fa-solid fa-shirt"></i> Men</button></li>
+          <li><button class="category-nav-item" data-category="Women"><i class="fa-solid fa-person-dress"></i> Women</button></li>
+          <li><button class="category-nav-item" data-category="Kids"><i class="fa-solid fa-child"></i> Kids</button></li>
           <li><button class="category-nav-item" data-category="Beauty"><i class="fa-solid fa-wand-magic-sparkles"></i> Beauty</button></li>
-          <li><button class="category-nav-item" data-category="Footwear"><i class="fa-solid fa-shoe-prints"></i> Footwear</button></li>
-          <li><button class="category-nav-item" data-category="Accessories"><i class="fa-solid fa-gem"></i> Accessories</button></li>
-          <li><button class="category-nav-item" data-category="Toys"><i class="fa-solid fa-gamepad"></i> Toys</button></li>
-          <li><button class="category-nav-item" data-category="Grocery"><i class="fa-solid fa-basket-shopping"></i> Grocery</button></li>
+          <li><button class="category-nav-item" data-category="Home"><i class="fa-solid fa-house"></i> Home &amp; Living</button></li>
         </ul>
       </div>
     </nav>
@@ -143,73 +143,75 @@
        3. MAIN CONTENT
   ============================================== -->
   <main id="main-content">
-    <!-- MEESHO HERO SECTION -->
+    <!-- MYNTRA HIGH-FASHION HERO CAROUSEL -->
     <section class="hero-section" id="hero">
       <div class="container hero-container">
         <div class="hero-content">
           <div class="hero-badge">
-            <i class="fa-solid fa-tag"></i> Lowest Prices • Best Quality Shopping
+            <i class="fa-solid fa-sparkles"></i> BIG FASHION FESTIVAL • 50-80% OFF
           </div>
           <h1 class="hero-title">
-            Lowest Prices<br />
-            <span class="text-gradient">Best Quality Shopping</span>
+            Trends of the Season<br />
+            <span class="text-gradient">India's Biggest Fashion Drop</span>
           </h1>
           <p class="hero-subtitle">
-            Shop 50 Lakh+ trendy fashion styles, sarees, kurtis, footwear &amp; home essentials directly from manufacturers across India at wholesale prices.
+            Explore 100% original top international &amp; Indian fashion brands. From casual streetwear to designer festive collections, curated for you.
           </p>
 
           <div class="hero-actions">
-            <a href="#products-section" class="btn btn-primary btn-lg" id="shop-now-hero-btn">
-              <i class="fa-solid fa-bag-shopping"></i> Start Shopping
-            </a>
-            <a href="#categories-section" class="btn btn-outline btn-lg">
-              <i class="fa-solid fa-compass"></i> Explore Categories
-            </a>
+            <button class="btn btn-primary btn-lg category-jump-btn" data-category="Men">
+              <i class="fa-solid fa-shirt"></i> Shop Men
+            </button>
+            <button class="btn btn-primary-alt btn-lg category-jump-btn" data-category="Women">
+              <i class="fa-solid fa-person-dress"></i> Shop Women
+            </button>
+            <button class="btn btn-outline btn-lg category-jump-btn" data-category="Kids">
+              <i class="fa-solid fa-child"></i> Kids Corner
+            </button>
           </div>
 
-          <!-- Meesho Core Guarantees -->
+          <!-- Myntra Core Trust Propositions -->
           <div class="hero-trust-row">
             <div class="trust-item">
-              <div class="trust-icon-box"><i class="fa-solid fa-truck-fast"></i></div>
+              <div class="trust-icon-box"><i class="fa-solid fa-circle-check"></i></div>
               <div>
-                <strong>Free Delivery</strong>
-                <span>On 1st order &amp; above ₹499</span>
-              </div>
-            </div>
-            <div class="trust-item">
-              <div class="trust-icon-box"><i class="fa-solid fa-hand-holding-dollar"></i></div>
-              <div>
-                <strong>Cash on Delivery</strong>
-                <span>Pay when you receive</span>
+                <strong>100% Original</strong>
+                <span>Direct brand guarantee</span>
               </div>
             </div>
             <div class="trust-item">
               <div class="trust-icon-box"><i class="fa-solid fa-rotate-left"></i></div>
               <div>
-                <strong>Easy 7-Day Returns</strong>
-                <span>Hassle-free doorstep pickup</span>
+                <strong>14-Day Returns</strong>
+                <span>Instant doorstep exchange</span>
+              </div>
+            </div>
+            <div class="trust-item">
+              <div class="trust-icon-box"><i class="fa-solid fa-truck-fast"></i></div>
+              <div>
+                <strong>Express Delivery</strong>
+                <span>Free shipping above ₹799</span>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Hero Visual Showcase (Meesho Festive Offer) -->
+        <!-- Hero Visual Showcase -->
         <div class="hero-visual">
           <div class="hero-card-stack">
             <div class="hero-banner-card main-banner">
               <img 
-                src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=800&q=80" 
-                alt="Meesho Indian Fashion Collection" 
+                src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=800&q=80" 
+                alt="Myntra Runway Fashion Collection" 
                 class="hero-img"
-                onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'600\' height=\'400\' viewBox=\'0 0 600 400\'><rect fill=\'%23f3e5f5\' width=\'600\' height=\'400\'/><text fill=\'%239f2089\' font-family=\'sans-serif\' font-size=\'24\' font-weight=\'bold\' x=\'50%25\' y=\'50%25\' text-anchor=\'middle\'>Meesho Festive Mega Sale</text></svg>';"
               />
               <div class="hero-floating-tag tag-discount">
-                <span class="tag-title">UP TO 70% OFF</span>
-                <span class="tag-sub">Sarees, Kurtis &amp; Suits</span>
+                <span class="tag-title">50% - 80% OFF</span>
+                <span class="tag-sub">Top International &amp; Indian Brands</span>
               </div>
               <div class="hero-floating-tag tag-rating">
                 <i class="fa-solid fa-star text-gold"></i>
-                <span class="rating-text">4.8 / 5 Rating (1.4 Crore+ Happy Shoppers)</span>
+                <span class="rating-text">4.9 Rating (5 Crore+ Fashion Enthusiasts)</span>
               </div>
             </div>
           </div>
@@ -217,195 +219,276 @@
       </div>
     </section>
 
-    <!-- MEESHO PROMOTIONAL OFFERS & BUDGET STORES -->
-    <section class="offers-section" aria-label="Meesho Budget Stores">
+    <!-- TOP BRAND SPOTLIGHT / MEDAL WORTHY BRANDS -->
+    <section class="section brands-section" id="top-brands">
       <div class="container">
-        <div class="offers-grid">
-          <div class="offer-card offer-card-1">
-            <div class="offer-text">
-              <span class="offer-pill">Meesho Budget Hub</span>
-              <h3>Under ₹199 Store</h3>
-              <p>Earrings, kitchen tools &amp; accessories at factory rates.</p>
-              <button class="btn-text filter-quick-btn" data-filter="under299">Shop Under ₹199 <i class="fa-solid fa-arrow-right"></i></button>
-            </div>
-            <div class="offer-icon"><i class="fa-solid fa-tags"></i></div>
+        <div class="section-header">
+          <div>
+            <span class="section-subtitle">MEDAL WORTHY BRANDS TO BAG</span>
+            <h2 class="section-title">Top Fashion Brands Spotlight</h2>
           </div>
+          <p class="section-desc">Click on any brand to instantly explore its premium designer collection.</p>
+        </div>
 
-          <div class="offer-card offer-card-2">
-            <div class="offer-text">
-              <span class="offer-pill">Top Indian Ethnic</span>
-              <h3>Sarees &amp; Kurtis</h3>
-              <p>Kanjeevaram, Anarkali &amp; Georgette starting at ₹299.</p>
-              <button class="btn-text filter-quick-btn" data-category="Women's Wear">Explore Sarees <i class="fa-solid fa-arrow-right"></i></button>
-            </div>
-            <div class="offer-icon"><i class="fa-solid fa-fire"></i></div>
-          </div>
-
-          <div class="offer-card offer-card-3">
-            <div class="offer-text">
-              <span class="offer-pill">Trending Footwear</span>
-              <h3>Bags &amp; Mojari Juttis</h3>
-              <p>Handcrafted ethnic juttis, heels &amp; handbags up to 65% off.</p>
-              <button class="btn-text filter-quick-btn" data-category="Footwear">View Footwear <i class="fa-solid fa-arrow-right"></i></button>
-            </div>
-            <div class="offer-icon"><i class="fa-solid fa-shoe-prints"></i></div>
-          </div>
+        <div class="brand-spotlight-grid">
+          <button class="brand-tile" data-brand="Roadster">
+            <span class="brand-badge-disc">50-70% OFF</span>
+            <strong>ROADSTER</strong>
+            <span class="brand-cat-hint">Rugged Denim &amp; Shirts</span>
+          </button>
+          <button class="brand-tile" data-brand="HRX by Hrithik Roshan">
+            <span class="brand-badge-disc">40-60% OFF</span>
+            <strong>HRX</strong>
+            <span class="brand-cat-hint">Activewear &amp; Sneakers</span>
+          </button>
+          <button class="brand-tile" data-brand="Anouk">
+            <span class="brand-badge-disc">UP TO 67% OFF</span>
+            <strong>ANOUK</strong>
+            <span class="brand-cat-hint">Festive Kurtas &amp; Suits</span>
+          </button>
+          <button class="brand-tile" data-brand="Libas">
+            <span class="brand-badge-disc">60% OFF</span>
+            <strong>LIBAS</strong>
+            <span class="brand-cat-hint">Anarkalis &amp; Velvet Sets</span>
+          </button>
+          <button class="brand-tile" data-brand="WROGN">
+            <span class="brand-badge-disc">MIN. 55% OFF</span>
+            <strong>WROGN</strong>
+            <span class="brand-cat-hint">Chinos &amp; Sweatshirts</span>
+          </button>
+          <button class="brand-tile" data-brand="Mango">
+            <span class="brand-badge-disc">50% OFF</span>
+            <strong>MANGO</strong>
+            <span class="brand-cat-hint">European Blazers &amp; Tops</span>
+          </button>
+          <button class="brand-tile" data-brand="Levis">
+            <span class="brand-badge-disc">FLAT 50% OFF</span>
+            <strong>LEVI'S</strong>
+            <span class="brand-cat-hint">511 Denim &amp; Jeans</span>
+          </button>
+          <button class="brand-tile" data-brand="Maybelline New York">
+            <span class="brand-badge-disc">UP TO 30% OFF</span>
+            <strong>MAYBELLINE</strong>
+            <span class="brand-cat-hint">Matte Ink Lipsticks</span>
+          </button>
+          <button class="brand-tile" data-brand="D'Decor">
+            <span class="brand-badge-disc">MIN. 55% OFF</span>
+            <strong>D'DECOR</strong>
+            <span class="brand-cat-hint">King Bedsheets &amp; Candles</span>
+          </button>
         </div>
       </div>
     </section>
 
-    <!-- FEATURED CATEGORIES SECTION (MEESHO ROUNDELS) -->
+    <!-- 5 CORE CATEGORIES SECTION (MEN, WOMEN, KIDS, BEAUTY, HOME) -->
     <section class="section categories-section" id="categories-section">
       <div class="container">
         <div class="section-header">
           <div>
-            <span class="section-subtitle">Top Categories</span>
-            <h2 class="section-title">Shop by Popular Category</h2>
+            <span class="section-subtitle">CATEGORIES TO BAG</span>
+            <h2 class="section-title">Shop by Fashion Department</h2>
           </div>
-          <p class="section-desc">Handpicked departments directly from verified Indian weavers and manufacturers.</p>
+          <p class="section-desc">Explore handpicked styles curated by India's top fashion stylists.</p>
         </div>
 
         <div class="category-cards-grid" id="category-cards-grid">
-          <div class="category-card" data-category="Fashion" role="button" tabindex="0">
+          <!-- 1. Men -->
+          <div class="category-card" data-category="Men" role="button" tabindex="0">
             <div class="category-image-wrap">
-              <img src="https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&w=400&q=80" alt="Fashion" />
+              <img src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=500&q=80" alt="Men's Fashion" />
+              <span class="cat-pill-overlay">MEN</span>
             </div>
-            <h3 class="category-card-title">Fashion</h3>
-            <span class="category-card-count">Jackets, Hoodies &amp; Co-ords</span>
+            <h3 class="category-card-title">Men's Fashion</h3>
+            <span class="category-card-count">Shirts, Denims, Blazers &amp; Boots</span>
           </div>
 
-          <div class="category-card" data-category="Women's Wear" role="button" tabindex="0">
+          <!-- 2. Women -->
+          <div class="category-card" data-category="Women" role="button" tabindex="0">
             <div class="category-image-wrap">
-              <img src="https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=400&q=80" alt="Women's Wear" />
+              <img src="https://images.unsplash.com/photo-1617627143750-d86bc21e42bb?auto=format&fit=crop&w=500&q=80" alt="Women's Wear" />
+              <span class="cat-pill-overlay">WOMEN</span>
             </div>
             <h3 class="category-card-title">Women's Wear</h3>
-            <span class="category-card-count">Sarees, Kurtis &amp; Gowns</span>
+            <span class="category-card-count">Kurtas, Sarees, Dresses &amp; Handbags</span>
           </div>
 
-          <div class="category-card" data-category="Men's Wear" role="button" tabindex="0">
+          <!-- 3. Kids -->
+          <div class="category-card" data-category="Kids" role="button" tabindex="0">
             <div class="category-image-wrap">
-              <img src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=400&q=80" alt="Men's Wear" />
+              <img src="https://images.unsplash.com/photo-1518831959646-742c3a14ebf7?auto=format&fit=crop&w=500&q=80" alt="Kids Corner" />
+              <span class="cat-pill-overlay">KIDS</span>
             </div>
-            <h3 class="category-card-title">Men's Wear</h3>
-            <span class="category-card-count">Shirts, Denims &amp; Kurtas</span>
+            <h3 class="category-card-title">Kids Corner</h3>
+            <span class="category-card-count">Boys Hoodies, Girls Frocks &amp; Shoes</span>
           </div>
 
-          <div class="category-card" data-category="Electronics" role="button" tabindex="0">
-            <div class="category-image-wrap">
-              <img src="https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&w=400&q=80" alt="Electronics" />
-            </div>
-            <h3 class="category-card-title">Electronics</h3>
-            <span class="category-card-count">Earbuds, Smartwatches &amp; Tech</span>
-          </div>
-
-          <div class="category-card" data-category="Mobiles" role="button" tabindex="0">
-            <div class="category-image-wrap">
-              <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=400&q=80" alt="Mobiles" />
-            </div>
-            <h3 class="category-card-title">Mobiles</h3>
-            <span class="category-card-count">Smartphones &amp; Accessories</span>
-          </div>
-
-          <div class="category-card" data-category="Home & Kitchen" role="button" tabindex="0">
-            <div class="category-image-wrap">
-              <img src="https://images.unsplash.com/photo-1584990347449-a292886f4553?auto=format&fit=crop&w=400&q=80" alt="Home & Kitchen" />
-            </div>
-            <h3 class="category-card-title">Home &amp; Kitchen</h3>
-            <span class="category-card-count">Cookware &amp; Storage</span>
-          </div>
-
+          <!-- 4. Beauty -->
           <div class="category-card" data-category="Beauty" role="button" tabindex="0">
             <div class="category-image-wrap">
-              <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=400&q=80" alt="Beauty" />
+              <img src="https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=500&q=80" alt="Beauty & Grooming" />
+              <span class="cat-pill-overlay">BEAUTY</span>
             </div>
-            <h3 class="category-card-title">Beauty</h3>
-            <span class="category-card-count">Skincare &amp; Cosmetics</span>
+            <h3 class="category-card-title">Beauty &amp; Grooming</h3>
+            <span class="category-card-count">Skincare Serums, Makeup &amp; Perfumes</span>
           </div>
 
-          <div class="category-card" data-category="Footwear" role="button" tabindex="0">
+          <!-- 5. Home -->
+          <div class="category-card" data-category="Home" role="button" tabindex="0">
             <div class="category-image-wrap">
-              <img src="https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=400&q=80" alt="Footwear" />
+              <img src="https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=500&q=80" alt="Home & Living" />
+              <span class="cat-pill-overlay">HOME</span>
             </div>
-            <h3 class="category-card-title">Footwear</h3>
-            <span class="category-card-count">Juttis, Shoes &amp; Heels</span>
+            <h3 class="category-card-title">Home &amp; Living</h3>
+            <span class="category-card-count">King Bedsheets, Curtains &amp; Decor</span>
           </div>
+        </div>
+      </div>
+    </section>
 
-          <div class="category-card" data-category="Accessories" role="button" tabindex="0">
-            <div class="category-image-wrap">
-              <img src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=400&q=80" alt="Accessories" />
-            </div>
-            <h3 class="category-card-title">Accessories</h3>
-            <span class="category-card-count">Jewellery, Wallets &amp; Bags</span>
+    <!-- CRAZY DEALS OF THE DAY STRIP -->
+    <section class="crazy-deals-section">
+      <div class="container">
+        <div class="crazy-deals-card">
+          <div class="crazy-deals-left">
+            <span class="deal-badge"><i class="fa-solid fa-bolt"></i> DEAL OF THE DAY</span>
+            <h2>Crazy Deals On Top Fashion</h2>
+            <p>Grab extraordinary price drops across Men's Denim, Women's Ethnic &amp; Kids Partywear!</p>
           </div>
-
-          <div class="category-card" data-category="Toys" role="button" tabindex="0">
-            <div class="category-image-wrap">
-              <img src="https://images.unsplash.com/photo-1587654780291-39c9404d746b?auto=format&fit=crop&w=400&q=80" alt="Toys" />
+          <div class="crazy-deals-right">
+            <div class="deal-timer-box">
+              <span class="timer-label">Ends In:</span>
+              <strong class="timer-digits">08h : 42m : 19s</strong>
             </div>
-            <h3 class="category-card-title">Toys</h3>
-            <span class="category-card-count">Blocks, RC Cars &amp; Games</span>
-          </div>
-
-          <div class="category-card" data-category="Grocery" role="button" tabindex="0">
-            <div class="category-image-wrap">
-              <img src="https://images.unsplash.com/photo-1508061252224-43775270fee7?auto=format&fit=crop&w=400&q=80" alt="Grocery" />
-            </div>
-            <h3 class="category-card-title">Grocery</h3>
-            <span class="category-card-count">Dry Fruits, Honey &amp; Staples</span>
+            <button class="btn btn-light-glow filter-tab" data-view="discounted">
+              View All 50%+ OFF Deals <i class="fa-solid fa-arrow-right"></i>
+            </button>
           </div>
         </div>
       </div>
     </section>
 
     <!-- ==============================================
-         4. MEESHO "PRODUCTS FOR YOU" CATALOG SECTION
+         4. MYNTRA PRODUCT CATALOG & MULTI-FILTER SECTION
     ============================================== -->
     <section class="section products-section" id="products-section">
       <div class="container">
-        <!-- Section Header with Quick Tabs -->
+        <!-- Section Header with Quick View Tabs -->
         <div class="products-header-wrap">
           <div>
-            <span class="section-subtitle">Curated Just For You</span>
-            <h2 class="section-title">Products For You</h2>
+            <span class="section-subtitle">EXPLORE THE RUNWAY</span>
+            <h2 class="section-title">Trending Styles For You</h2>
           </div>
           
           <div class="view-filter-tabs" role="tablist">
-            <button class="filter-tab active" data-view="all" role="tab">All Products</button>
-            <button class="filter-tab" data-view="trending" role="tab"><i class="fa-solid fa-fire-flame-curved"></i> Trending</button>
-            <button class="filter-tab" data-view="bestseller" role="tab"><i class="fa-solid fa-crown"></i> M-Trusted</button>
-            <button class="filter-tab" data-view="discounted" role="tab"><i class="fa-solid fa-percent"></i> 60%+ OFF</button>
-            <button class="filter-tab" data-view="under299" role="tab"><i class="fa-solid fa-tag"></i> Under ₹299</button>
+            <button class="filter-tab active" data-view="all" role="tab">All Styles</button>
+            <button class="filter-tab" data-view="trending" role="tab"><i class="fa-solid fa-fire"></i> Trending</button>
+            <button class="filter-tab" data-view="bestseller" role="tab"><i class="fa-solid fa-crown"></i> Best Sellers</button>
+            <button class="filter-tab" data-view="discounted" role="tab"><i class="fa-solid fa-percent"></i> 50%+ OFF</button>
+            <button class="filter-tab" data-view="under999" role="tab"><i class="fa-solid fa-tag"></i> Under ₹999</button>
           </div>
         </div>
 
-        <!-- Controls Toolbar: Filters & Sorting -->
+        <!-- Comprehensive Multi-Faceted Toolbar: Category, Brand, Size, Price, Sort -->
         <div class="catalog-toolbar">
           <div class="toolbar-left">
-            <!-- Active Category indicator / Results count -->
+            <!-- Active Filter tags / Results count -->
             <div class="results-info">
-              <span class="results-count" id="results-count">Showing 20 products</span>
+              <span class="results-count" id="results-count">Showing 75 styles</span>
               <span class="filter-tag" id="active-category-tag">Category: <strong>All</strong></span>
-              <span class="filter-tag search-tag" id="active-search-tag" hidden>Search: <strong id="active-search-query"></strong> <i class="fa-solid fa-xmark remove-tag-btn"></i></span>
+              <span class="filter-tag" id="active-brand-tag" hidden>Brand: <strong id="active-brand-val"></strong> <i class="fa-solid fa-xmark remove-tag-btn" data-type="brand"></i></span>
+              <span class="filter-tag" id="active-size-tag" hidden>Size: <strong id="active-size-val"></strong> <i class="fa-solid fa-xmark remove-tag-btn" data-type="size"></i></span>
+              <span class="filter-tag" id="active-price-tag" hidden>Price: <strong id="active-price-val"></strong> <i class="fa-solid fa-xmark remove-tag-btn" data-type="price"></i></span>
+              <span class="filter-tag search-tag" id="active-search-tag" hidden>Search: <strong id="active-search-query"></strong> <i class="fa-solid fa-xmark remove-tag-btn" data-type="search"></i></span>
             </div>
           </div>
 
           <div class="toolbar-right">
-            <!-- Category Dropdown Filter for compact views -->
+            <!-- Category Filter -->
             <div class="filter-group">
-              <label for="category-select" class="filter-label"><i class="fa-solid fa-filter"></i> Department:</label>
+              <label for="category-select" class="filter-label"><i class="fa-solid fa-layer-group"></i> Category:</label>
               <select id="category-select" class="form-select" aria-label="Filter by department">
-                <option value="All">All Departments</option>
-                <option value="Fashion">Fashion</option>
-                <option value="Women's Wear">Women's Wear</option>
-                <option value="Men's Wear">Men's Wear</option>
-                <option value="Electronics">Electronics</option>
-                <option value="Mobiles">Mobiles</option>
-                <option value="Home & Kitchen">Home &amp; Kitchen</option>
+                <option value="All">All Categories</option>
+                <option value="Men">Men</option>
+                <option value="Women">Women</option>
+                <option value="Kids">Kids</option>
                 <option value="Beauty">Beauty</option>
-                <option value="Footwear">Footwear</option>
-                <option value="Accessories">Accessories</option>
-                <option value="Toys">Toys</option>
-                <option value="Grocery">Grocery</option>
+                <option value="Home">Home &amp; Living</option>
+              </select>
+            </div>
+
+            <!-- Brand Filter -->
+            <div class="filter-group">
+              <label for="brand-select" class="filter-label"><i class="fa-solid fa-tags"></i> Brand:</label>
+              <select id="brand-select" class="form-select" aria-label="Filter by brand">
+                <option value="All">All Brands</option>
+                <option value="Roadster">Roadster</option>
+                <option value="HRX by Hrithik Roshan">HRX</option>
+                <option value="WROGN">WROGN</option>
+                <option value="Highlander">Highlander</option>
+                <option value="Mast & Harbour">Mast &amp; Harbour</option>
+                <option value="Levis">Levi's</option>
+                <option value="Tommy Hilfiger">Tommy Hilfiger</option>
+                <option value="U.S. Polo Assn.">U.S. Polo Assn.</option>
+                <option value="Allen Solly">Allen Solly</option>
+                <option value="Peter England">Peter England</option>
+                <option value="Manyavar">Manyavar</option>
+                <option value="Anouk">Anouk</option>
+                <option value="Libas">Libas</option>
+                <option value="Sangria">Sangria</option>
+                <option value="Mango">Mango</option>
+                <option value="Biba">Biba</option>
+                <option value="VERO MODA">VERO MODA</option>
+                <option value="ONLY">ONLY</option>
+                <option value="Tokyo Talkies">Tokyo Talkies</option>
+                <option value="AND">AND</option>
+                <option value="Forever 21">Forever 21</option>
+                <option value="Baggit">Baggit</option>
+                <option value="Lavie">Lavie</option>
+                <option value="Metro">Metro</option>
+                <option value="Gini & Jony">Gini &amp; Jony</option>
+                <option value="Hopscotch">Hopscotch</option>
+                <option value="Mothercare">Mothercare</option>
+                <option value="Max Kids">Max Kids</option>
+                <option value="Puma Kids">Puma Kids</option>
+                <option value="Crocs">Crocs</option>
+                <option value="Maybelline New York">Maybelline</option>
+                <option value="The Derma Co">The Derma Co</option>
+                <option value="Minimalist">Minimalist</option>
+                <option value="Lakme">Lakme</option>
+                <option value="Plum">Plum</option>
+                <option value="Forest Essentials">Forest Essentials</option>
+                <option value="M.A.C">M.A.C</option>
+                <option value="D'Decor">D'Decor</option>
+                <option value="Spaces">Spaces</option>
+                <option value="Home Centre">Home Centre</option>
+                <option value="Story@Home">Story@Home</option>
+                <option value="Portico New York">Portico New York</option>
+              </select>
+            </div>
+
+            <!-- Size Filter -->
+            <div class="filter-group">
+              <label for="size-select" class="filter-label"><i class="fa-solid fa-ruler"></i> Size:</label>
+              <select id="size-select" class="form-select" aria-label="Filter by size">
+                <option value="All">All Sizes</option>
+                <option value="S">S (Small)</option>
+                <option value="M">M (Medium)</option>
+                <option value="L">L (Large)</option>
+                <option value="XL">XL (Extra Large)</option>
+                <option value="XXL">XXL</option>
+                <option value="Free Size">Free Size</option>
+              </select>
+            </div>
+
+            <!-- Price Filter -->
+            <div class="filter-group">
+              <label for="price-filter-select" class="filter-label"><i class="fa-solid fa-indian-rupee-sign"></i> Price:</label>
+              <select id="price-filter-select" class="form-select" aria-label="Filter by price range">
+                <option value="all">All Prices</option>
+                <option value="under500">Under ₹500</option>
+                <option value="500to999">₹500 - ₹999</option>
+                <option value="1000to1999">₹1,000 - ₹1,999</option>
+                <option value="2000above">₹2,000 &amp; Above</option>
               </select>
             </div>
 
@@ -413,12 +496,12 @@
             <div class="filter-group">
               <label for="sort-select" class="filter-label"><i class="fa-solid fa-arrow-down-short-wide"></i> Sort By:</label>
               <select id="sort-select" class="form-select" aria-label="Sort products">
-                <option value="popular">Popularity (Default)</option>
+                <option value="popular">Recommended</option>
                 <option value="price-asc">Price: Low to High</option>
                 <option value="price-desc">Price: High to Low</option>
-                <option value="newest">Newest First</option>
-                <option value="rating">Highest Rated</option>
-                <option value="discount">Biggest Discount</option>
+                <option value="rating">Customer Rating</option>
+                <option value="discount">Better Discount</option>
+                <option value="newest">What's New</option>
               </select>
             </div>
 
@@ -439,21 +522,20 @@
           <div class="empty-icon-wrapper">
             <i class="fa-solid fa-magnifying-glass-chart"></i>
           </div>
-          <h3 id="empty-state-title">No Matching Products Found</h3>
-          <p id="empty-state-desc">We couldn't find any items matching your search or filters. Try checking for typos, searching broader terms, or click a popular keyword below.</p>
+          <h3 id="empty-state-title">We couldn't find any matches!</h3>
+          <p id="empty-state-desc">Please check the spelling or try searching for another fashion term, brand or category.</p>
           
           <!-- Popular Search Suggestion Chips -->
           <div class="popular-search-chips" id="popular-search-chips">
-            <span class="chips-label"><i class="fa-solid fa-fire"></i> Popular Searches:</span>
-            <button type="button" class="search-chip" data-query="Saree">Saree</button>
-            <button type="button" class="search-chip" data-query="Kurti">Kurti</button>
+            <span class="chips-label"><i class="fa-solid fa-fire"></i> Popular Fashion Searches:</span>
+            <button type="button" class="search-chip" data-query="Roadster">Roadster</button>
             <button type="button" class="search-chip" data-query="Shirt">Shirt</button>
-            <button type="button" class="search-chip" data-query="Earbuds">Earbuds</button>
-            <button type="button" class="search-chip" data-query="Mobile">Mobile</button>
-            <button type="button" class="search-chip" data-query="Shoes">Shoes</button>
-            <button type="button" class="search-chip" data-query="Jewellery">Jewellery</button>
-            <button type="button" class="search-chip" data-query="Dry Fruits">Dry Fruits</button>
-            <button type="button" class="search-chip" data-query="Toys">Toys</button>
+            <button type="button" class="search-chip" data-query="Kurta">Kurta</button>
+            <button type="button" class="search-chip" data-query="Jeans">Jeans</button>
+            <button type="button" class="search-chip" data-query="Dress">Dress</button>
+            <button type="button" class="search-chip" data-query="Sneakers">Sneakers</button>
+            <button type="button" class="search-chip" data-query="Serum">Serum</button>
+            <button type="button" class="search-chip" data-query="Bedsheet">Bedsheet</button>
           </div>
 
           <div class="empty-actions">
@@ -465,8 +547,8 @@
           <!-- RELATED / RECOMMENDED PRODUCTS SECTION -->
           <div class="related-products-section" id="related-products-section">
             <div class="related-section-header">
-              <h4><i class="fa-solid fa-sparkles text-pink"></i> Recommended Products For You</h4>
-              <p>Explore popular and trending styles loved by other Meesho shoppers</p>
+              <h4><i class="fa-solid fa-sparkles text-pink"></i> Recommended Fashion Styles For You</h4>
+              <p>Explore trending designs loved by fashion lovers</p>
             </div>
             <div class="product-grid related-product-grid" id="related-product-grid">
               <!-- Rendered via JavaScript -->
@@ -476,69 +558,69 @@
       </div>
     </section>
 
-    <!-- MEESHO PROMOTIONAL SUPPLIER & FESTIVE BANNER -->
-    <section class="banner-strip-section" id="supplier-banner">
+    <!-- PROMOTIONAL MYNTRA INSIDER BANNER -->
+    <section class="banner-strip-section" id="insider-banner">
       <div class="container">
-        <div class="banner-strip-card">
+        <div class="banner-strip-card myntra-insider-card">
           <div class="banner-strip-content">
-            <span class="badge-pill bg-white-translucent">BECOME A MEESHO SUPPLIER</span>
-            <h2>Grow Your Business to 14 Crore+ Customers</h2>
-            <p>Sell with 0% Commission, 7-Day Payment Cycle &amp; PAN-India delivery to 26,000+ PIN codes.</p>
+            <span class="badge-pill bg-gold-dark"><i class="fa-solid fa-crown"></i> MYNTRA INSIDER CLUB</span>
+            <h2>Experience Privilege Fashion Shopping</h2>
+            <p>Earn Insider Points on every order, enjoy VIP early access to sales &amp; unlock free express shipping.</p>
             <div class="coupon-display-box">
-              <span>Festival First Order Code:</span>
-              <strong id="promo-copy-code">MEESHONEW</strong>
+              <span>First Order Welcome Code:</span>
+              <strong id="promo-copy-code">MYNTRA200</strong>
               <button class="copy-coupon-btn" id="copy-code-btn" title="Copy Coupon Code">
                 <i class="fa-regular fa-copy"></i> Copy Code
               </button>
             </div>
           </div>
           <div class="banner-strip-illustration">
-            <i class="fa-solid fa-store pulse-icon"></i>
+            <i class="fa-solid fa-gem pulse-icon"></i>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- WHY CHOOSE MEESHO / TRUST SECTION -->
+    <!-- THE MYNTRA GUARANTEE / TRUST SECTION -->
     <section class="section trust-section" id="trust-section">
       <div class="container">
         <div class="section-header text-center">
-          <span class="section-subtitle">Why 14 Crore+ Indians Love Meesho</span>
-          <h2 class="section-title">The Meesho Promise</h2>
-          <p class="section-desc">Connecting millions of Indian families directly to trusted manufacturers with unbeatable savings.</p>
+          <span class="section-subtitle">THE MYNTRA ADVANTAGE</span>
+          <h2 class="section-title">Why India Shops Fashion on Myntra</h2>
+          <p class="section-desc">Experience 100% original global fashion with effortless doorstep delivery and returns.</p>
         </div>
 
         <div class="features-grid">
           <div class="feature-card">
             <div class="feature-icon bg-pink-soft">
-              <i class="fa-solid fa-tag"></i>
+              <i class="fa-solid fa-shield-halved"></i>
             </div>
-            <h3>Lowest Price Ever</h3>
-            <p>Direct manufacturer sourcing guarantees honest wholesale prices with zero middlemen markups.</p>
+            <h3>100% Genuine Brands</h3>
+            <p>Direct authentic sourcing from verified brands with zero replica guarantee.</p>
           </div>
 
           <div class="feature-card">
             <div class="feature-icon bg-purple-soft">
-              <i class="fa-solid fa-truck-fast"></i>
+              <i class="fa-solid fa-rotate-left"></i>
             </div>
-            <h3>Free &amp; Fast Shipping</h3>
-            <p>Doorstep delivery across all metro and tier 2/3/4 towns in India with real-time tracking.</p>
+            <h3>14-Day Return Policy</h3>
+            <p>Return or exchange your fashion garments easily with instant doorstep pickup.</p>
           </div>
 
           <div class="feature-card">
             <div class="feature-icon bg-blue-soft">
-              <i class="fa-solid fa-hand-holding-dollar"></i>
+              <i class="fa-solid fa-truck-fast"></i>
             </div>
-            <h3>Cash on Delivery (COD)</h3>
-            <p>Inspect your parcel at your doorstep and pay safely in cash or UPI scan on delivery.</p>
+            <h3>Fast Express Delivery</h3>
+            <p>Speedy doorstep delivery across 26,000+ PIN codes with live package tracking.</p>
           </div>
 
           <div class="feature-card">
             <div class="feature-icon bg-green-soft">
-              <i class="fa-solid fa-rotate-left"></i>
+              <i class="fa-solid fa-lock"></i>
             </div>
-            <h3>7-Day Hassle-Free Returns</h3>
-            <p>Not 100% satisfied? Enjoy instant doorstep return pickup with immediate full refund.</p>
+            <h3>Secure Seamless Payments</h3>
+            <p>Pay comfortably with Cash on Delivery, UPI (GPay/PhonePe), Credit/Debit Cards, or NetBanking.</p>
           </div>
         </div>
       </div>
@@ -550,11 +632,11 @@
         <div class="newsletter-card">
           <div class="newsletter-content">
             <div class="newsletter-icon">
-              <i class="fa-regular fa-bell"></i>
+              <i class="fa-regular fa-envelope-open"></i>
             </div>
             <div class="newsletter-text">
-              <h3>Never Miss a Meesho Maha Sale!</h3>
-              <p>Get instant alerts for ₹9 Flash Sales, price drop alerts, and exclusive secret seller coupons.</p>
+              <h3>Get the Latest Fashion Drops in Your Inbox</h3>
+              <p>Subscribe for exclusive flash deals, seasonal style guides, and VIP discount coupons.</p>
             </div>
           </div>
           <form class="newsletter-form" id="newsletter-form">
@@ -572,17 +654,17 @@
   </main>
 
   <!-- ==============================================
-       5. FOOTER (MEESHO STYLING)
+       5. FOOTER (MYNTRA MODERN FOOTER)
   ============================================== -->
   <footer class="main-footer" id="help-section">
     <div class="container footer-container">
       <div class="footer-brand-col">
-        <a href="#" class="brand-logo footer-logo meesho-logo-wrap">
-          <span class="meesho-logo-text text-white">meesho</span>
-          <span class="meesho-clone-badge">CLONE</span>
+        <a href="#" class="brand-logo footer-logo myntra-logo-wrap">
+          <span class="myntra-logo-text text-white">myntra</span>
+          <span class="myntra-clone-badge">FASHION</span>
         </a>
         <p class="footer-desc">
-          Shop Non-Stop on Meesho Clone! India's favourite online destination for affordable fashion, sarees, kurtis, footwear, beauty and home essentials.
+          India's leading online fashion and lifestyle store. Experience the latest in Men's, Women's, Kids clothing, Beauty essentials &amp; Home decor with effortless delivery.
         </p>
         <div class="social-links">
           <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
@@ -593,34 +675,31 @@
       </div>
 
       <div class="footer-col">
-        <h4 class="footer-heading">Top Categories</h4>
+        <h4 class="footer-heading">Online Shopping</h4>
         <ul class="footer-links">
-          <li><a href="#" class="footer-cat-link" data-category="Women Ethnic">Women Ethnic (Sarees &amp; Kurtis)</a></li>
-          <li><a href="#" class="footer-cat-link" data-category="Women Western">Women Western Dresses</a></li>
-          <li><a href="#" class="footer-cat-link" data-category="Men">Men's Shirts &amp; Denims</a></li>
-          <li><a href="#" class="footer-cat-link" data-category="Bags & Footwear">Bags &amp; Mojari Juttis</a></li>
-          <li><a href="#" class="footer-cat-link" data-category="Home & Kitchen">Home &amp; Kitchen Cookware</a></li>
-          <li><a href="#" class="footer-cat-link" data-category="Beauty & Health">Beauty &amp; Personal Care</a></li>
-          <li><a href="#" class="footer-cat-link" data-category="Jewellery & Accessories">Jewellery &amp; Accessories</a></li>
-          <li><a href="#" class="footer-cat-link" data-category="Electronics">Electronics &amp; Smart Audio</a></li>
+          <li><a href="#" class="footer-cat-link" data-category="Men">Men's Apparel &amp; Footwear</a></li>
+          <li><a href="#" class="footer-cat-link" data-category="Women">Women's Western &amp; Ethnic</a></li>
+          <li><a href="#" class="footer-cat-link" data-category="Kids">Kids &amp; Baby Clothing</a></li>
+          <li><a href="#" class="footer-cat-link" data-category="Beauty">Beauty, Skincare &amp; Fragrances</a></li>
+          <li><a href="#" class="footer-cat-link" data-category="Home">Home &amp; Living Essentials</a></li>
         </ul>
       </div>
 
       <div class="footer-col">
-        <h4 class="footer-heading">Customer Assistance</h4>
+        <h4 class="footer-heading">Customer Policies</h4>
         <ul class="footer-links">
           <li><a href="#header" id="track-order-link">Track Your Order</a></li>
-          <li><a href="#trust-section">Return &amp; Refund Policy</a></li>
-          <li><a href="#trust-section">Shipping Information</a></li>
-          <li><a href="#supplier-banner">Become a Meesho Supplier</a></li>
+          <li><a href="#trust-section">14-Day Return Policy</a></li>
+          <li><a href="#trust-section">Shipping &amp; Delivery Information</a></li>
+          <li><a href="#insider-banner">Myntra Insider Terms</a></li>
           <li><a href="#header">Help Center &amp; FAQs</a></li>
-          <li><a href="#header">Terms of Service &amp; Privacy</a></li>
+          <li><a href="#header">Privacy Policy &amp; Terms of Use</a></li>
         </ul>
       </div>
 
       <div class="footer-col" id="app-download">
-        <h4 class="footer-heading">Experience Meesho App</h4>
-        <p class="footer-app-text">Shop on the go with exclusive app-only flash deals and notifications.</p>
+        <h4 class="footer-heading">Experience Myntra App</h4>
+        <p class="footer-app-text">Download the Myntra App for exclusive early-bird sale access &amp; instant notifications.</p>
         <div class="app-badges">
           <div class="app-badge-box">
             <i class="fa-brands fa-google-play"></i>
@@ -638,7 +717,7 @@
           </div>
         </div>
         <div class="payment-partners">
-          <span class="payment-title">100% Safe &amp; Secure Payments:</span>
+          <span class="payment-title">100% Genuine &amp; Secure Payments:</span>
           <div class="payment-icons">
             <i class="fa-brands fa-cc-visa" title="Visa"></i>
             <i class="fa-brands fa-cc-mastercard" title="Mastercard"></i>
@@ -652,16 +731,16 @@
 
     <div class="footer-bottom">
       <div class="container footer-bottom-container">
-        <p>&copy; 2026 Meesho Clone Technologies Ltd. All rights reserved.</p>
+        <p>&copy; 2026 Myntra Designs Pvt. Ltd. All rights reserved.</p>
         <p class="project-tagline">
-          Crafted with <i class="fa-solid fa-heart text-pink"></i> for <strong>B.Tech College Project Demonstration</strong> (Meesho-Inspired Frontend Web App).
+          Crafted with <i class="fa-solid fa-heart text-pink"></i> for <strong>B.Tech College Project Demonstration</strong> (Myntra-Inspired Fashion E-Commerce Platform).
         </p>
       </div>
     </div>
   </footer>
 
   <!-- ==============================================
-       6. MOBILE BOTTOM NAVIGATION DOCK (MEESHO APP FEEL)
+       6. MOBILE BOTTOM NAVIGATION DOCK (MYNTRA APP FEEL)
   ============================================== -->
   <nav class="mobile-bottom-nav" aria-label="Mobile Bottom Navigation">
     <a href="#" class="mobile-nav-item active" id="mob-nav-home">
@@ -684,11 +763,11 @@
         <i class="fa-solid fa-bag-shopping"></i>
         <span class="badge-counter" id="mob-cart-count">0</span>
       </div>
-      <span>Cart</span>
+      <span>Bag</span>
     </button>
     <button class="mobile-nav-item" id="mob-nav-account">
       <i class="fa-regular fa-user"></i>
-      <span>Account</span>
+      <span>Profile</span>
     </button>
   </nav>
 
@@ -708,16 +787,16 @@
     </div>
   </div>
 
-  <!-- B. SHOPPING CART DRAWER -->
+  <!-- B. SHOPPING CART / BAG DRAWER -->
   <div class="drawer-backdrop" id="cart-drawer-backdrop" hidden>
     <div class="drawer cart-drawer" role="dialog" aria-modal="true" aria-labelledby="cart-drawer-title">
       <div class="drawer-header">
         <div class="drawer-title-wrap">
           <i class="fa-solid fa-bag-shopping text-pink"></i>
-          <h2 id="cart-drawer-title">My Meesho Bag</h2>
+          <h2 id="cart-drawer-title">Myntra Shopping Bag</h2>
           <span class="cart-header-count" id="cart-drawer-count">(0 items)</span>
         </div>
-        <button class="drawer-close-btn" id="close-cart-drawer" aria-label="Close cart drawer">
+        <button class="drawer-close-btn" id="close-cart-drawer" aria-label="Close bag drawer">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
@@ -725,7 +804,7 @@
       <!-- Free Delivery Progress Bar -->
       <div class="free-delivery-bar" id="free-delivery-banner">
         <div class="delivery-status-text" id="delivery-status-text">
-          <span>Add ₹499 more for <strong>FREE Delivery</strong></span>
+          <span>Add ₹799 more for <strong>FREE Delivery</strong></span>
         </div>
         <div class="progress-track">
           <div class="progress-fill" id="delivery-progress-fill" style="width: 0%;"></div>
@@ -734,7 +813,7 @@
 
       <!-- Cart Item List -->
       <div class="drawer-body" id="cart-items-container">
-        <!-- Dynamic cart item list or empty state -->
+        <!-- Dynamic bag item list or empty state -->
       </div>
 
       <!-- Cart Footer / Totals & Checkout -->
@@ -743,7 +822,7 @@
         <div class="cart-coupon-box">
           <div class="coupon-input-group">
             <i class="fa-solid fa-ticket coupon-icon"></i>
-            <input type="text" id="cart-coupon-input" placeholder="Enter coupon (MEESHONEW)" uppercase />
+            <input type="text" id="cart-coupon-input" placeholder="Enter coupon (MYNTRA200)" uppercase />
             <button class="btn btn-sm btn-dark" id="apply-coupon-btn">Apply</button>
           </div>
           <div class="coupon-msg" id="coupon-msg"></div>
@@ -760,11 +839,11 @@
             <span id="bill-discount">-₹0</span>
           </div>
           <div class="bill-row" id="coupon-discount-row" hidden>
-            <span>Meesho Coupon</span>
+            <span>Myntra Coupon Discount</span>
             <span class="text-success" id="bill-coupon">-₹0</span>
           </div>
           <div class="bill-row">
-            <span>Delivery Fee</span>
+            <span>Convenience / Delivery Fee</span>
             <span id="bill-delivery">FREE</span>
           </div>
           <div class="bill-divider"></div>
@@ -776,7 +855,7 @@
 
         <div class="drawer-action-buttons">
           <button class="btn btn-primary btn-block btn-lg" id="proceed-checkout-btn">
-            <span>Continue to Delivery</span>
+            <span>PLACE ORDER</span>
             <i class="fa-solid fa-arrow-right"></i>
           </button>
           <button class="btn btn-outline btn-block" id="continue-shopping-cart-btn">
@@ -807,7 +886,7 @@
 
       <div class="drawer-footer" id="wishlist-footer">
         <button class="btn btn-outline btn-block" id="continue-shopping-wishlist-btn">
-          Explore More Products
+          Explore Trending Styles
         </button>
       </div>
     </div>
@@ -822,19 +901,19 @@
 
       <div class="checkout-modal-header">
         <div class="checkout-steps">
-          <span class="step-badge active"><i class="fa-solid fa-location-dot"></i> Shipping Address</span>
+          <span class="step-badge active"><i class="fa-solid fa-location-dot"></i> Delivery Address</span>
           <span class="step-divider"><i class="fa-solid fa-chevron-right"></i></span>
-          <span class="step-badge active"><i class="fa-solid fa-clipboard-check"></i> Order Summary</span>
+          <span class="step-badge active"><i class="fa-solid fa-clipboard-check"></i> Order Summary &amp; Payment</span>
         </div>
-        <h2 id="checkout-modal-title">Meesho Order Checkout</h2>
-        <p class="checkout-sub">Safe doorstep delivery with Cash on Delivery (COD). Demo College Showcase.</p>
+        <h2 id="checkout-modal-title">Myntra Express Checkout</h2>
+        <p class="checkout-sub">Safe &amp; fast doorstep fashion delivery. College Demo Project.</p>
       </div>
 
       <div class="checkout-modal-body">
         <div class="checkout-layout">
           <!-- Checkout Form -->
           <form class="checkout-form" id="checkout-form" novalidate>
-            <h3 class="form-section-title"><i class="fa-solid fa-address-book"></i> Delivery Address</h3>
+            <h3 class="form-section-title"><i class="fa-solid fa-address-book"></i> Shipping Address</h3>
 
             <div class="form-row">
               <div class="form-group col-full">
@@ -846,7 +925,7 @@
 
             <div class="form-row">
               <div class="form-group col-half">
-                <label for="checkout-phone">Phone Number <span class="required">*</span></label>
+                <label for="checkout-phone">Mobile Number <span class="required">*</span></label>
                 <div class="input-prefix-wrap">
                   <span class="input-prefix">+91</span>
                   <input type="tel" id="checkout-phone" placeholder="98765 43210" maxlength="10" required />
@@ -897,8 +976,8 @@
               </div>
             </div>
 
-            <!-- Payment Method Demo Selection -->
-            <h3 class="form-section-title"><i class="fa-solid fa-wallet"></i> Payment Mode (Demo)</h3>
+            <!-- Payment Method Selection -->
+            <h3 class="form-section-title"><i class="fa-solid fa-wallet"></i> Payment Method (Demo)</h3>
             <div class="payment-methods-grid">
               <label class="payment-option selected">
                 <input type="radio" name="payment-method" value="COD" checked />
@@ -924,15 +1003,15 @@
             </div>
 
             <button type="submit" class="btn btn-primary btn-block btn-lg" id="place-order-submit-btn">
-              <i class="fa-solid fa-lock"></i> Place Demo Order (<span id="checkout-btn-amount">₹0</span>)
+              <i class="fa-solid fa-lock"></i> PLACE DEMO ORDER (<span id="checkout-btn-amount">₹0</span>)
             </button>
           </form>
 
           <!-- Order Mini Summary inside Checkout -->
           <div class="checkout-summary-col">
-            <h3 class="form-section-title"><i class="fa-solid fa-receipt"></i> Order Summary</h3>
+            <h3 class="form-section-title"><i class="fa-solid fa-receipt"></i> Bag Summary</h3>
             <div class="checkout-items-preview" id="checkout-items-preview">
-              <!-- Rendered items in cart -->
+              <!-- Rendered items in bag -->
             </div>
             <div class="checkout-price-breakdown">
               <div class="summary-line">
@@ -940,26 +1019,26 @@
                 <span id="checkout-items-count">0 items</span>
               </div>
               <div class="summary-line">
-                <span>Items Subtotal</span>
+                <span>Total MRP</span>
                 <span id="checkout-subtotal">₹0</span>
               </div>
               <div class="summary-line text-success">
-                <span>Meesho Discounts</span>
+                <span>Discount on MRP</span>
                 <span id="checkout-discount-val">-₹0</span>
               </div>
               <div class="summary-line">
-                <span>Shipping Fee</span>
+                <span>Convenience / Delivery Fee</span>
                 <span id="checkout-shipping-val">FREE</span>
               </div>
               <div class="summary-divider"></div>
               <div class="summary-line summary-total">
-                <span>Amount to Pay</span>
+                <span>Total Payable Amount</span>
                 <strong id="checkout-grand-total">₹0</strong>
               </div>
             </div>
             <div class="checkout-trust-box">
               <i class="fa-solid fa-shield-halved"></i>
-              <span>100% Meesho Purchase Protection • Easy Returns &amp; Full Refund</span>
+              <span>100% Original Products • Easy 14-Day Returns &amp; Exchanges</span>
             </div>
           </div>
         </div>
@@ -978,17 +1057,17 @@
 
       <span class="badge-pill bg-success-soft">ORDER CONFIRMED</span>
       <h2 id="order-success-title">Order Placed Successfully!</h2>
-      <p class="order-subtitle">Your Meesho order has been placed with the supplier and is getting packaged for shipping.</p>
+      <p class="order-subtitle">Your Myntra fashion order has been confirmed and is being prepped for dispatch.</p>
 
       <div class="order-details-card">
         <div class="order-info-grid">
           <div class="info-block">
-            <span class="info-label">Meesho Order ID</span>
-            <strong class="info-val text-pink" id="confirmed-order-id">MEESHO-ORD-2026-9481</strong>
+            <span class="info-label">Myntra Order ID</span>
+            <strong class="info-val text-pink" id="confirmed-order-id">MYN-ORD-2026-9481</strong>
           </div>
           <div class="info-block">
             <span class="info-label">Order Date</span>
-            <strong class="info-val" id="confirmed-order-date">Nov 24, 2026</strong>
+            <strong class="info-val" id="confirmed-order-date">Nov 26, 2026</strong>
           </div>
           <div class="info-block">
             <span class="info-label">Payment Mode</span>
@@ -996,7 +1075,7 @@
           </div>
           <div class="info-block">
             <span class="info-label">Estimated Delivery</span>
-            <strong class="info-val text-green" id="confirmed-delivery-date">3-5 Business Days</strong>
+            <strong class="info-val text-green" id="confirmed-delivery-date">2-4 Business Days</strong>
           </div>
         </div>
 
@@ -1034,8 +1113,8 @@
           <i class="fa-solid fa-user"></i>
         </div>
         <div>
-          <h2 id="account-modal-title">Meesho Student Profile</h2>
-          <span class="user-email-text">demo.student@meesho.local • Meesho VIP Member</span>
+          <h2 id="account-modal-title">Myntra Profile</h2>
+          <span class="user-email-text">demo.student@myntra.local • Myntra Insider VIP</span>
         </div>
       </div>
 
@@ -1043,7 +1122,7 @@
         <div class="account-tabs">
           <button class="acc-tab-btn active" data-tab="orders">My Orders (<span id="acc-orders-count">0</span>)</button>
           <button class="acc-tab-btn" data-tab="profile">Saved Addresses</button>
-          <button class="acc-tab-btn" data-tab="coupons">Meesho Coupons</button>
+          <button class="acc-tab-btn" data-tab="coupons">Myntra Coupons</button>
         </div>
 
         <div class="acc-tab-content active" id="acc-orders-tab">
@@ -1066,22 +1145,22 @@
           <div class="coupon-cards-list">
             <div class="coupon-promo-card">
               <div class="coupon-promo-left">
-                <strong>MEESHONEW</strong>
-                <span>Flat ₹150 OFF on orders above ₹499</span>
+                <strong>MYNTRA200</strong>
+                <span>Flat ₹200 OFF on orders above ₹799</span>
               </div>
-              <button class="btn btn-sm btn-outline copy-coupon-inline" data-code="MEESHONEW">Copy</button>
+              <button class="btn btn-sm btn-outline copy-coupon-inline" data-code="MYNTRA200">Copy</button>
             </div>
             <div class="coupon-promo-card">
               <div class="coupon-promo-left">
-                <strong>MEESHO100</strong>
-                <span>Flat ₹100 OFF on any order above ₹299</span>
+                <strong>MYNTRA10</strong>
+                <span>Extra 10% OFF on all fashion orders above ₹499</span>
               </div>
-              <button class="btn btn-sm btn-outline copy-coupon-inline" data-code="MEESHO100">Copy</button>
+              <button class="btn btn-sm btn-outline copy-coupon-inline" data-code="MYNTRA10">Copy</button>
             </div>
             <div class="coupon-promo-card">
               <div class="coupon-promo-left">
                 <strong>FESTIVE20</strong>
-                <span>Extra 20% OFF on Sarees, Kurtis &amp; Fashion</span>
+                <span>Extra 20% OFF on Ethnic, Sarees &amp; Partywear</span>
               </div>
               <button class="btn btn-sm btn-outline copy-coupon-inline" data-code="FESTIVE20">Copy</button>
             </div>

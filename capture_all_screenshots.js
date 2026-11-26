@@ -31,29 +31,30 @@ function takeScreenshot(tempHtmlContent, outputFilename, windowSize = '1440,900'
   }
 }
 
-console.log('Generating comprehensive suite of 7 verified screenshots...');
+console.log('Generating comprehensive suite of 7 verified Myntra Fashion screenshots...');
 
-// 1. Desktop Homepage & Hero
+// 1. Desktop Homepage & Hero Banner Carousel
 takeScreenshot(baseHtml, '01_desktop_home.png', '1440,900', 3000);
 
-// 2. Categories Showcase (all 11 departments)
+// 2. Categories Showcase (Men, Women, Kids, Beauty, Home & Living)
 const snapCategoriesHtml = baseHtml.replace('</head>', `
 <style>
-  #hero, .offers-section { display: none !important; }
+  #hero-section, .announcement-bar, #deals-section { display: none !important; }
+  #categories-section { padding-top: 30px !important; }
 </style>
 </head>`);
 takeScreenshot(snapCategoriesHtml, '02_categories_showcase.png', '1440,900', 3000);
 
-// 3. Product Catalog Grid (4-column responsive grid with prices, ratings, discounts)
+// 3. Product Catalog Grid (4-column responsive grid with fashion brand names, ratings, discounts)
 const snapCatalogHtml = baseHtml.replace('</head>', `
 <style>
-  #hero, .offers-section, #categories-section { display: none !important; }
+  #hero-section, #brands-section, #categories-section, #deals-section { display: none !important; }
   #products-section { padding-top: 20px !important; }
 </style>
 </head>`);
 takeScreenshot(snapCatalogHtml, '03_product_catalog_grid.png', '1440,950', 3000);
 
-// 4. Smart Search & Live Suggestions
+// 4. Smart Search & Live Autocomplete Suggestions
 const snapSearchHtml = baseHtml.replace('</body>', `
 <script>
   window.addEventListener('load', () => {
@@ -61,46 +62,48 @@ const snapSearchHtml = baseHtml.replace('</body>', `
       const input = document.getElementById('search-input');
       if (input) {
         input.focus();
-        input.value = 'saree';
+        input.value = 'roadster';
         input.dispatchEvent(new Event('input', { bubbles: true }));
       }
     }, 800);
   });
 </script>
 </body>`);
-takeScreenshot(snapSearchHtml, '04_smart_search_suggestions.png', '1440,900', 3000);
+takeScreenshot(snapSearchHtml, '04_smart_search_suggestions.png', '1440,900', 3500);
 
-// 5. Cart Drawer with Items, Delivery Progress, & Applied Coupon
+// 5. Cart Drawer with Fashion Items, Delivery Progress, & Applied MYNTRA200 Coupon
 const dummyCart = [
   {
     id: 1,
-    name: "Pure Kanjeevaram Soft Silk Saree with Zari Woven Border & Rich Pallu",
-    category: "Women's Wear",
-    price: 1299,
-    originalPrice: 3999,
-    discount: 68,
-    rating: 4.8,
-    reviewsCount: 3420,
-    image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=600&q=80",
-    description: "Authentic Kanjeevaram jacquard woven art silk saree with regal gold zari pallu.",
-    stock: 25,
-    badge: "Best Seller",
+    brand: "Roadster",
+    name: "Men Pure Cotton Casual Slim Fit Shirt",
+    category: "Men",
+    price: 649,
+    originalPrice: 1499,
+    discount: 56,
+    rating: 4.3,
+    reviewsCount: 3820,
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    selectedSize: "L",
+    image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=600&q=80",
+    badge: "Trending",
     quantity: 1
   },
   {
-    id: 10,
-    name: "AeroTune True Wireless Earbuds with ENC & 45h Playtime",
-    category: "Electronics",
-    price: 899,
-    originalPrice: 2499,
-    discount: 64,
-    rating: 4.7,
-    reviewsCount: 4210,
-    image: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&w=600&q=80",
-    description: "Low-latency Bluetooth 5.3 earbuds featuring environmental noise cancellation.",
-    stock: 40,
-    badge: "Trending",
-    quantity: 2
+    id: 16,
+    brand: "Libas",
+    name: "Women Floral Printed Pure Cotton Anarkali Kurta Set",
+    category: "Women",
+    price: 1399,
+    originalPrice: 3499,
+    discount: 60,
+    rating: 4.6,
+    reviewsCount: 5210,
+    sizes: ["S", "M", "L", "XL"],
+    selectedSize: "M",
+    image: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=600&q=80",
+    badge: "Best Seller",
+    quantity: 1
   }
 ];
 
@@ -110,20 +113,23 @@ const snapCartHtml = baseHtml.replace('<head>', `<head>
     opacity: 1 !important;
     visibility: visible !important;
   }
-  #cart-drawer-backdrop .drawer {
+  #cart-drawer-backdrop .cart-drawer {
     transform: none !important;
     transition: none !important;
   }
 </style>
 <script>
+  localStorage.setItem('myntra_cart', JSON.stringify(${JSON.stringify(dummyCart)}));
   localStorage.setItem('meesho_cart', JSON.stringify(${JSON.stringify(dummyCart)}));
-  localStorage.setItem('meesho_applied_coupon', JSON.stringify({ code: 'MEESHONEW', discount: 150, type: 'flat' }));
+  localStorage.setItem('myntra_applied_coupon', JSON.stringify({ code: 'MYNTRA200', discount: 200, type: 'flat' }));
+  localStorage.setItem('meesho_applied_coupon', JSON.stringify({ code: 'MYNTRA200', discount: 200, type: 'flat' }));
 </script>`).replace('</body>', `
 <script>
   window.addEventListener('load', () => {
     setTimeout(() => {
-      if (window.Meesho && window.Meesho.openCart) {
-        window.Meesho.openCart();
+      const api = window.Myntra || window.Meesho;
+      if (api && api.openCart) {
+        api.openCart();
       }
     }, 600);
   });
@@ -136,8 +142,9 @@ const snapModalHtml = baseHtml.replace('</body>', `
 <script>
   window.addEventListener('load', () => {
     setTimeout(() => {
-      if (window.Meesho && window.Meesho.openProductModal) {
-        window.Meesho.openProductModal(1);
+      const api = window.Myntra || window.Meesho;
+      if (api && api.openProductModal) {
+        api.openProductModal(1);
       }
     }, 800);
   });
@@ -148,4 +155,4 @@ takeScreenshot(snapModalHtml, '06_product_quickview.png', '1440,900', 3000);
 // 7. Mobile Responsive View
 takeScreenshot(baseHtml, '07_mobile_view.png', '390,844', 3000);
 
-console.log('All 7 screenshots generated successfully.');
+console.log('✓ All 7 Myntra screenshots captured successfully.');

@@ -1,9 +1,8 @@
 /**
  * ============================================================================
- * Meesho Clone - Smart Online Shopping Engine
- * Inspired by Meesho (meesho.com)
+ * Myntra - Modern Online Fashion Shopping Engine
  * Pure Vanilla JavaScript (ES6+)
- * Author: Senior Frontend Developer / B.Tech College Project Demonstration
+ * Author: Senior Frontend Engineer / B.Tech College Project Demonstration
  * ============================================================================
  */
 
@@ -11,23 +10,22 @@
   'use strict';
 
   // ==========================================================================
-  // 1. MEESHO PRODUCT DATABASE (65 Authentic Products Across 11 Categories)
+  // 1. PRODUCT DATABASE & FALLBACK
   // ==========================================================================
   const PRODUCTS_DATA = (typeof window !== 'undefined' && Array.isArray(window.PRODUCTS_DATA) && window.PRODUCTS_DATA.length > 0)
     ? window.PRODUCTS_DATA
     : (typeof require !== 'undefined' ? require('./products_data').PRODUCTS_DATA : []);
 
-  // SVG Fallback Data URI in case of network issue
-  const FALLBACK_IMAGE = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'><rect fill='%23fcebf5' width='400' height='400'/><text fill='%239f2089' font-family='sans-serif' font-size='22' font-weight='900' x='50%25' y='48%25' text-anchor='middle'>meesho</text><text fill='%2364748b' font-family='sans-serif' font-size='13' x='50%25' y='55%25' text-anchor='middle'>Trusted Supplier Product</text></svg>";
+  const FALLBACK_IMAGE = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='500' viewBox='0 0 400 500'><rect fill='%23fff1f4' width='400' height='500'/><text fill='%23ff3f6c' font-family='sans-serif' font-size='26' font-weight='900' x='50%25' y='48%25' text-anchor='middle'>myntra</text><text fill='%23535766' font-family='sans-serif' font-size='14' x='50%25' y='55%25' text-anchor='middle'>Fashion Runway Collection</text></svg>";
 
   // ==========================================================================
   // 2. APPLICATION STATE MANAGEMENT
   // ==========================================================================
   function getSessionToken() {
-    let token = localStorage.getItem('meesho_session_token');
+    let token = localStorage.getItem('myntra_session_token') || localStorage.getItem('meesho_session_token');
     if (!token) {
       token = 'user_' + Math.random().toString(36).substring(2, 9);
-      localStorage.setItem('meesho_session_token', token);
+      localStorage.setItem('myntra_session_token', token);
     }
     return token;
   }
@@ -35,26 +33,31 @@
   const STATE = {
     products: PRODUCTS_DATA,
     filteredProducts: [...PRODUCTS_DATA],
-    cart: loadFromStorage('meesho_cart', loadFromStorage('shopease_cart', [])),
-    wishlist: loadFromStorage('meesho_wishlist', loadFromStorage('shopease_wishlist', [])),
-    orders: loadFromStorage('meesho_orders', loadFromStorage('shopease_orders', [])),
+    cart: loadFromStorage('myntra_cart', loadFromStorage('meesho_cart', loadFromStorage('shopease_cart', []))),
+    wishlist: loadFromStorage('myntra_wishlist', loadFromStorage('meesho_wishlist', loadFromStorage('shopease_wishlist', []))),
+    orders: loadFromStorage('myntra_orders', loadFromStorage('meesho_orders', loadFromStorage('shopease_orders', []))),
     activeCategory: 'All',
+    activeBrand: 'All',
+    activeSize: 'All',
+    activePriceRange: 'all',
     searchQuery: '',
     sortBy: 'popular',
     viewFilter: 'all',
     appliedCoupon: null,
     selectedProductModal: null,
+    modalSelectedSize: 'M',
     modalQuantity: 1,
     isBackendConnected: false,
     sessionId: getSessionToken()
   };
 
-  // Valid Meesho Promo Coupons
+  // Valid Myntra Promo Coupons (with backward-compatible aliases)
   const PROMO_COUPONS = {
+    'MYNTRA200': { discount: 200, type: 'flat', minOrder: 799, desc: 'Flat ₹200 OFF on orders above ₹799' },
+    'MYNTRA10': { discount: 10, type: 'percent', minOrder: 499, desc: 'Extra 10% OFF on all fashion orders' },
+    'FESTIVE20': { discount: 20, type: 'percent', minOrder: 599, desc: 'Extra 20% OFF on Ethnic & Festive Wear' },
     'MEESHONEW': { discount: 150, type: 'flat', minOrder: 499, desc: 'Flat ₹150 OFF on first order' },
     'MEESHO100': { discount: 100, type: 'flat', minOrder: 299, desc: 'Flat ₹100 OFF on any order above ₹299' },
-    'FESTIVE20': { discount: 20, type: 'percent', minOrder: 599, desc: 'Extra 20% OFF on Sarees & Fashion' },
-    'EASENEW': { discount: 150, type: 'flat', minOrder: 499, desc: 'Flat ₹150 OFF on order above ₹499' },
     'FREEDEL': { discount: 40, type: 'delivery', minOrder: 0, desc: 'Free Delivery on any order' }
   };
 
@@ -113,10 +116,23 @@
     relatedProductGrid: document.getElementById('related-product-grid'),
     relatedProductsSection: document.getElementById('related-products-section'),
     resultsCount: document.getElementById('results-count'),
+
+    // Filter Tags
     activeCategoryTag: document.getElementById('active-category-tag'),
+    activeBrandTag: document.getElementById('active-brand-tag'),
+    activeBrandVal: document.getElementById('active-brand-val'),
+    activeSizeTag: document.getElementById('active-size-tag'),
+    activeSizeVal: document.getElementById('active-size-val'),
+    activePriceTag: document.getElementById('active-price-tag'),
+    activePriceVal: document.getElementById('active-price-val'),
     activeSearchTag: document.getElementById('active-search-tag'),
     activeSearchQuery: document.getElementById('active-search-query'),
+
+    // Filter Controls
     categorySelect: document.getElementById('category-select'),
+    brandSelect: document.getElementById('brand-select'),
+    sizeSelect: document.getElementById('size-select'),
+    priceFilterSelect: document.getElementById('price-filter-select'),
     sortSelect: document.getElementById('sort-select'),
     resetFiltersBtn: document.getElementById('reset-filters-btn'),
     viewFilterTabs: document.querySelectorAll('.filter-tab'),
@@ -184,7 +200,7 @@
     accOrdersList: document.getElementById('acc-orders-list'),
     savedAddressPreview: document.getElementById('saved-address-preview'),
 
-    // UI Tools
+    // Utilities
     toastContainer: document.getElementById('toast-container'),
     backToTop: document.getElementById('back-to-top'),
     copyCodeBtn: document.getElementById('copy-code-btn'),
@@ -193,76 +209,103 @@
     newsletterFeedback: document.getElementById('newsletter-feedback')
   };
 
-  // Format currency in Indian standard (e.g. ₹1,299)
-  function formatINR(amount) {
-    return '₹' + Number(amount).toLocaleString('en-IN');
+  // ==========================================================================
+  // 5. UTILITY & FORMATTING FUNCTIONS
+  // ==========================================================================
+  function formatINR(number) {
+    return '₹' + Number(number || 0).toLocaleString('en-IN');
   }
 
-  // ==========================================================================
-  // 5. TOAST NOTIFICATION SYSTEM
-  // ==========================================================================
-  function showToast(message, type = 'info', icon = null) {
+  function formatCount(number) {
+    const num = Number(number || 0);
+    if (num >= 1000) {
+      return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+    }
+    return String(num);
+  }
+
+  function escapeHTML(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  function showToast(message, type = 'info', customIcon = null) {
     if (!DOM.toastContainer) return;
 
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
 
-    let iconClass = 'fa-solid fa-circle-info';
-    if (type === 'success') iconClass = 'fa-solid fa-circle-check text-success';
-    if (type === 'warning') iconClass = 'fa-solid fa-triangle-exclamation text-warning';
-    if (type === 'danger') iconClass = 'fa-solid fa-circle-xmark text-danger';
-    if (icon) iconClass = icon;
+    let icon = 'fa-solid fa-circle-info';
+    if (type === 'success') icon = 'fa-solid fa-circle-check';
+    if (type === 'warning') icon = 'fa-solid fa-triangle-exclamation';
+    if (type === 'danger') icon = 'fa-solid fa-circle-xmark';
+    if (customIcon) icon = customIcon;
 
     toast.innerHTML = `
-      <i class="${iconClass}"></i>
-      <span class="toast-msg">${message}</span>
+      <i class="${icon} toast-icon"></i>
+      <div class="toast-text">${message}</div>
+      <button class="toast-close" aria-label="Close notification"><i class="fa-solid fa-xmark"></i></button>
     `;
 
     DOM.toastContainer.appendChild(toast);
 
+    const closeBtn = toast.querySelector('.toast-close');
+    closeBtn.addEventListener('click', () => {
+      toast.classList.add('hide');
+      setTimeout(() => toast.remove(), 250);
+    });
+
     setTimeout(() => {
-      toast.style.opacity = '0';
-      toast.style.transform = 'translateY(15px)';
-      setTimeout(() => {
-        if (toast.parentNode) {
-          toast.parentNode.removeChild(toast);
-        }
-      }, 300);
-    }, 3200);
+      if (toast.parentElement) {
+        toast.classList.add('hide');
+        setTimeout(() => toast.remove(), 250);
+      }
+    }, 3800);
   }
 
   // ==========================================================================
-  // 6. MEESHO CATALOG & FILTER ENGINE
+  // 6. MYNTRA PRODUCT CARDS & CATALOG RENDERING
   // ==========================================================================
-  
-  // Reusable Product Card Template
-  function createProductCardHtml(p) {
+  function renderProductCard(p) {
     const isWishlisted = STATE.wishlist.includes(p.id);
-    const isLowStock = p.stock <= 8;
+    const reviewsFormatted = formatCount(p.reviewsCount || p.reviews_count || 0);
+    const availableSizes = Array.isArray(p.sizes) ? p.sizes : (typeof p.sizes === 'string' ? JSON.parse(p.sizes || '[]') : []);
 
     let badgeClass = 'card-badge';
-    if (p.badge === 'M-Trusted' || p.badge === 'Bestseller') badgeClass += ' card-badge-bestseller';
     if (p.badge === 'Trending') badgeClass += ' card-badge-trending';
+    else if (p.badge === 'Best Seller' || p.badge === 'Top Brand') badgeClass += ' card-badge-bestseller';
 
     return `
       <article class="product-card" data-id="${p.id}">
-        <div class="card-image-box" onclick="window.Meesho.openProductModal(${p.id})">
+        <div class="card-image-box" onclick="window.Myntra.openProductModal(${p.id})">
           <img 
             src="${p.image}" 
-            alt="${p.name}" 
+            alt="${escapeHTML(p.name)}" 
             class="card-img" 
             loading="lazy"
             onerror="this.onerror=null; this.src='${FALLBACK_IMAGE}';"
           />
           ${p.badge ? `<span class="${badgeClass}">${p.badge}</span>` : ''}
           
+          <div class="card-rating-badge">
+            <span class="card-rating-val">${p.rating}</span>
+            <i class="fa-solid fa-star"></i>
+            <span class="card-rating-divider">|</span>
+            <span class="card-reviews-num">${reviewsFormatted}</span>
+          </div>
+
           <button 
             type="button" 
             class="card-wishlist-btn ${isWishlisted ? 'active' : ''}" 
             data-id="${p.id}" 
-            onclick="event.stopPropagation(); window.Meesho.toggleWishlist(${p.id});"
-            aria-label="${isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}"
-            title="${isWishlisted ? 'Remove from Wishlist' : 'Add to Wishlist'}"
+            onclick="event.stopPropagation(); window.Myntra.toggleWishlist(${p.id});"
+            aria-label="${isWishlisted ? 'Remove from wishlist' : 'Save to wishlist'}"
+            title="${isWishlisted ? 'Remove from Wishlist' : 'Save to Wishlist'}"
           >
             <i class="${isWishlisted ? 'fa-solid fa-heart' : 'fa-regular fa-heart'}"></i>
           </button>
@@ -270,56 +313,47 @@
           <button 
             type="button" 
             class="card-quickview-btn" 
-            onclick="event.stopPropagation(); window.Meesho.openProductModal(${p.id});"
+            onclick="event.stopPropagation(); window.Myntra.openProductModal(${p.id});"
           >
             <i class="fa-regular fa-eye"></i> Quick View
           </button>
         </div>
 
         <div class="card-content">
-          <div class="card-category-row">
-            <span class="card-category">${p.category}</span>
-            <span class="card-stock-pill ${isLowStock ? 'card-stock-low' : ''}">
-              ${isLowStock ? `Only ${p.stock} left!` : 'In Stock'}
-            </span>
-          </div>
-
-          <h3 class="card-title" onclick="window.Meesho.openProductModal(${p.id})" title="${p.name}">
-            ${p.name}
+          <div class="card-brand">${escapeHTML(p.brand || 'MYNTRA')}</div>
+          
+          <h3 class="card-title" onclick="window.Myntra.openProductModal(${p.id})" title="${escapeHTML(p.name)}">
+            ${escapeHTML(p.name)}
           </h3>
 
-          <div class="card-rating-row">
-            <span class="rating-badge">
-              <i class="fa-solid fa-star"></i> ${p.rating}
-            </span>
-            <span class="reviews-count">(${Number(p.reviewsCount || p.reviews_count || 0).toLocaleString('en-IN')} Reviews)</span>
-          </div>
+          ${availableSizes.length > 0 ? `
+            <div class="card-sizes-row">
+              <span class="sizes-hint">Sizes:</span>
+              ${availableSizes.slice(0, 4).map(s => `<span class="size-pill">${s}</span>`).join('')}
+              ${availableSizes.length > 4 ? `<span class="size-pill-more">+${availableSizes.length - 4}</span>` : ''}
+            </div>
+          ` : ''}
 
           <div class="card-price-row">
             <span class="price-current">${formatINR(p.price)}</span>
             <span class="price-original">${formatINR(p.originalPrice || p.original_price)}</span>
-            <span class="price-discount">${p.discount}% off</span>
-          </div>
-
-          <div class="card-delivery-tag">
-            <i class="fa-solid fa-truck-fast"></i>
-            <span>Free Delivery</span>
+            <span class="price-discount">(${p.discount}% OFF)</span>
           </div>
 
           <button 
             type="button" 
             class="card-add-cart-btn" 
-            onclick="window.Meesho.addToCart(${p.id}, 1, true)"
-            aria-label="Add ${p.name} to cart"
+            onclick="window.Myntra.addToCart(${p.id}, 1, true)"
+            aria-label="Add ${escapeHTML(p.name)} to bag"
           >
-            <i class="fa-solid fa-bag-shopping"></i> Add to Cart
+            <i class="fa-solid fa-bag-shopping"></i> Add to Bag
           </button>
         </div>
       </article>
     `;
   }
 
-  // Smart Multi-Token Search Matcher with Relevance Scoring
+  // Smart Multi-Token Search Matcher with Brand & Relevance Scoring
   function evaluateSearchMatch(product, rawQuery) {
     if (!rawQuery || rawQuery.trim() === '') {
       return { isMatch: true, score: product.popularity || 50 };
@@ -328,6 +362,7 @@
     const query = rawQuery.trim().toLowerCase();
     const tokens = query.split(/\s+/).filter(Boolean);
     const name = (product.name || '').toLowerCase();
+    const brand = (product.brand || '').toLowerCase();
     const cat = (product.category || '').toLowerCase();
     const desc = (product.description || '').toLowerCase();
     const tags = Array.isArray(product.tags) 
@@ -336,6 +371,10 @@
     const tagsText = tags.join(' ');
 
     let score = 0;
+
+    // Direct brand match
+    if (brand === query) score += 250;
+    else if (brand.includes(query)) score += 150;
 
     // Full query whole-phrase checks
     if (name === query) score += 200;
@@ -354,6 +393,10 @@
     for (const token of tokens) {
       let tokenMatched = false;
 
+      if (brand.includes(token)) {
+        tokenMatched = true;
+        score += 45;
+      }
       if (name.includes(token)) {
         tokenMatched = true;
         score += 35;
@@ -371,7 +414,7 @@
         score += 15;
       }
 
-      // Partial / Prefix match for user typing partial words (e.g. "kurt", "shir", "snee")
+      // Prefix match for fast typers (e.g. "road", "deni", "kurt")
       const words = name.split(/[\s,.-]+/);
       if (words.some(w => w.startsWith(token))) {
         tokenMatched = true;
@@ -395,10 +438,41 @@
 
     // 1. Category Filter
     if (STATE.activeCategory && STATE.activeCategory !== 'All') {
-      result = result.filter(p => p.category === STATE.activeCategory);
+      result = result.filter(p => p.category.toLowerCase() === STATE.activeCategory.toLowerCase());
     }
 
-    // 2. Smart Search Query Filter with Relevance Scoring
+    // 2. Brand Filter
+    if (STATE.activeBrand && STATE.activeBrand !== 'All') {
+      result = result.filter(p => (p.brand || '').toLowerCase() === STATE.activeBrand.toLowerCase());
+    }
+
+    // 3. Size Filter
+    if (STATE.activeSize && STATE.activeSize !== 'All') {
+      result = result.filter(p => {
+        const sizes = Array.isArray(p.sizes) ? p.sizes : (typeof p.sizes === 'string' ? JSON.parse(p.sizes || '[]') : []);
+        return sizes.includes(STATE.activeSize);
+      });
+    }
+
+    // 4. Price Filter
+    if (STATE.activePriceRange && STATE.activePriceRange !== 'all') {
+      switch (STATE.activePriceRange) {
+        case 'under500':
+          result = result.filter(p => p.price < 500);
+          break;
+        case '500to999':
+          result = result.filter(p => p.price >= 500 && p.price <= 999);
+          break;
+        case '1000to1999':
+          result = result.filter(p => p.price >= 1000 && p.price <= 1999);
+          break;
+        case '2000above':
+          result = result.filter(p => p.price >= 2000);
+          break;
+      }
+    }
+
+    // 5. Smart Search Query Filter with Relevance Scoring
     const searchActive = STATE.searchQuery.trim() !== '';
     if (searchActive) {
       const scoredItems = [];
@@ -408,23 +482,24 @@
           scoredItems.push({ product: p, score: evalResult.score });
         }
       }
-      // Sort by relevance score initially
       scoredItems.sort((a, b) => b.score - a.score);
       result = scoredItems.map(item => item.product);
     }
 
-    // 3. View Filter Tab (all, trending, bestseller/M-trusted, discounted, under299)
+    // 6. View Filter Tab (all, trending, bestseller, discounted, under999, under299)
     if (STATE.viewFilter === 'trending') {
       result = result.filter(p => p.badge === 'Trending' || (p.tags && p.tags.includes('trending')));
     } else if (STATE.viewFilter === 'bestseller') {
-      result = result.filter(p => p.badge === 'M-Trusted' || p.badge === 'Bestseller' || (p.tags && p.tags.includes('bestseller')));
+      result = result.filter(p => p.badge === 'Best Seller' || p.badge === 'Top Brand' || (p.tags && p.tags.includes('bestseller')));
     } else if (STATE.viewFilter === 'discounted') {
-      result = result.filter(p => p.discount >= 65);
+      result = result.filter(p => p.discount >= 50);
+    } else if (STATE.viewFilter === 'under999') {
+      result = result.filter(p => p.price <= 999);
     } else if (STATE.viewFilter === 'under299') {
-      result = result.filter(p => p.price <= 299);
+      result = result.filter(p => p.price <= 499);
     }
 
-    // 4. Sorting (if not default popular during search, or if user picked explicit sort)
+    // 7. Sorting
     if (!searchActive || STATE.sortBy !== 'popular') {
       switch (STATE.sortBy) {
         case 'price-asc':
@@ -451,16 +526,89 @@
 
     STATE.filteredProducts = result;
     renderCatalog();
-    updateToolbarInfo();
+    updateFilterTagsUI();
   }
 
-  function renderRelatedProducts() {
-    if (!DOM.relatedProductGrid) return;
-    const recommendations = STATE.products
-      .filter(p => p.badge === 'M-Trusted' || p.badge === 'Trending' || p.badge === 'Bestseller' || p.popularity >= 93)
-      .slice(0, 8);
+  function updateFilterTagsUI() {
+    if (DOM.resultsCount) {
+      DOM.resultsCount.textContent = `Showing ${STATE.filteredProducts.length} style${STATE.filteredProducts.length === 1 ? '' : 's'}`;
+    }
 
-    DOM.relatedProductGrid.innerHTML = recommendations.map(p => createProductCardHtml(p)).join('');
+    // Category tag
+    if (DOM.activeCategoryTag) {
+      DOM.activeCategoryTag.innerHTML = `Category: <strong>${STATE.activeCategory}</strong>`;
+    }
+
+    // Brand tag
+    if (DOM.activeBrandTag && DOM.activeBrandVal) {
+      if (STATE.activeBrand && STATE.activeBrand !== 'All') {
+        DOM.activeBrandVal.textContent = STATE.activeBrand;
+        DOM.activeBrandTag.hidden = false;
+      } else {
+        DOM.activeBrandTag.hidden = true;
+      }
+    }
+
+    // Size tag
+    if (DOM.activeSizeTag && DOM.activeSizeVal) {
+      if (STATE.activeSize && STATE.activeSize !== 'All') {
+        DOM.activeSizeVal.textContent = STATE.activeSize;
+        DOM.activeSizeTag.hidden = false;
+      } else {
+        DOM.activeSizeTag.hidden = true;
+      }
+    }
+
+    // Price tag
+    if (DOM.activePriceTag && DOM.activePriceVal) {
+      if (STATE.activePriceRange && STATE.activePriceRange !== 'all') {
+        const labels = {
+          'under500': 'Under ₹500',
+          '500to999': '₹500 - ₹999',
+          '1000to1999': '₹1,000 - ₹1,999',
+          '2000above': '₹2,000+'
+        };
+        DOM.activePriceVal.textContent = labels[STATE.activePriceRange] || STATE.activePriceRange;
+        DOM.activePriceTag.hidden = false;
+      } else {
+        DOM.activePriceTag.hidden = true;
+      }
+    }
+
+    // Search tag
+    if (DOM.activeSearchTag && DOM.activeSearchQuery) {
+      if (STATE.searchQuery.trim() !== '') {
+        DOM.activeSearchQuery.textContent = STATE.searchQuery.trim();
+        DOM.activeSearchTag.hidden = false;
+      } else {
+        DOM.activeSearchTag.hidden = true;
+      }
+    }
+
+    // Synchronize select controls
+    if (DOM.categorySelect && DOM.categorySelect.value !== STATE.activeCategory) {
+      DOM.categorySelect.value = STATE.activeCategory;
+    }
+    if (DOM.brandSelect && DOM.brandSelect.value !== STATE.activeBrand) {
+      DOM.brandSelect.value = STATE.activeBrand;
+    }
+    if (DOM.sizeSelect && DOM.sizeSelect.value !== STATE.activeSize) {
+      DOM.sizeSelect.value = STATE.activeSize;
+    }
+    if (DOM.priceFilterSelect && DOM.priceFilterSelect.value !== STATE.activePriceRange) {
+      DOM.priceFilterSelect.value = STATE.activePriceRange;
+    }
+    if (DOM.sortSelect && DOM.sortSelect.value !== STATE.sortBy) {
+      DOM.sortSelect.value = STATE.sortBy;
+    }
+
+    // Synchronize sub-nav and main dept nav active pills
+    document.querySelectorAll('.category-nav-item').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-category') === STATE.activeCategory);
+    });
+    document.querySelectorAll('.nav-dept-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-category') === STATE.activeCategory);
+    });
   }
 
   function renderCatalog() {
@@ -470,115 +618,98 @@
       DOM.productGrid.innerHTML = '';
       if (DOM.emptyCatalogState) {
         DOM.emptyCatalogState.hidden = false;
-        if (DOM.emptyStateTitle) {
-          if (STATE.searchQuery.trim() !== '') {
-            DOM.emptyStateTitle.textContent = `No Matching Products Found for "${STATE.searchQuery}"`;
-          } else {
-            DOM.emptyStateTitle.textContent = 'No Matching Products Found';
-          }
+        if (STATE.searchQuery.trim() !== '') {
+          DOM.emptyStateTitle.textContent = `No matches found for "${STATE.searchQuery}"`;
+          DOM.emptyStateDesc.textContent = "Try searching broader terms like 'Shirt', 'Kurta', 'Denim', 'Dress', or check for spelling mistakes.";
+        } else {
+          DOM.emptyStateTitle.textContent = 'No Styles Match Your Selected Filters';
+          DOM.emptyStateDesc.textContent = 'Try adjusting your brand, size or price filters to explore our wider collection.';
         }
-        if (DOM.emptyStateDesc) {
-          if (STATE.searchQuery.trim() !== '') {
-            DOM.emptyStateDesc.textContent = `We couldn't find any items matching "${STATE.searchQuery}". Try checking for typos, searching broader keywords, or click any of the popular search suggestions below.`;
-          } else {
-            DOM.emptyStateDesc.textContent = "We couldn't find any items matching your active category or filters. Try resetting your filters to explore all available products.";
-          }
-        }
-        renderRelatedProducts();
+      }
+
+      // Render recommendations inside empty state
+      if (DOM.relatedProductGrid) {
+        const recommendations = [...STATE.products]
+          .sort((a, b) => b.popularity - a.popularity)
+          .slice(0, 4);
+        DOM.relatedProductGrid.innerHTML = recommendations.map(p => renderProductCard(p)).join('');
       }
       return;
     }
 
-    if (DOM.emptyCatalogState) DOM.emptyCatalogState.hidden = true;
-
-    DOM.productGrid.innerHTML = STATE.filteredProducts.map(p => createProductCardHtml(p)).join('');
-  }
-
-  function updateToolbarInfo() {
-    if (DOM.resultsCount) {
-      DOM.resultsCount.textContent = `Showing ${STATE.filteredProducts.length} of ${STATE.products.length} products`;
+    if (DOM.emptyCatalogState) {
+      DOM.emptyCatalogState.hidden = true;
     }
 
-    if (DOM.activeCategoryTag) {
-      DOM.activeCategoryTag.innerHTML = `Category: <strong>${STATE.activeCategory}</strong>`;
-    }
-
-    if (DOM.activeSearchTag && DOM.activeSearchQuery) {
-      if (STATE.searchQuery.trim() !== '') {
-        DOM.activeSearchTag.hidden = false;
-        DOM.activeSearchQuery.textContent = `"${STATE.searchQuery}"`;
-      } else {
-        DOM.activeSearchTag.hidden = true;
-      }
-    }
-
-    // Sync Dropdown
-    if (DOM.categorySelect && DOM.categorySelect.value !== STATE.activeCategory) {
-      DOM.categorySelect.value = STATE.activeCategory;
-    }
-
-    // Sync Horizontal Category Nav Bar
-    const navItems = document.querySelectorAll('.category-nav-item');
-    navItems.forEach(btn => {
-      const cat = btn.getAttribute('data-category');
-      if (cat === STATE.activeCategory) {
-        btn.classList.add('active');
-      } else {
-        btn.classList.remove('active');
-      }
-    });
+    DOM.productGrid.innerHTML = STATE.filteredProducts.map(p => renderProductCard(p)).join('');
   }
 
   // ==========================================================================
-  // 7. PRODUCT DETAILS MODAL (QUICK VIEW)
+  // 7. PRODUCT DETAILS / QUICK VIEW MODAL
   // ==========================================================================
   function openProductModal(productId) {
     const product = STATE.products.find(p => p.id === productId);
-    if (!product) return;
+    if (!product || !DOM.productModalBody) return;
 
     STATE.selectedProductModal = product;
     STATE.modalQuantity = 1;
+    STATE.modalSelectedSize = (product.sizes && product.sizes.length > 0) ? product.sizes[0] : 'Free Size';
 
     const isWishlisted = STATE.wishlist.includes(product.id);
-    const isLowStock = product.stock <= 8;
+    const availableSizes = Array.isArray(product.sizes) ? product.sizes : (typeof product.sizes === 'string' ? JSON.parse(product.sizes || '[]') : []);
 
     DOM.productModalBody.innerHTML = `
-      <div class="modal-product-grid">
-        <div class="modal-img-wrap">
+      <div class="product-modal-grid">
+        <div class="modal-gallery-col">
           <img 
             src="${product.image}" 
-            alt="${product.name}" 
+            class="modal-main-img" 
+            alt="${escapeHTML(product.name)}" 
             onerror="this.onerror=null; this.src='${FALLBACK_IMAGE}';"
           />
         </div>
 
         <div class="modal-info-col">
-          <span class="modal-category-badge">${product.category}</span>
-          <h2 class="modal-product-title" id="modal-product-title">${product.name}</h2>
+          <div class="modal-brand-name">${escapeHTML(product.brand || 'MYNTRA')}</div>
+          <h2 class="modal-product-title" id="modal-product-title">${escapeHTML(product.name)}</h2>
 
           <div class="modal-rating-row">
             <span class="rating-badge">
-              <i class="fa-solid fa-star"></i> ${product.rating}
+              <span>${product.rating}</span>
+              <i class="fa-solid fa-star"></i>
             </span>
-            <span class="reviews-count">${Number(product.reviewsCount).toLocaleString('en-IN')} Verified Customer Ratings</span>
-            <span class="badge-pill bg-success-soft">M-Trusted Supplier</span>
+            <span class="reviews-count">${Number(product.reviewsCount || product.reviews_count || 0).toLocaleString('en-IN')} Customer Ratings</span>
+            <span class="badge-pill bg-success-soft">100% Original Brand</span>
           </div>
 
           <div class="modal-price-card">
             <span class="current-price">${formatINR(product.price)}</span>
-            <span class="orig-price">${formatINR(product.originalPrice)}</span>
-            <span class="discount-pill">${product.discount}% OFF</span>
+            <span class="orig-price">${formatINR(product.originalPrice || product.original_price)}</span>
+            <span class="discount-pill">(${product.discount}% OFF)</span>
+            <span class="tax-info">inclusive of all taxes</span>
           </div>
 
+          ${availableSizes.length > 0 ? `
+            <div class="modal-size-select-box">
+              <span class="size-heading">SELECT SIZE:</span>
+              <div class="modal-size-options" id="modal-size-options">
+                ${availableSizes.map((s, idx) => `
+                  <button type="button" class="modal-size-btn ${idx === 0 ? 'selected' : ''}" data-size="${s}">${s}</button>
+                `).join('')}
+              </div>
+            </div>
+          ` : ''}
+
           <div class="modal-desc-box">
-            <p>${product.description}</p>
+            <h4 class="desc-heading">PRODUCT DETAILS</h4>
+            <p>${escapeHTML(product.description)}</p>
           </div>
 
           <div class="modal-perks-list">
-            <div class="perk-item"><i class="fa-solid fa-check"></i> Free Delivery Across India</div>
-            <div class="perk-item"><i class="fa-solid fa-check"></i> Cash On Delivery (COD)</div>
-            <div class="perk-item"><i class="fa-solid fa-check"></i> 7-Day Easy Doorstep Return</div>
-            <div class="perk-item"><i class="fa-solid fa-check"></i> Lowest Price Direct from Seller</div>
+            <div class="perk-item"><i class="fa-solid fa-circle-check text-success"></i> 100% Original Products Guaranteed</div>
+            <div class="perk-item"><i class="fa-solid fa-truck-fast text-pink"></i> Express Delivery (Dispatches in 24 Hours)</div>
+            <div class="perk-item"><i class="fa-solid fa-rotate-left text-blue"></i> Easy 14-Day Return &amp; Exchange</div>
+            <div class="perk-item"><i class="fa-solid fa-hand-holding-dollar text-green"></i> Cash on Delivery Available</div>
           </div>
 
           <div class="modal-qty-row">
@@ -588,8 +719,8 @@
               <span class="qty-value" id="modal-qty-val">1</span>
               <button type="button" class="qty-btn" id="modal-qty-plus" aria-label="Increase quantity">+</button>
             </div>
-            <span class="card-stock-pill ${isLowStock ? 'card-stock-low' : ''}" style="margin-left: 0.5rem;">
-              ${isLowStock ? `Only ${product.stock} items left in stock!` : 'In Stock (Ready to Dispatch)'}
+            <span class="stock-status-pill ${product.stock <= 8 ? 'low-stock' : ''}">
+              ${product.stock <= 8 ? `Hurry, only ${product.stock} items left!` : 'In Stock'}
             </span>
           </div>
 
@@ -599,13 +730,13 @@
               class="btn btn-primary btn-lg btn-block" 
               id="modal-add-cart-btn"
             >
-              <i class="fa-solid fa-bag-shopping"></i> Add to Cart
+              <i class="fa-solid fa-bag-shopping"></i> ADD TO BAG
             </button>
             <button 
               type="button" 
               class="btn btn-outline btn-lg" 
               id="modal-wishlist-toggle"
-              title="${isWishlisted ? 'Remove from Wishlist' : 'Add to Wishlist'}"
+              title="${isWishlisted ? 'Remove from Wishlist' : 'Save to Wishlist'}"
             >
               <i class="${isWishlisted ? 'fa-solid fa-heart text-pink' : 'fa-regular fa-heart'}"></i>
             </button>
@@ -613,6 +744,15 @@
         </div>
       </div>
     `;
+
+    // Size selection listener in modal
+    document.querySelectorAll('.modal-size-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.modal-size-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        STATE.modalSelectedSize = btn.getAttribute('data-size');
+      });
+    });
 
     const minusBtn = document.getElementById('modal-qty-minus');
     const plusBtn = document.getElementById('modal-qty-plus');
@@ -637,7 +777,7 @@
     });
 
     addCartBtn.addEventListener('click', () => {
-      addToCart(product.id, STATE.modalQuantity, true);
+      addToCart(product.id, STATE.modalQuantity, true, STATE.modalSelectedSize);
       closeProductModal();
     });
 
@@ -652,7 +792,9 @@
   }
 
   function closeProductModal() {
-    DOM.productModalBackdrop.hidden = true;
+    if (DOM.productModalBackdrop) {
+      DOM.productModalBackdrop.hidden = true;
+    }
     STATE.selectedProductModal = null;
     document.body.style.overflow = '';
   }
@@ -660,22 +802,25 @@
   // ==========================================================================
   // 8. SHOPPING CART ENGINE
   // ==========================================================================
-  function addToCart(productId, quantity = 1, showToastNotification = true) {
+  function addToCart(productId, quantity = 1, showToastNotification = true, size = 'M') {
     const product = STATE.products.find(p => p.id === productId);
     if (!product) return;
 
-    const existingIndex = STATE.cart.findIndex(item => item.product.id === productId);
+    const chosenSize = size || (product.sizes && product.sizes[0]) || 'M';
+    const existingIndex = STATE.cart.findIndex(item => item.product.id === productId && (item.size || 'M') === chosenSize);
 
     if (existingIndex > -1) {
       STATE.cart[existingIndex].quantity += quantity;
     } else {
       STATE.cart.push({
         product: product,
-        quantity: quantity
+        quantity: quantity,
+        size: chosenSize
       });
     }
 
-    saveToStorage('meesho_cart', STATE.cart);
+    saveToStorage('myntra_cart', STATE.cart);
+    saveToStorage('meesho_cart', STATE.cart); // Backwards compatibility
     saveToStorage('shopease_cart', STATE.cart); // Backwards compatibility
     updateCartBadges();
 
@@ -684,15 +829,15 @@
       fetch('/api/cart', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-session-id': STATE.sessionId },
-        body: JSON.stringify({ productId, quantity })
+        body: JSON.stringify({ productId, quantity, size: chosenSize })
       }).catch(e => console.warn('Cart backend sync skipped:', e));
     }
 
     if (showToastNotification) {
-      showToast(`Added <strong>${product.name.slice(0, 28)}...</strong> to Meesho Bag!`, 'success');
+      showToast(`Added <strong>${product.name.slice(0, 26)}... (Size: ${chosenSize})</strong> to Bag!`, 'success');
     }
 
-    if (!DOM.cartDrawerBackdrop.hidden) {
+    if (DOM.cartDrawerBackdrop && !DOM.cartDrawerBackdrop.hidden) {
       renderCartDrawer();
     }
   }
@@ -712,6 +857,7 @@
         return;
       }
       STATE.cart[itemIndex].quantity = newQty;
+      saveToStorage('myntra_cart', STATE.cart);
       saveToStorage('meesho_cart', STATE.cart);
       saveToStorage('shopease_cart', STATE.cart);
       updateCartBadges();
@@ -730,6 +876,7 @@
   function removeFromCart(productId) {
     const item = STATE.cart.find(i => i.product.id === productId);
     STATE.cart = STATE.cart.filter(i => i.product.id !== productId);
+    saveToStorage('myntra_cart', STATE.cart);
     saveToStorage('meesho_cart', STATE.cart);
     saveToStorage('shopease_cart', STATE.cart);
     updateCartBadges();
@@ -743,7 +890,7 @@
     }
 
     if (item) {
-      showToast(`Removed <strong>${item.product.name.slice(0, 24)}...</strong> from bag`, 'info');
+      showToast(`Removed <strong>${item.product.name.slice(0, 24)}...</strong> from Bag`, 'info');
     }
   }
 
@@ -760,12 +907,13 @@
     let currentTotal = 0;
 
     STATE.cart.forEach(item => {
-      subtotalMRP += (item.product.originalPrice * item.quantity);
+      const orig = item.product.originalPrice || item.product.original_price || item.product.price;
+      subtotalMRP += (orig * item.quantity);
       currentTotal += (item.product.price * item.quantity);
     });
 
     const bagDiscount = subtotalMRP - currentTotal;
-    let deliveryFee = currentTotal >= 499 || currentTotal === 0 ? 0 : 40;
+    let deliveryFee = currentTotal >= 799 || currentTotal === 0 ? 0 : 70;
 
     let couponDiscount = 0;
     if (STATE.appliedCoupon && currentTotal > 0) {
@@ -800,10 +948,10 @@
           <div class="empty-icon-wrapper">
             <i class="fa-solid fa-bag-shopping"></i>
           </div>
-          <h3>Your Meesho Bag is Empty</h3>
-          <p>Looks like you haven't added anything to your cart yet. Explore sarees, kurtis, footwear and grab factory deals!</p>
-          <button class="btn btn-primary" onclick="window.Meesho.closeCart(); window.location.hash='#products-section';">
-            <i class="fa-solid fa-bag-shopping"></i> Start Shopping
+          <h3>Hey, your bag is empty!</h3>
+          <p>There is nothing in your bag. Let's add some trendy fashion styles from Men, Women, Kids or Beauty!</p>
+          <button class="btn btn-primary" onclick="window.Myntra.closeCart(); window.location.hash='#products-section';">
+            <i class="fa-solid fa-bag-shopping"></i> Explore Fashion
           </button>
         </div>
       `;
@@ -817,12 +965,12 @@
 
     const totals = calculateCartTotals();
 
-    const threshold = 499;
+    const threshold = 799;
     const diff = threshold - totals.currentTotal;
     const pct = Math.min(100, Math.round((totals.currentTotal / threshold) * 100));
 
     if (diff > 0) {
-      DOM.deliveryStatusText.innerHTML = `Add <strong>${formatINR(diff)}</strong> more to unlock <strong>FREE Delivery!</strong>`;
+      DOM.deliveryStatusText.innerHTML = `Shop for <strong>${formatINR(diff)}</strong> more to unlock <strong>FREE Delivery!</strong>`;
       DOM.deliveryProgressFill.style.width = `${pct}%`;
     } else {
       DOM.deliveryStatusText.innerHTML = `<span class="text-success"><i class="fa-solid fa-circle-check"></i> Congratulations! You have unlocked <strong>FREE Delivery</strong></span>`;
@@ -833,15 +981,19 @@
       <div class="cart-item-card" data-id="${item.product.id}">
         <img 
           src="${item.product.image}" 
-          alt="${item.product.name}" 
+          alt="${escapeHTML(item.product.name)}" 
           class="cart-item-img"
           onerror="this.onerror=null; this.src='${FALLBACK_IMAGE}';"
         />
         <div class="cart-item-details">
-          <h4 class="cart-item-title" title="${item.product.name}">${item.product.name}</h4>
+          <div class="cart-item-brand">${escapeHTML(item.product.brand || 'MYNTRA')}</div>
+          <h4 class="cart-item-title" title="${escapeHTML(item.product.name)}">${escapeHTML(item.product.name)}</h4>
+          <div class="cart-item-size-tag">Size: <strong>${item.size || 'M'}</strong></div>
+          
           <div class="cart-item-price-row">
             <span class="cart-item-price">${formatINR(item.product.price)}</span>
-            <span class="cart-item-orig-price">${formatINR(item.product.originalPrice)}</span>
+            <span class="cart-item-orig-price">${formatINR(item.product.originalPrice || item.product.original_price)}</span>
+            <span class="price-discount">(${item.product.discount}% OFF)</span>
           </div>
 
           <div class="cart-item-controls">
@@ -849,14 +1001,14 @@
               <button 
                 type="button" 
                 class="qty-btn" 
-                onclick="window.Meesho.updateCartQty(${item.product.id}, -1)" 
+                onclick="window.Myntra.updateCartQty(${item.product.id}, -1)" 
                 aria-label="Decrease quantity"
               >-</button>
               <span class="qty-value">${item.quantity}</span>
               <button 
                 type="button" 
                 class="qty-btn" 
-                onclick="window.Meesho.updateCartQty(${item.product.id}, 1)" 
+                onclick="window.Myntra.updateCartQty(${item.product.id}, 1)" 
                 aria-label="Increase quantity"
               >+</button>
             </div>
@@ -864,7 +1016,7 @@
             <button 
               type="button" 
               class="cart-item-remove-btn" 
-              onclick="window.Meesho.removeFromCart(${item.product.id})"
+              onclick="window.Myntra.removeFromCart(${item.product.id})"
               aria-label="Remove item"
             >
               <i class="fa-regular fa-trash-can"></i> Remove
@@ -902,7 +1054,7 @@
 
     const coupon = PROMO_COUPONS[cleanCode];
     if (!coupon) {
-      if (DOM.couponMsg) DOM.couponMsg.innerHTML = `<span class="text-danger">Invalid code. Try "MEESHONEW" or "MEESHO100"</span>`;
+      if (DOM.couponMsg) DOM.couponMsg.innerHTML = `<span class="text-danger">Invalid code. Try "MYNTRA200" or "MYNTRA10"</span>`;
       return;
     }
 
@@ -949,6 +1101,7 @@
       showToast(`Saved <strong>${product.name.slice(0, 24)}...</strong> to Wishlist!`, 'success', 'fa-solid fa-heart text-pink');
     }
 
+    saveToStorage('myntra_wishlist', STATE.wishlist);
     saveToStorage('meesho_wishlist', STATE.wishlist);
     saveToStorage('shopease_wishlist', STATE.wishlist);
     updateWishlistBadges();
@@ -963,7 +1116,7 @@
 
     renderCatalog();
 
-    if (!DOM.wishlistDrawerBackdrop.hidden) {
+    if (DOM.wishlistDrawerBackdrop && !DOM.wishlistDrawerBackdrop.hidden) {
       renderWishlistDrawer();
     }
   }
@@ -984,10 +1137,10 @@
           <div class="empty-icon-wrapper">
             <i class="fa-regular fa-heart"></i>
           </div>
-          <h3>Your Wishlist is Empty</h3>
-          <p>Tap the heart icon on any product to save items you love for later.</p>
-          <button class="btn btn-primary" onclick="window.Meesho.closeWishlist(); window.location.hash='#products-section';">
-            <i class="fa-solid fa-compass"></i> Discover Products
+          <h3>YOUR WISHLIST IS EMPTY</h3>
+          <p>Explore runway trends and save your favorite garments and accessories here.</p>
+          <button class="btn btn-primary" onclick="window.Myntra.closeWishlist(); window.location.hash='#products-section';">
+            <i class="fa-solid fa-compass"></i> Discover Fashion
           </button>
         </div>
       `;
@@ -1000,30 +1153,31 @@
       <div class="wishlist-item-card">
         <img 
           src="${p.image}" 
-          alt="${p.name}" 
+          alt="${escapeHTML(p.name)}" 
           class="wishlist-item-img"
           onerror="this.onerror=null; this.src='${FALLBACK_IMAGE}';"
         />
         <div class="wishlist-item-details">
-          <h4 class="cart-item-title" title="${p.name}">${p.name}</h4>
+          <div class="cart-item-brand">${escapeHTML(p.brand || 'MYNTRA')}</div>
+          <h4 class="cart-item-title" title="${escapeHTML(p.name)}">${escapeHTML(p.name)}</h4>
           <div class="cart-item-price-row">
             <span class="cart-item-price">${formatINR(p.price)}</span>
-            <span class="cart-item-orig-price">${formatINR(p.originalPrice)}</span>
-            <span class="price-discount">${p.discount}% OFF</span>
+            <span class="cart-item-orig-price">${formatINR(p.originalPrice || p.original_price)}</span>
+            <span class="price-discount">(${p.discount}% OFF)</span>
           </div>
 
           <div class="wishlist-actions-row">
             <button 
               type="button" 
               class="btn btn-sm btn-primary" 
-              onclick="window.Meesho.moveWishlistToCart(${p.id})"
+              onclick="window.Myntra.moveWishlistToCart(${p.id})"
             >
-              <i class="fa-solid fa-cart-plus"></i> Move to Cart
+              <i class="fa-solid fa-bag-shopping"></i> MOVE TO BAG
             </button>
             <button 
               type="button" 
               class="btn btn-sm btn-outline" 
-              onclick="window.Meesho.toggleWishlist(${p.id})"
+              onclick="window.Myntra.toggleWishlist(${p.id})"
               title="Remove from Wishlist"
             >
               <i class="fa-regular fa-trash-can"></i>
@@ -1039,7 +1193,7 @@
   function moveWishlistToCart(productId) {
     addToCart(productId, 1, false);
     toggleWishlist(productId);
-    showToast('Item moved from Wishlist to Meesho Bag!', 'success');
+    showToast('Item moved from Wishlist to Shopping Bag!', 'success');
   }
 
   function openWishlistDrawer() {
@@ -1054,7 +1208,7 @@
   }
 
   // ==========================================================================
-  // 10. MEESHO CHECKOUT & DEMO ORDER ENGINE
+  // 10. CHECKOUT & ORDER PLACEMENT ENGINE
   // ==========================================================================
   function openCheckoutModal() {
     if (STATE.cart.length === 0) {
@@ -1068,13 +1222,13 @@
 
     const previewHtml = STATE.cart.map(item => `
       <div class="checkout-preview-item">
-        <span class="preview-name">${item.product.name}</span>
+        <span class="preview-name">${escapeHTML(item.product.name)} (Size: ${item.size || 'M'})</span>
         <span>${item.quantity} x ${formatINR(item.product.price)}</span>
       </div>
     `).join('');
 
     DOM.checkoutItemsPreview.innerHTML = previewHtml;
-    DOM.checkoutItemsCount.textContent = `${totals.totalCount} items`;
+    DOM.checkoutItemsCount.textContent = `${totals.totalCount} item${totals.totalCount === 1 ? '' : 's'}`;
     DOM.checkoutSubtotal.textContent = formatINR(totals.currentTotal);
     DOM.checkoutDiscountVal.textContent = totals.bagDiscount > 0 ? `-${formatINR(totals.bagDiscount)}` : '₹0';
     DOM.checkoutShippingVal.innerHTML = totals.deliveryFee === 0 
@@ -1125,20 +1279,20 @@
 
     const phoneRegex = /^[6-9]\d{9}$/;
     if (!phoneRegex.test(phoneInput.value.replace(/\s+/g, ''))) {
-      errPhone.textContent = 'Please enter a valid 10-digit Indian phone number';
+      errPhone.textContent = 'Please enter a valid 10-digit Indian mobile number';
       phoneInput.classList.add('invalid');
       isValid = false;
     }
 
     const pinRegex = /^[1-9][0-9]{5}$/;
     if (!pinRegex.test(pincodeInput.value.trim())) {
-      errPincode.textContent = 'Please enter a valid 6-digit Indian PIN code';
+      errPincode.textContent = 'Please enter a valid 6-digit PIN code';
       pincodeInput.classList.add('invalid');
       isValid = false;
     }
 
     if (!addressInput.value.trim() || addressInput.value.trim().length < 8) {
-      errAddress.textContent = 'Please enter your complete address and house number';
+      errAddress.textContent = 'Please enter complete house/flat and street address';
       addressInput.classList.add('invalid');
       isValid = false;
     }
@@ -1150,7 +1304,7 @@
     }
 
     if (!stateInput.value) {
-      errState.textContent = 'Please select your delivery state';
+      errState.textContent = 'Please select your state';
       stateInput.classList.add('invalid');
       isValid = false;
     }
@@ -1161,9 +1315,8 @@
     const paymentMethod = paymentRadio ? (paymentRadio.value === 'COD' ? 'Cash On Delivery' : 'Instant UPI (Demo)') : 'Cash On Delivery';
 
     const totals = calculateCartTotals();
-
     const randomNum = Math.floor(10000 + Math.random() * 90000);
-    const orderId = `MEESHO-ORD-2026-${randomNum}`;
+    const orderId = `MYN-ORD-2026-${randomNum}`;
     const today = new Date();
     const formattedDate = today.toLocaleDateString('en-IN', {
       day: 'numeric',
@@ -1185,11 +1338,9 @@
     };
 
     STATE.orders.unshift(newOrder);
+    saveToStorage('myntra_orders', STATE.orders);
     saveToStorage('meesho_orders', STATE.orders);
-    saveToStorage('shopease_cart', STATE.cart);
-
-    saveToStorage('meesho_saved_address', newOrder.customer);
-    saveToStorage('shopease_saved_address', newOrder.customer);
+    saveToStorage('myntra_saved_address', newOrder.customer);
 
     // Save order in SQLite backend if connected
     if (STATE.isBackendConnected) {
@@ -1218,11 +1369,12 @@
 
     STATE.cart = [];
     STATE.appliedCoupon = null;
+    saveToStorage('myntra_cart', STATE.cart);
     saveToStorage('meesho_cart', STATE.cart);
     saveToStorage('shopease_cart', STATE.cart);
     updateCartBadges();
 
-    showToast(`Meesho Order <strong>${orderId}</strong> confirmed! 🎉`, 'success');
+    showToast(`Order <strong>${orderId}</strong> confirmed! 🎉`, 'success');
   }
 
   function closeOrderSuccessModal() {
@@ -1237,7 +1389,6 @@
     DOM.accOrdersCount.textContent = STATE.orders.length;
     renderOrderHistory();
 
-    // If connected to SQLite backend, refresh order list from server
     if (STATE.isBackendConnected) {
       fetch('/api/orders')
         .then(res => res.json())
@@ -1251,7 +1402,7 @@
         .catch(err => console.warn('Order history server fetch skipped:', err));
     }
 
-    const savedAddr = loadFromStorage('meesho_saved_address', loadFromStorage('shopease_saved_address', null));
+    const savedAddr = loadFromStorage('myntra_saved_address', loadFromStorage('meesho_saved_address', null));
     if (savedAddr && DOM.savedAddressPreview) {
       DOM.savedAddressPreview.innerHTML = `
         <strong>${savedAddr.name}</strong> (${savedAddr.phone})<br />
@@ -1274,9 +1425,9 @@
     if (STATE.orders.length === 0) {
       DOM.accOrdersList.innerHTML = `
         <div class="empty-state" style="padding: 2rem 1rem;">
-          <i class="fa-solid fa-clock-rotate-left" style="font-size: 2rem; color: var(--meesho-magenta); margin-bottom: 0.5rem; display: block;"></i>
-          <h4>No Meesho Orders Placed Yet</h4>
-          <p style="font-size: 0.85rem;">When you complete demo checkout, your orders and tracking details will appear here.</p>
+          <i class="fa-solid fa-clock-rotate-left" style="font-size: 2rem; color: var(--primary); margin-bottom: 0.5rem; display: block;"></i>
+          <h4>No Orders Placed Yet</h4>
+          <p style="font-size: 0.85rem;">When you complete demo checkout, your fashion order tracking and summary will appear here.</p>
         </div>
       `;
       return;
@@ -1290,7 +1441,7 @@
             <span style="margin: 0 0.5rem;">•</span>
             <span>${order.date}</span>
           </div>
-          <span class="badge-pill bg-success-soft">SUPPLIER DISPATCHED</span>
+          <span class="badge-pill bg-success-soft">ORDER CONFIRMED</span>
         </div>
         <div class="order-history-items">
           ${order.items.map(i => `${i.product.name} (x${i.quantity})`).join(', ')}
@@ -1395,143 +1546,179 @@
 
     activeSuggestionIndex = -1;
 
-    // 1. Direct product matches evaluated via smart token matcher
+    // 1. Direct matches
     const productMatches = STATE.products.filter(p => {
       const evalRes = evaluateSearchMatch(p, q);
       return evalRes.isMatch;
     }).slice(0, 5);
 
-    // 2. Matching categories (e.g. searching "mob" matches Mobiles, "foot" matches Footwear)
-    const allCategories = [...new Set(STATE.products.map(p => p.category))];
-    const matchingCategories = allCategories
-      .filter(cat => cat.toLowerCase().includes(q))
-      .slice(0, 2);
-
-    // 3. Matching tags/keywords for instant suggestions
-    const matchingKeywords = new Set();
-    for (const p of STATE.products) {
-      const tags = Array.isArray(p.tags) ? p.tags : (typeof p.tags === 'string' ? p.tags.split(',') : []);
-      for (const t of tags) {
-        const cleanT = t.trim().toLowerCase();
-        if (cleanT.includes(q) && cleanT !== q) {
-          matchingKeywords.add(cleanT);
-        }
+    // 2. Brand suggestions
+    const brandMatches = new Set();
+    STATE.products.forEach(p => {
+      if (p.brand && p.brand.toLowerCase().includes(q)) {
+        brandMatches.add(p.brand);
       }
-    }
-    const keywordsList = Array.from(matchingKeywords).slice(0, 3);
+    });
 
-    if (productMatches.length === 0 && matchingCategories.length === 0 && keywordsList.length === 0) {
-      hideSearchSuggestions();
+    // 3. Category suggestions
+    const categoryMatches = new Set();
+    const allCategories = ['Men', 'Women', 'Kids', 'Beauty', 'Home'];
+    allCategories.forEach(c => {
+      if (c.toLowerCase().includes(q)) {
+        categoryMatches.add(c);
+      }
+    });
+
+    if (productMatches.length === 0 && brandMatches.size === 0 && categoryMatches.size === 0) {
+      DOM.searchSuggestions.innerHTML = `
+        <div class="no-suggestions">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <span>No suggestions for "<strong>${escapeHTML(query)}</strong>"</span>
+        </div>
+      `;
+      DOM.searchSuggestions.hidden = false;
       return;
     }
 
     let html = '';
 
-    // A. Category Suggestions
-    if (matchingCategories.length > 0) {
-      html += '<div class="suggestion-section-title"><i class="fa-solid fa-layer-group"></i> Department Suggestions</div>';
-      html += matchingCategories.map(cat => `
-        <div class="suggestion-item suggestion-category-item" onclick="window.Meesho.selectCategorySuggestion('${cat.replace(/'/g, "\\'")}')">
-          <div class="suggestion-icon"><i class="fa-solid fa-layer-group"></i></div>
-          <div class="suggestion-details">
-            <span class="suggestion-title">In <strong>${highlightMatch(cat, query)}</strong></span>
-            <span class="suggestion-meta">Filter by ${cat}</span>
-          </div>
+    // Render Brand matches
+    if (brandMatches.size > 0) {
+      html += `
+        <div class="suggestion-group">
+          <div class="suggestion-group-title"><i class="fa-solid fa-tags"></i> Top Brands</div>
+          ${Array.from(brandMatches).slice(0, 3).map(b => `
+            <div class="suggestion-item" data-type="brand" data-val="${b}">
+              <div class="suggestion-text">
+                <strong>${highlightMatch(b, query)}</strong>
+                <span class="suggestion-sub">Explore Brand Store</span>
+              </div>
+              <i class="fa-solid fa-arrow-right suggestion-arrow"></i>
+            </div>
+          `).join('')}
         </div>
-      `).join('');
+      `;
     }
 
-    // B. Keyword Suggestions
-    if (keywordsList.length > 0) {
-      html += '<div class="suggestion-section-title"><i class="fa-solid fa-fire"></i> Popular Searches</div>';
-      html += keywordsList.map(kw => `
-        <div class="suggestion-item suggestion-keyword-item" onclick="window.Meesho.selectSearchSuggestion('${kw.replace(/'/g, "\\'")}')">
-          <div class="suggestion-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
-          <div class="suggestion-details">
-            <span class="suggestion-title">${highlightMatch(kw, query)}</span>
-            <span class="suggestion-meta">Search Meesho catalog</span>
-          </div>
+    // Render Category matches
+    if (categoryMatches.size > 0) {
+      html += `
+        <div class="suggestion-group">
+          <div class="suggestion-group-title"><i class="fa-solid fa-layer-group"></i> Fashion Departments</div>
+          ${Array.from(categoryMatches).slice(0, 3).map(c => `
+            <div class="suggestion-item" data-type="category" data-val="${c}">
+              <div class="suggestion-text">
+                <strong>${highlightMatch(c, query)}</strong>
+                <span class="suggestion-sub">View department styles</span>
+              </div>
+              <i class="fa-solid fa-arrow-right suggestion-arrow"></i>
+            </div>
+          `).join('')}
         </div>
-      `).join('');
+      `;
     }
 
-    // C. Product Suggestions
+    // Render Product matches
     if (productMatches.length > 0) {
-      html += '<div class="suggestion-section-title"><i class="fa-solid fa-bag-shopping"></i> Matching Products</div>';
-      html += productMatches.map(p => `
-        <div class="suggestion-item" onclick="window.Meesho.selectSearchSuggestion('${p.name.replace(/'/g, "\\'")}')">
-          <img 
-            src="${p.image}" 
-            alt="${p.name}" 
-            class="suggestion-thumb"
-            onerror="this.onerror=null; this.src='${FALLBACK_IMAGE}';"
-          />
-          <div class="suggestion-details">
-            <span class="suggestion-title">${highlightMatch(p.name, query)}</span>
-            <span class="suggestion-meta">
-              <span>${formatINR(p.price)}</span>
-              <span class="suggestion-cat-badge">${p.category}</span>
-            </span>
-          </div>
+      html += `
+        <div class="suggestion-group">
+          <div class="suggestion-group-title"><i class="fa-solid fa-shirt"></i> Matching Styles</div>
+          ${productMatches.map(p => `
+            <div class="suggestion-item product-suggestion" data-type="product" data-id="${p.id}">
+              <img src="${p.image}" class="suggestion-thumb" alt="${escapeHTML(p.name)}" />
+              <div class="suggestion-text">
+                <span class="suggestion-brand">${escapeHTML(p.brand || '')}</span>
+                <span class="suggestion-name">${highlightMatch(p.name, query)}</span>
+                <span class="suggestion-price">${formatINR(p.price)} <small>(${p.discount}% OFF)</small></span>
+              </div>
+            </div>
+          `).join('')}
         </div>
-      `).join('');
+      `;
     }
 
     DOM.searchSuggestions.innerHTML = html;
     DOM.searchSuggestions.hidden = false;
+
+    // Attach click events on suggestions
+    DOM.searchSuggestions.querySelectorAll('.suggestion-item').forEach(item => {
+      item.addEventListener('click', () => {
+        const type = item.getAttribute('data-type');
+        if (type === 'product') {
+          const id = parseInt(item.getAttribute('data-id'), 10);
+          openProductModal(id);
+        } else if (type === 'brand') {
+          const brand = item.getAttribute('data-val');
+          selectBrandSuggestion(brand);
+        } else if (type === 'category') {
+          const category = item.getAttribute('data-val');
+          selectCategorySuggestion(category);
+        }
+        hideSearchSuggestions();
+      });
+    });
   }
 
   function hideSearchSuggestions() {
-    activeSuggestionIndex = -1;
-    if (DOM.searchSuggestions) DOM.searchSuggestions.hidden = true;
-  }
-
-  function selectSearchSuggestion(productName) {
-    DOM.searchInput.value = productName;
-    STATE.searchQuery = productName;
-    DOM.clearSearchBtn.style.display = 'block';
-    hideSearchSuggestions();
-    applyFiltersAndSort();
-    scrollToCatalog();
-  }
-
-  function selectCategorySuggestion(categoryName) {
-    DOM.searchInput.value = '';
-    STATE.searchQuery = '';
-    DOM.clearSearchBtn.style.display = 'none';
-    STATE.activeCategory = categoryName;
-    hideSearchSuggestions();
-
-    // Synchronize Category Navigation bar
-    const catNavButtons = document.querySelectorAll('.category-nav-item');
-    catNavButtons.forEach(btn => {
-      btn.classList.toggle('active', btn.getAttribute('data-category') === categoryName);
-    });
-
-    if (DOM.categorySelect) {
-      DOM.categorySelect.value = categoryName;
+    if (DOM.searchSuggestions) {
+      DOM.searchSuggestions.hidden = true;
+      activeSuggestionIndex = -1;
     }
+  }
 
+  function selectSearchSuggestion(query) {
+    if (DOM.searchInput) {
+      DOM.searchInput.value = query;
+      STATE.searchQuery = query;
+      DOM.clearSearchBtn.style.display = 'block';
+    }
+    hideSearchSuggestions();
     applyFiltersAndSort();
     scrollToCatalog();
+  }
+
+  function selectBrandSuggestion(brand) {
+    STATE.activeBrand = brand;
+    if (DOM.brandSelect) DOM.brandSelect.value = brand;
+    applyFiltersAndSort();
+    scrollToCatalog();
+    showToast(`Filtering by brand: <strong>${brand}</strong>`, 'info');
+  }
+
+  function selectCategorySuggestion(category) {
+    STATE.activeCategory = category;
+    if (DOM.categorySelect) DOM.categorySelect.value = category;
+    applyFiltersAndSort();
+    scrollToCatalog();
+    showToast(`Browsing category: <strong>${category}</strong>`, 'info');
   }
 
   function clearSearch() {
-    DOM.searchInput.value = '';
+    if (DOM.searchInput) DOM.searchInput.value = '';
     STATE.searchQuery = '';
     DOM.clearSearchBtn.style.display = 'none';
     hideSearchSuggestions();
     applyFiltersAndSort();
-    DOM.searchInput.focus();
   }
 
   // ==========================================================================
-  // 13. GLOBAL EVENT LISTENERS ATTACHMENT
+  // 13. EVENT LISTENERS
   // ==========================================================================
   function attachEventListeners() {
-    DOM.searchInput.addEventListener('input', handleSearchInput);
-    DOM.searchInput.addEventListener('keydown', handleSearchKeydown);
-    DOM.clearSearchBtn.addEventListener('click', clearSearch);
+    // Search input & suggestions
+    if (DOM.searchInput) {
+      DOM.searchInput.addEventListener('input', handleSearchInput);
+      DOM.searchInput.addEventListener('keydown', handleSearchKeydown);
+      DOM.searchInput.addEventListener('focus', () => {
+        if (DOM.searchInput.value.trim().length > 0) {
+          showSearchSuggestions(DOM.searchInput.value);
+        }
+      });
+    }
+
+    if (DOM.clearSearchBtn) {
+      DOM.clearSearchBtn.addEventListener('click', clearSearch);
+    }
 
     document.addEventListener('click', (e) => {
       if (!e.target.closest('.search-container')) {
@@ -1539,107 +1726,66 @@
       }
     });
 
-    if (DOM.activeSearchTag) {
-      DOM.activeSearchTag.addEventListener('click', clearSearch);
+    // Department navigation clicks (Header)
+    document.querySelectorAll('.nav-dept-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const cat = btn.getAttribute('data-category');
+        selectCategorySuggestion(cat);
+      });
+    });
+
+    // Category navigation clicks (Sub-bar)
+    if (DOM.categoryNavList) {
+      DOM.categoryNavList.addEventListener('click', (e) => {
+        const item = e.target.closest('.category-nav-item');
+        if (item) {
+          const category = item.getAttribute('data-category');
+          selectCategorySuggestion(category);
+        }
+      });
     }
 
-    const catNavButtons = document.querySelectorAll('.category-nav-item');
-    catNavButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const cat = btn.getAttribute('data-category');
-        STATE.activeCategory = cat;
-        STATE.viewFilter = 'all';
-        catNavButtons.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        if (DOM.categorySelect) DOM.categorySelect.value = cat;
-        DOM.viewFilterTabs.forEach(t => t.classList.remove('active'));
-        const allTab = document.querySelector('.filter-tab[data-view="all"]');
-        if (allTab) allTab.classList.add('active');
-        applyFiltersAndSort();
-        scrollToCatalog();
-      });
-    });
-
-    const categoryCards = document.querySelectorAll('.category-card');
-    categoryCards.forEach(card => {
+    // Category Cards / Roundels on Homepage
+    document.querySelectorAll('.category-card, .category-jump-btn').forEach(card => {
       card.addEventListener('click', () => {
         const cat = card.getAttribute('data-category');
-        STATE.activeCategory = cat;
-        catNavButtons.forEach(b => {
-          b.classList.toggle('active', b.getAttribute('data-category') === cat);
-        });
-        if (DOM.categorySelect) DOM.categorySelect.value = cat;
-        applyFiltersAndSort();
-        scrollToCatalog();
+        if (cat) selectCategorySuggestion(cat);
       });
     });
 
-    const footerCatLinks = document.querySelectorAll('.footer-cat-link');
-    footerCatLinks.forEach(link => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        const cat = link.getAttribute('data-category');
-        STATE.activeCategory = cat;
-        catNavButtons.forEach(b => {
-          b.classList.toggle('active', b.getAttribute('data-category') === cat);
-        });
-        if (DOM.categorySelect) DOM.categorySelect.value = cat;
-        applyFiltersAndSort();
-        scrollToCatalog();
+    // Top Brand Spotlight Tiles
+    document.querySelectorAll('.brand-tile').forEach(tile => {
+      tile.addEventListener('click', () => {
+        const brand = tile.getAttribute('data-brand');
+        if (brand) selectBrandSuggestion(brand);
       });
     });
 
-    const filterQuickBtns = document.querySelectorAll('.filter-quick-btn');
-    filterQuickBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const cat = btn.getAttribute('data-category');
-        const filter = btn.getAttribute('data-filter');
-
-        if (cat) {
-          STATE.activeCategory = cat;
-          STATE.viewFilter = 'all';
-          catNavButtons.forEach(b => {
-            b.classList.toggle('active', b.getAttribute('data-category') === cat);
-          });
-          if (DOM.categorySelect) DOM.categorySelect.value = cat;
-        } else if (filter === 'under299') {
-          STATE.viewFilter = 'under299';
-        }
-
-        applyFiltersAndSort();
-        scrollToCatalog();
-      });
-    });
-
-    // Popular Search Suggestion Chips in Empty State
-    document.querySelectorAll('.search-chip').forEach(chip => {
-      chip.addEventListener('click', () => {
-        const query = chip.getAttribute('data-query');
-        if (query) {
-          DOM.searchInput.value = query;
-          STATE.searchQuery = query;
-          DOM.clearSearchBtn.style.display = 'block';
-          applyFiltersAndSort();
-          scrollToCatalog();
-        }
-      });
-    });
-
-    DOM.viewFilterTabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        DOM.viewFilterTabs.forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        STATE.viewFilter = tab.getAttribute('data-view');
-        applyFiltersAndSort();
-      });
-    });
-
+    // Filter Controls
     if (DOM.categorySelect) {
       DOM.categorySelect.addEventListener('change', (e) => {
         STATE.activeCategory = e.target.value;
-        catNavButtons.forEach(b => {
-          b.classList.toggle('active', b.getAttribute('data-category') === e.target.value);
-        });
+        applyFiltersAndSort();
+      });
+    }
+
+    if (DOM.brandSelect) {
+      DOM.brandSelect.addEventListener('change', (e) => {
+        STATE.activeBrand = e.target.value;
+        applyFiltersAndSort();
+      });
+    }
+
+    if (DOM.sizeSelect) {
+      DOM.sizeSelect.addEventListener('change', (e) => {
+        STATE.activeSize = e.target.value;
+        applyFiltersAndSort();
+      });
+    }
+
+    if (DOM.priceFilterSelect) {
+      DOM.priceFilterSelect.addEventListener('change', (e) => {
+        STATE.activePriceRange = e.target.value;
         applyFiltersAndSort();
       });
     }
@@ -1651,95 +1797,113 @@
       });
     }
 
-    const resetAll = () => {
+    // Reset Filters button
+    if (DOM.resetFiltersBtn) {
+      DOM.resetFiltersBtn.addEventListener('click', () => {
+        resetAllFilters();
+        showToast('All filters have been reset to default', 'info');
+      });
+    }
+
+    if (DOM.emptyResetBtn) {
+      DOM.emptyResetBtn.addEventListener('click', () => {
+        resetAllFilters();
+      });
+    }
+
+    function resetAllFilters() {
       STATE.activeCategory = 'All';
+      STATE.activeBrand = 'All';
+      STATE.activeSize = 'All';
+      STATE.activePriceRange = 'all';
       STATE.searchQuery = '';
       STATE.sortBy = 'popular';
       STATE.viewFilter = 'all';
-      DOM.searchInput.value = '';
-      DOM.clearSearchBtn.style.display = 'none';
-      if (DOM.sortSelect) DOM.sortSelect.value = 'popular';
-      if (DOM.categorySelect) DOM.categorySelect.value = 'All';
-      DOM.viewFilterTabs.forEach(t => t.classList.remove('active'));
-      const allTab = document.querySelector('.filter-tab[data-view="all"]');
-      if (allTab) allTab.classList.add('active');
-      catNavButtons.forEach(b => {
-        b.classList.toggle('active', b.getAttribute('data-category') === 'All');
-      });
-      hideSearchSuggestions();
+      if (DOM.searchInput) DOM.searchInput.value = '';
+      if (DOM.clearSearchBtn) DOM.clearSearchBtn.style.display = 'none';
+      DOM.viewFilterTabs.forEach(t => t.classList.toggle('active', t.getAttribute('data-view') === 'all'));
       applyFiltersAndSort();
-      showToast('Filters reset to default', 'info');
-    };
-
-    if (DOM.resetFiltersBtn) DOM.resetFiltersBtn.addEventListener('click', resetAll);
-    if (DOM.emptyResetBtn) DOM.emptyResetBtn.addEventListener('click', resetAll);
-
-    if (DOM.cartBtn) DOM.cartBtn.addEventListener('click', openCartDrawer);
-    if (DOM.mobNavCart) DOM.mobNavCart.addEventListener('click', openCartDrawer);
-    if (DOM.closeCartDrawer) DOM.closeCartDrawer.addEventListener('click', closeCartDrawer);
-
-    if (DOM.wishlistBtn) DOM.wishlistBtn.addEventListener('click', openWishlistDrawer);
-    if (DOM.mobNavWishlist) DOM.mobNavWishlist.addEventListener('click', openWishlistDrawer);
-    if (DOM.closeWishlistDrawer) DOM.closeWishlistDrawer.addEventListener('click', closeWishlistDrawer);
-
-    if (DOM.accountBtn) DOM.accountBtn.addEventListener('click', openAccountModal);
-    if (DOM.mobNavAccount) DOM.mobNavAccount.addEventListener('click', openAccountModal);
-    if (DOM.closeAccountModal) DOM.closeAccountModal.addEventListener('click', closeAccountModal);
-
-    const trackOrderLink = document.getElementById('track-order-link');
-    if (trackOrderLink) {
-      trackOrderLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        openAccountModal();
-      });
     }
 
-    if (DOM.closeProductModal) DOM.closeProductModal.addEventListener('click', closeProductModal);
+    // Filter Tabs
+    DOM.viewFilterTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        DOM.viewFilterTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        STATE.viewFilter = tab.getAttribute('data-view');
+        applyFiltersAndSort();
+      });
+    });
 
-    if (DOM.proceedCheckoutBtn) DOM.proceedCheckoutBtn.addEventListener('click', openCheckoutModal);
+    // Remove individual active filter tags
+    document.querySelectorAll('.remove-tag-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const type = btn.getAttribute('data-type');
+        if (type === 'brand') STATE.activeBrand = 'All';
+        else if (type === 'size') STATE.activeSize = 'All';
+        else if (type === 'price') STATE.activePriceRange = 'all';
+        else if (type === 'search') clearSearch();
+        applyFiltersAndSort();
+      });
+    });
+
+    // Search chip buttons inside empty state
+    document.querySelectorAll('.search-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const q = chip.getAttribute('data-query');
+        selectSearchSuggestion(q);
+      });
+    });
+
+    // Header buttons (Cart, Wishlist, Profile)
+    if (DOM.cartBtn) DOM.cartBtn.addEventListener('click', openCartDrawer);
+    if (DOM.wishlistBtn) DOM.wishlistBtn.addEventListener('click', openWishlistDrawer);
+    if (DOM.accountBtn) DOM.accountBtn.addEventListener('click', openAccountModal);
+
+    // Mobile nav buttons
+    if (DOM.mobNavCart) DOM.mobNavCart.addEventListener('click', openCartDrawer);
+    if (DOM.mobNavWishlist) DOM.mobNavWishlist.addEventListener('click', openWishlistDrawer);
+    if (DOM.mobNavAccount) DOM.mobNavAccount.addEventListener('click', openAccountModal);
+
+    // Close drawers / modals
+    if (DOM.closeCartDrawer) DOM.closeCartDrawer.addEventListener('click', closeCartDrawer);
+    if (DOM.closeWishlistDrawer) DOM.closeWishlistDrawer.addEventListener('click', closeWishlistDrawer);
+    if (DOM.closeProductModal) DOM.closeProductModal.addEventListener('click', closeProductModal);
     if (DOM.closeCheckoutModal) DOM.closeCheckoutModal.addEventListener('click', closeCheckoutModal);
-    if (DOM.checkoutForm) DOM.checkoutForm.addEventListener('submit', handleCheckoutSubmit);
+    if (DOM.closeAccountModal) DOM.closeAccountModal.addEventListener('click', closeAccountModal);
 
     if (DOM.continueShoppingBtn) DOM.continueShoppingBtn.addEventListener('click', closeCartDrawer);
     if (DOM.continueShoppingWishlistBtn) DOM.continueShoppingWishlistBtn.addEventListener('click', closeWishlistDrawer);
-    if (DOM.successContinueShoppingBtn) DOM.successContinueShoppingBtn.addEventListener('click', closeOrderSuccessModal);
 
-    if (DOM.successViewOrdersBtn) {
-      DOM.successViewOrdersBtn.addEventListener('click', () => {
-        closeOrderSuccessModal();
-        openAccountModal();
-      });
-    }
+    if (DOM.proceedCheckoutBtn) DOM.proceedCheckoutBtn.addEventListener('click', openCheckoutModal);
 
-    const backdropList = [
-      { backdrop: DOM.productModalBackdrop, closeFn: closeProductModal },
-      { backdrop: DOM.cartDrawerBackdrop, closeFn: closeCartDrawer },
-      { backdrop: DOM.wishlistDrawerBackdrop, closeFn: closeWishlistDrawer },
-      { backdrop: DOM.checkoutModalBackdrop, closeFn: closeCheckoutModal },
-      { backdrop: DOM.orderSuccessBackdrop, closeFn: closeOrderSuccessModal },
-      { backdrop: DOM.accountModalBackdrop, closeFn: closeAccountModal }
+    // Backdrop clicks to close modals/drawers
+    const modalBackdrops = [
+      DOM.productModalBackdrop,
+      DOM.cartDrawerBackdrop,
+      DOM.wishlistDrawerBackdrop,
+      DOM.checkoutModalBackdrop,
+      DOM.orderSuccessBackdrop,
+      DOM.accountModalBackdrop
     ];
 
-    backdropList.forEach(({ backdrop, closeFn }) => {
+    modalBackdrops.forEach(backdrop => {
       if (backdrop) {
         backdrop.addEventListener('click', (e) => {
-          if (e.target === backdrop) closeFn();
+          if (e.target === backdrop) {
+            backdrop.hidden = true;
+            document.body.style.overflow = '';
+          }
         });
       }
     });
 
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        backdropList.forEach(({ closeFn }) => closeFn());
-        hideSearchSuggestions();
-      }
-    });
-
+    // Apply Coupon button
     if (DOM.applyCouponBtn && DOM.cartCouponInput) {
       DOM.applyCouponBtn.addEventListener('click', () => {
         applyCoupon(DOM.cartCouponInput.value);
       });
-
       DOM.cartCouponInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
           e.preventDefault();
@@ -1748,6 +1912,27 @@
       });
     }
 
+    // Checkout form submit
+    if (DOM.checkoutForm) {
+      DOM.checkoutForm.addEventListener('submit', handleCheckoutSubmit);
+    }
+
+    // Order Success Modal Actions
+    if (DOM.successContinueShoppingBtn) {
+      DOM.successContinueShoppingBtn.addEventListener('click', () => {
+        closeOrderSuccessModal();
+        window.location.hash = '#products-section';
+      });
+    }
+
+    if (DOM.successViewOrdersBtn) {
+      DOM.successViewOrdersBtn.addEventListener('click', () => {
+        closeOrderSuccessModal();
+        openAccountModal();
+      });
+    }
+
+    // Promo Code Copy Buttons
     if (DOM.copyCodeBtn) {
       DOM.copyCodeBtn.addEventListener('click', () => {
         const code = document.getElementById('promo-copy-code').textContent.trim();
@@ -1770,6 +1955,7 @@
       });
     });
 
+    // Account Modal Tabs
     document.querySelectorAll('.acc-tab-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.acc-tab-btn').forEach(b => b.classList.remove('active'));
@@ -1782,6 +1968,7 @@
       });
     });
 
+    // Payment Radio button styling
     document.querySelectorAll('.payment-option input[type="radio"]').forEach(radio => {
       radio.addEventListener('change', () => {
         document.querySelectorAll('.payment-option').forEach(opt => opt.classList.remove('selected'));
@@ -1791,18 +1978,20 @@
       });
     });
 
+    // Newsletter Form
     if (DOM.newsletterForm && DOM.newsletterEmail) {
       DOM.newsletterForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const email = DOM.newsletterEmail.value.trim();
         if (email) {
-          DOM.newsletterFeedback.innerHTML = `<span class="text-success"><i class="fa-solid fa-circle-check"></i> Subscribed to Meesho Maha Sale updates!</span>`;
+          DOM.newsletterFeedback.innerHTML = `<span class="text-success"><i class="fa-solid fa-circle-check"></i> Subscribed to Myntra Fashion drops!</span>`;
           DOM.newsletterEmail.value = '';
-          showToast('Subscribed! Check email for secret seller deals.', 'success');
+          showToast('Subscribed! Check email for exclusive VIP drop alerts.', 'success');
         }
       });
     }
 
+    // Scroll listeners (header shadow, back-to-top)
     window.addEventListener('scroll', () => {
       const scrollPos = window.scrollY;
 
@@ -1827,20 +2016,21 @@
       });
     }
 
+    // Mobile Menu toggle
     const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
     if (mobileMenuToggle) {
       mobileMenuToggle.addEventListener('click', () => {
         const catNav = document.getElementById('category-nav');
         if (catNav) {
           catNav.scrollIntoView({ behavior: 'smooth' });
-          showToast('Scroll sideways on category strip to explore all departments', 'info');
+          showToast('Browse Men, Women, Kids, Beauty & Home', 'info');
         }
       });
     }
   }
 
   // ==========================================================================
-  // 14. PUBLIC API EXPOSURE (MEESHO & SHOPEASE COMPATIBILITY)
+  // 14. PUBLIC API EXPOSURE (MYNTRA & MEESHO COMPATIBILITY)
   // ==========================================================================
   const PUBLIC_API = {
     openProductModal,
@@ -1859,12 +2049,15 @@
     openAccount: openAccountModal,
     closeAccount: closeAccountModal,
     selectSearchSuggestion,
+    selectBrandSuggestion,
     selectCategorySuggestion,
+    applyCoupon,
     showToast
   };
 
-  window.Meesho = PUBLIC_API;
-  window.ShopEase = PUBLIC_API; // Maintain backwards compatibility
+  window.Myntra = PUBLIC_API;
+  window.Meesho = PUBLIC_API; // Maintain backwards compatibility for existing tests & triggers
+  window.ShopEase = PUBLIC_API;
 
   // ==========================================================================
   // 15. DUAL-MODE BACKEND SYNC & INITIALIZATION
@@ -1909,7 +2102,7 @@
       statusPill.innerHTML = `<span class="status-dot"></span> Standalone Mode (Local)`;
       statusPill.title = 'Running directly in browser with LocalStorage data persistence';
     }
-    console.log('%c[Standalone Mode]%c Operating with LocalStorage persistence', 'color: #ff9800; font-weight: bold;', 'color: #666;');
+    console.log('%c[Standalone Mode]%c Operating with LocalStorage persistence', 'color: #ff3f6c; font-weight: bold;', 'color: #666;');
     return false;
   }
 
@@ -1919,7 +2112,7 @@
     applyFiltersAndSort();
     attachEventListeners();
     checkBackendConnection();
-    console.log('%c meesho CLONE E-Commerce Platform Loaded (B.Tech Showcase) ', 'background: #9f2089; color: #fff; font-weight: bold; padding: 4px 10px; border-radius: 4px; font-size: 13px;');
+    console.log('%c MYNTRA FASHION E-COMMERCE PLATFORM (B.Tech College Showcase) ', 'background: #ff3f6c; color: #fff; font-weight: bold; padding: 4px 10px; border-radius: 4px; font-size: 13px;');
   }
 
   if (document.readyState === 'loading') {

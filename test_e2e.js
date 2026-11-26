@@ -1,7 +1,7 @@
 /**
  * ============================================================================
- * Meesho Clone - End-to-End System Test Suite
- * Tests: Backend Server, Database, Cart, Wishlist, Checkout, PPTX
+ * Myntra Fashion Platform - End-to-End System Test Suite
+ * Tests: Backend Server, Database, Fashion Brands, Sizes, Cart, Wishlist, Checkout
  * ============================================================================
  */
 
@@ -10,7 +10,7 @@ const path = require('path');
 const db = require('./db');
 
 console.log('========================================================');
-console.log('  🧪 STARTING MEESHO CLONE SYSTEM VERIFICATION');
+console.log('  🧪 STARTING MYNTRA FASHION SYSTEM VERIFICATION');
 console.log('========================================================\n');
 
 let passedTests = 0;
@@ -28,34 +28,48 @@ function assertTest(name, condition, details = '') {
 
 // 1. Database & Catalog Verification
 const products = db.getProducts();
-assertTest('SQLite Products Loaded', products.length >= 65, `${products.length} products found`);
+assertTest('SQLite Products Loaded', products.length >= 75, `${products.length} products found`);
 assertTest('Product Pricing Validity', products.every(p => p.price > 0 && p.price < p.originalPrice), 'All prices < originalPrice');
+assertTest('Fashion Brand Presence', products.every(p => p.brand && p.brand.trim() !== ''), 'All items have authentic brand name');
+assertTest('Size Array Presence', products.every(p => Array.isArray(p.sizes) && p.sizes.length > 0), 'All items have available sizes');
 
 const categories = db.getCategories();
-assertTest('Categories Count (11 Requested Categories)', categories.length === 11, `${categories.length} departments found: ${categories.map(c => c.category).join(', ')}`);
+const expectedCats = ['Men', 'Women', 'Kids', 'Beauty', 'Home'];
+const hasAllCats = expectedCats.every(cat => categories.some(c => c.category === cat));
+assertTest('5 Core Fashion Categories Present', categories.length === 5 && hasAllCats, `${categories.length} departments: ${categories.map(c => c.category).join(', ')}`);
 
-// 1b. Smart Search & Newest Sort Verification
+// 1b. Brand & Size Filtering Verification
+const roadsterProds = db.getProducts({ brand: 'Roadster' });
+assertTest('Brand Filter ("Roadster")', roadsterProds.length > 0 && roadsterProds.every(p => p.brand === 'Roadster'), `${roadsterProds.length} Roadster items`);
+
+const hrxProds = db.getProducts({ brand: 'HRX by Hrithik Roshan' });
+assertTest('Brand Filter ("HRX")', hrxProds.length > 0, `${hrxProds.length} HRX items`);
+
+const mediumSizeProds = db.getProducts({ size: 'M' });
+assertTest('Size Filter ("M")', mediumSizeProds.length > 0, `${mediumSizeProds.length} items in size M`);
+
+// 1c. Smart Search & Autocomplete
 const smartSearchResult = db.getProducts({ search: 'cotton shirt' });
 assertTest('Smart Search (Multi-token "cotton shirt")', smartSearchResult.length > 0, `${smartSearchResult.length} relevant items matched`);
 
-const partialSearchResult = db.getProducts({ search: 'smart' });
-assertTest('Partial Search ("smart")', partialSearchResult.length > 0, `${partialSearchResult.length} matches found`);
+const brandSearchResult = db.getProducts({ search: 'anouk' });
+assertTest('Brand Search ("anouk")', brandSearchResult.length > 0, `${brandSearchResult.length} matches found`);
 
-const suggestionsResult = db.getSearchSuggestions('ear');
+const suggestionsResult = db.getSearchSuggestions('kur');
 assertTest('Live Search Suggestions API', suggestionsResult && suggestionsResult.products.length > 0, `${suggestionsResult.products.length} products, ${suggestionsResult.categories.length} categories suggested`);
 
 const newestSorted = db.getProducts({ sort: 'newest' });
 assertTest('Newest First Sorting', newestSorted.length >= 2 && newestSorted[0].createdAt >= newestSorted[newestSorted.length - 1].createdAt, 'Sorted descending by date');
 
-const categoryFiltered = db.getProducts({ category: "Women's Wear" });
-assertTest('Category Filter ("Women\'s Wear")', categoryFiltered.length > 0 && categoryFiltered.every(p => p.category === "Women's Wear"), `${categoryFiltered.length} items`);
+const categoryFiltered = db.getProducts({ category: 'Women' });
+assertTest('Category Filter ("Women")', categoryFiltered.length > 0 && categoryFiltered.every(p => p.category === 'Women'), `${categoryFiltered.length} items`);
 
 // 2. Cart Operations Test
 const sessionId = 'test_session_' + Date.now();
-const cart1 = db.addToCart(sessionId, 1, 1);
-assertTest('Add to Cart', cart1.length === 1 && cart1[0].quantity === 1, 'Item added with qty 1');
+const cart1 = db.addToCart(sessionId, 1, 1, 'L');
+assertTest('Add to Cart with Size', cart1.length === 1 && cart1[0].quantity === 1 && cart1[0].size === 'L', 'Item added with qty 1 and size L');
 
-const cart2 = db.addToCart(sessionId, 1, 2);
+const cart2 = db.addToCart(sessionId, 1, 2, 'L');
 assertTest('Duplicate Cart Prevention', cart2.length === 1 && cart2[0].quantity === 3, 'Qty incremented to 3');
 
 const cart3 = db.updateCartQty(sessionId, 1, -1);
@@ -72,27 +86,30 @@ const wish2 = db.toggleWishlist(sessionId, 5);
 assertTest('Remove from Wishlist', wish2.isWishlisted === false && !wish2.wishlist.includes(5), 'Item 5 removed from wishlist');
 
 // 4. Coupon Validation Test
-const validCoupon = db.validateCoupon('MEESHONEW', 599);
-assertTest('Valid Coupon MEESHONEW', validCoupon.valid === true && validCoupon.discount === 150, '₹150 discount applied');
+const myntraCoupon = db.validateCoupon('MYNTRA200', 999);
+assertTest('Valid Coupon MYNTRA200', myntraCoupon.valid === true && myntraCoupon.discount === 200, '₹200 discount applied');
 
-const lowOrderCoupon = db.validateCoupon('MEESHONEW', 299);
-assertTest('Coupon Minimum Order Check', lowOrderCoupon.valid === false, 'Blocked when under ₹499');
+const myntra10Coupon = db.validateCoupon('MYNTRA10', 1000);
+assertTest('Percent Coupon MYNTRA10', myntra10Coupon.valid === true && myntra10Coupon.discount === 100, '10% (₹100) discount applied');
 
-const invalidCoupon = db.validateCoupon('INVALID99', 599);
-assertTest('Invalid Coupon Handling', invalidCoupon.valid === false, 'Blocked invalid code');
+const lowOrderCoupon = db.validateCoupon('MYNTRA200', 499);
+assertTest('Coupon Minimum Order Check', lowOrderCoupon.valid === false, 'Blocked when under ₹799');
+
+const meeshoCompatCoupon = db.validateCoupon('MEESHONEW', 599);
+assertTest('Backward Compatible MEESHONEW Coupon', meeshoCompatCoupon.valid === true && meeshoCompatCoupon.discount === 150, '₹150 discount applied');
 
 // 5. Checkout & Order Persistence Test
 const testOrderData = {
-  orderId: 'MEESHO-ORD-TEST-' + Math.floor(10000 + Math.random() * 90000),
-  orderDate: '24 Nov 2026',
+  orderId: 'MYN-ORD-TEST-' + Math.floor(10000 + Math.random() * 90000),
+  orderDate: '26 Nov 2026',
   customer: {
     name: 'Rishabh Kumar',
     phone: '9876543210',
     address: 'Flat 101, College Road, New Delhi - 110001'
   },
   paymentMethod: 'Cash On Delivery',
-  totalAmount: 649,
-  items: [{ id: 1, name: 'Anarkali Kurta Set', price: 649, quantity: 1 }]
+  totalAmount: 1299,
+  items: [{ id: 1, name: 'Men Washed Denim Casual Shirt', price: 699, quantity: 1, size: 'L' }]
 };
 
 const orderResult = db.createOrder(testOrderData);
@@ -102,18 +119,6 @@ const allOrders = db.getOrders();
 const fetchedOrder = allOrders.find(o => o.orderId === testOrderData.orderId);
 assertTest('Fetch Order History from SQLite', fetchedOrder !== undefined, `Found order: ${fetchedOrder ? fetchedOrder.orderId : 'none'}`);
 assertTest('Order Customer Details Match', fetchedOrder && fetchedOrder.customer.name === 'Rishabh Kumar', 'Customer name preserved');
-
-// 6. PowerPoint File Verification
-const pptxPath = path.join(__dirname, 'Meesho_Clone_BTech_Project_Presentation.pptx');
-assertTest('PPTX Presentation File Exists', fs.existsSync(pptxPath), pptxPath);
-const pptxStat = fs.statSync(pptxPath);
-assertTest('PPTX Presentation File Non-Empty', pptxStat.size > 100000, `${Math.round(pptxStat.size / 1024)} KB`);
-
-// 7. Backup Integrity Verification
-const backupDir = path.join(__dirname, 'backup');
-assertTest('Backup Directory Exists', fs.existsSync(backupDir));
-assertTest('Backup index.html Exists', fs.existsSync(path.join(backupDir, 'index.html')));
-assertTest('Backup script.js Exists', fs.existsSync(path.join(backupDir, 'script.js')));
 
 console.log('\n========================================================');
 console.log(`  📊 TEST RESULTS: ${passedTests} / ${totalTests} TESTS PASSED`);

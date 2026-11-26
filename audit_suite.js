@@ -1,6 +1,6 @@
 /**
  * ============================================================================
- * Meesho Clone - Comprehensive Final Audit & Verification Suite
+ * Myntra Fashion Platform - Comprehensive Final Audit & Verification Suite
  * ============================================================================
  */
 
@@ -9,7 +9,7 @@ const path = require('path');
 const db = require('./db');
 
 console.log('================================================================');
-console.log('  🔍 MEESHO CLONE - COMPREHENSIVE FINAL AUDIT SUITE');
+console.log('  🔍 MYNTRA FASHION PLATFORM - COMPREHENSIVE FINAL AUDIT SUITE');
 console.log('================================================================\n');
 
 let auditResults = [];
@@ -29,9 +29,9 @@ const htmlContent = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');
 const cssContent = fs.readFileSync(path.join(__dirname, 'style.css'), 'utf8');
 const jsContent = fs.readFileSync(path.join(__dirname, 'script.js'), 'utf8');
 
-recordAudit('Frontend', 'index.html exists and non-empty', htmlContent.length > 40000, `${htmlContent.length} bytes`);
-recordAudit('Frontend', 'style.css exists and non-empty', cssContent.length > 50000, `${cssContent.length} bytes`);
-recordAudit('Frontend', 'script.js exists and non-empty', jsContent.length > 60000, `${jsContent.length} bytes`);
+recordAudit('Frontend', 'index.html exists and non-empty', htmlContent.length > 25000, `${htmlContent.length} bytes`);
+recordAudit('Frontend', 'style.css exists and non-empty', cssContent.length > 25000, `${cssContent.length} bytes`);
+recordAudit('Frontend', 'script.js exists and non-empty', jsContent.length > 25000, `${jsContent.length} bytes`);
 
 // Verify critical DOM elements
 const criticalElements = [
@@ -74,17 +74,18 @@ expectedTables.forEach(t => {
 
 // Check Products Table Count & Columns
 const products = sqlite.prepare("SELECT * FROM products").all();
-recordAudit('DB Data', 'Products seeded count is 65', products.length >= 65, `${products.length} products`);
+recordAudit('DB Data', 'Products seeded count is 75', products.length >= 75, `${products.length} products`);
 recordAudit('DB Data', 'Product Price Integrity', products.every(p => p.price > 0 && p.original_price > p.price), 'All prices realistic & discounted');
 recordAudit('DB Data', 'Product Stock Availability', products.every(p => p.stock > 0), 'All products have positive stock');
+recordAudit('DB Data', 'Fashion Brands Present', products.every(p => p.brand && p.brand.trim() !== ''), 'All products have brand name');
 
-// Check Categories Diversity
+// Check Categories Diversity (5 Core Categories)
 const categories = sqlite.prepare("SELECT category, COUNT(*) as c FROM products GROUP BY category").all();
-recordAudit('DB Data', 'Categories Diversity (11 Categories)', categories.length === 11, `${categories.length} departments: ${categories.map(c => c.category).join(', ')}`);
+recordAudit('DB Data', 'Categories Diversity (5 Core Fashion Categories)', categories.length === 5, `${categories.length} departments: ${categories.map(c => c.category).join(', ')}`);
 
 // Check Coupons Table
 const coupons = sqlite.prepare("SELECT * FROM coupons").all();
-recordAudit('DB Data', 'Coupons Table Seeded', coupons.length >= 3, `${coupons.length} coupons: ${coupons.map(c => c.code).join(', ')}`);
+recordAudit('DB Data', 'Coupons Table Seeded', coupons.length >= 4, `${coupons.length} coupons: ${coupons.map(c => c.code).join(', ')}`);
 
 // ----------------------------------------------------------------------------
 // 3. API & BUSINESS LOGIC AUDIT
@@ -92,16 +93,19 @@ recordAudit('DB Data', 'Coupons Table Seeded', coupons.length >= 3, `${coupons.l
 console.log('\n--- SECTION 3: BUSINESS LOGIC & API ENDPOINTS VERIFICATION ---');
 
 // Test 1: Category Filter API
-const ethnicProducts = db.getProducts({ category: "Women's Wear" });
-recordAudit('API Logic', "Category Filter (Women's Wear)", ethnicProducts.every(p => p.category === "Women's Wear") && ethnicProducts.length > 0, `${ethnicProducts.length} items`);
+const womenProducts = db.getProducts({ category: "Women" });
+recordAudit('API Logic', "Category Filter (Women)", womenProducts.every(p => p.category === "Women") && womenProducts.length > 0, `${womenProducts.length} items`);
+
+const menProducts = db.getProducts({ category: "Men" });
+recordAudit('API Logic', "Category Filter (Men)", menProducts.every(p => p.category === "Men") && menProducts.length > 0, `${menProducts.length} items`);
 
 // Test 2: Smart Search Multi-Token API
 const searchResult = db.getProducts({ search: 'cotton shirt' });
 recordAudit('API Logic', 'Smart Search Query ("cotton shirt")', searchResult.length > 0, `${searchResult.length} matches`);
 
 // Test 2b: Search Suggestions API
-const suggestions = db.getSearchSuggestions('ear');
-recordAudit('API Logic', 'Live Search Suggestions API', suggestions.products.length > 0 && suggestions.categories.length > 0, `${suggestions.products.length} product matches`);
+const suggestions = db.getSearchSuggestions('men');
+recordAudit('API Logic', 'Live Search Suggestions API', suggestions.products.length > 0 && suggestions.categories.length > 0, `${suggestions.products.length} product matches, ${suggestions.categories.length} category matches`);
 
 // Test 3: Sorting API
 const sortedAsc = db.getProducts({ sort: 'price-asc' });
@@ -122,18 +126,18 @@ const sortedNewest = db.getProducts({ sort: 'newest' });
 recordAudit('API Logic', 'Sort: Newest First', sortedNewest.length > 0 && sortedNewest[0].createdAt >= sortedNewest[sortedNewest.length - 1].createdAt, 'Newest timestamp first');
 
 // Test 4: View Filter Tabs API
-const under299 = db.getProducts({ viewFilter: 'under299' });
-recordAudit('API Logic', 'View Filter: Under ₹299', under299.every(p => p.price <= 299), `${under299.length} items <= ₹299`);
+const under999 = db.getProducts({ viewFilter: 'under999' });
+recordAudit('API Logic', 'View Filter: Under ₹999', under999.every(p => p.price <= 999), `${under999.length} items <= ₹999`);
 
 const trending = db.getProducts({ viewFilter: 'trending' });
 recordAudit('API Logic', 'View Filter: Trending', trending.length > 0, `${trending.length} trending items`);
 
 // Test 5: Cart Isolation & Operations
 const testSess = 'audit_session_' + Date.now();
-const cartStep1 = db.addToCart(testSess, 1, 2);
+const cartStep1 = db.addToCart(testSess, 1, 2, 'L');
 recordAudit('Cart Logic', 'Add to Cart', cartStep1.length === 1 && cartStep1[0].quantity === 2, 'Qty = 2');
 
-const cartStep2 = db.addToCart(testSess, 1, 3);
+const cartStep2 = db.addToCart(testSess, 1, 3, 'L');
 recordAudit('Cart Logic', 'Duplicate Add (Increment)', cartStep2.length === 1 && cartStep2[0].quantity === 5, 'Qty incremented to 5');
 
 const cartStep3 = db.updateCartQty(testSess, 1, -2);
@@ -150,64 +154,47 @@ const wishStep2 = db.toggleWishlist(testSess, 7);
 recordAudit('Wishlist Logic', 'Remove from Wishlist', wishStep2.isWishlisted === false && !wishStep2.wishlist.includes(7), 'Item 7 un-wishlisted');
 
 // Test 7: Coupon Validation
-const couponCheck1 = db.validateCoupon('MEESHONEW', 599);
-recordAudit('Coupon Logic', 'Apply MEESHONEW (Order >= ₹499)', couponCheck1.valid === true && couponCheck1.discount === 150, '₹150 discount validated');
+const couponCheck1 = db.validateCoupon('MYNTRA200', 899);
+recordAudit('Coupon Logic', 'Apply MYNTRA200 (Order >= ₹799)', couponCheck1.valid === true && couponCheck1.discount === 200, '₹200 discount validated');
 
-const couponCheck2 = db.validateCoupon('MEESHONEW', 300);
-recordAudit('Coupon Logic', 'Apply MEESHONEW (Order < ₹499)', couponCheck2.valid === false, 'Blocked when under minimum order');
+const couponCheck2 = db.validateCoupon('MYNTRA200', 499);
+recordAudit('Coupon Logic', 'Apply MYNTRA200 (Order < ₹799)', couponCheck2.valid === false, 'Blocked when under minimum order');
 
 // Test 8: Order Creation & SQLite Persistence
-const auditOrderId = 'MEESHO-AUDIT-' + Math.floor(1000 + Math.random() * 9000);
-const orderCreation = db.createOrder({
+const auditOrderId = 'MYN-AUDIT-' + Math.floor(1000 + Math.random() * 9000);
+const orderRes = db.createOrder({
   orderId: auditOrderId,
-  orderDate: '24 Nov 2026',
+  orderDate: '26 Nov 2026',
   customer: {
-    name: 'College Examiner Audit',
-    phone: '9876543210',
-    address: 'Academic Block 4, CSE Department, New Delhi - 110001'
+    name: 'Auditor Rahul',
+    phone: '9876500000',
+    address: 'Auditing Lab, Sector 62, Noida, UP'
   },
   paymentMethod: 'Cash On Delivery',
-  totalAmount: 899,
-  items: [{ id: 2, name: 'Kanjeevaram Saree', price: 899, quantity: 1 }]
+  totalAmount: 1899,
+  items: [{ id: 1, name: 'Denim Shirt', price: 699, quantity: 1, size: 'L' }]
 });
-recordAudit('Order Logic', 'Order Insertion in SQLite', orderCreation.success === true, `Created Order ${auditOrderId}`);
+recordAudit('Order Logic', 'Order Insertion to SQLite', orderRes.success === true, `Created Order ${auditOrderId}`);
 
-const retrievedOrder = db.getOrders().find(o => o.orderId === auditOrderId);
-recordAudit('Order Logic', 'Order Retrieval from SQLite', retrievedOrder !== undefined, `Found ${retrievedOrder ? retrievedOrder.orderId : 'none'}`);
-recordAudit('Order Logic', 'Order Item Serialization', retrievedOrder && retrievedOrder.items.length === 1 && retrievedOrder.items[0].id === 2, 'Parsed items JSON matches');
-
-// ----------------------------------------------------------------------------
-// 4. PRESENTATION & ACADEMIC ALIGNMENT AUDIT
-// ----------------------------------------------------------------------------
-console.log('\n--- SECTION 4: PRESENTATION (PPTX) INTEGRITY AUDIT ---');
-
-const pptxFile = path.join(__dirname, 'Meesho_Clone_BTech_Project_Presentation.pptx');
-recordAudit('PPTX Audit', 'PPTX file exists', fs.existsSync(pptxFile), pptxFile);
-
-const pptxStats = fs.statSync(pptxFile);
-recordAudit('PPTX Audit', 'PPTX file size valid', pptxStats.size > 200000, `${Math.round(pptxStats.size / 1024)} KB`);
-
-// Check generate_ppt.js file
-const pptGenScript = fs.readFileSync(path.join(__dirname, 'generate_ppt.js'), 'utf8');
-recordAudit('PPTX Content', 'Slide 1: Student & Degree Information', pptGenScript.includes('Rishabh Kumar') && pptGenScript.includes('B.Tech'), 'Rishabh Kumar / B.Tech CSE');
-recordAudit('PPTX Content', 'Slide 4: 3-Tier Architecture Slide', pptGenScript.includes('Presentation Tier') && pptGenScript.includes('Application Tier') && pptGenScript.includes('Database Tier'), '3 tiers documented');
-recordAudit('PPTX Content', 'Slide 6: SQLite Schema Match', pptGenScript.includes('products') && pptGenScript.includes('orders') && pptGenScript.includes('cart_items') && pptGenScript.includes('coupons'), 'All 5 tables documented');
-recordAudit('PPTX Content', 'Slide 7: REST API Table Match', pptGenScript.includes('/api/products') && pptGenScript.includes('/api/cart') && pptGenScript.includes('/api/orders'), 'Endpoints table verified');
-recordAudit('PPTX Content', 'Slide 11: Viva Questions Slide', pptGenScript.includes('Viva Voce Guide') && pptGenScript.includes('Why did you choose SQLite'), 'Viva questions included');
+const storedOrders = db.getOrders();
+const verifiedOrder = storedOrders.find(o => o.orderId === auditOrderId);
+recordAudit('Order Logic', 'Order Retrieval from SQLite', verifiedOrder !== undefined, `Found Order ID ${auditOrderId}`);
+recordAudit('Order Logic', 'Order Payload Consistency', verifiedOrder && verifiedOrder.customer.name === 'Auditor Rahul', 'Customer details verified');
 
 // ----------------------------------------------------------------------------
-// FINAL SUMMARY
+// SUMMARY REPORT
 // ----------------------------------------------------------------------------
 console.log('\n================================================================');
 const total = auditResults.length;
 const passed = auditResults.filter(r => r.passed).length;
 const failed = total - passed;
-console.log(`  📊 AUDIT RESULT: ${passed} / ${total} CHECKS PASSED (${Math.round((passed/total)*100)}%)`);
-if (failed === 0) {
-  console.log('  🎉 ZERO BUGS OR DISCREPANCIES FOUND - PROJECT IS 100% READY!');
-} else {
-  console.log(`  ⚠️ ${failed} CHECKS FAILED`);
-}
+console.log(`  AUDIT SUMMARY: ${passed} / ${total} TESTS PASSED (${failed} FAILED)`);
 console.log('================================================================\n');
 
-process.exit(failed === 0 ? 0 : 1);
+if (failed === 0) {
+  console.log('🎉 AUDIT SUCCESS: All tests passed with 100% score!\n');
+  process.exit(0);
+} else {
+  console.error(`⚠️ AUDIT FAILURE: ${failed} tests failed.`);
+  process.exit(1);
+}

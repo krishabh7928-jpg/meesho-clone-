@@ -43,18 +43,18 @@ function getSessionId(req) {
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'online',
-    project: 'Meesho Clone Full-Stack Application',
+    project: 'Myntra Fashion E-Commerce Full-Stack Application',
     technology: 'Node.js + Express + SQLite Database',
     databaseDriver: db.dbDriver,
     timestamp: new Date().toISOString()
   });
 });
 
-// 2. Products Catalog
+// 2. Products Catalog with multi-faceted filtering (category, search, sort, brand, size, price range)
 app.get('/api/products', (req, res) => {
   try {
-    const { category, search, sort, viewFilter } = req.query;
-    const products = db.getProducts({ category, search, sort, viewFilter });
+    const { category, search, sort, viewFilter, brand, size, priceMin, priceMax } = req.query;
+    const products = db.getProducts({ category, search, sort, viewFilter, brand, size, priceMin, priceMax });
     res.json({
       success: true,
       total: products.length,
@@ -76,6 +76,17 @@ app.get('/api/products/suggestions', (req, res) => {
   } catch (err) {
     console.error('Error fetching search suggestions:', err);
     res.status(500).json({ success: false, error: 'Error fetching search suggestions' });
+  }
+});
+
+// 2c. Brands List
+app.get('/api/brands', (req, res) => {
+  try {
+    const brands = db.getBrands();
+    res.json({ success: true, total: brands.length, data: brands });
+  } catch (err) {
+    console.error('Error fetching brands:', err);
+    res.status(500).json({ success: false, error: 'Error fetching brands' });
   }
 });
 
@@ -117,13 +128,13 @@ app.get('/api/cart', (req, res) => {
 app.post('/api/cart', (req, res) => {
   try {
     const sessionId = getSessionId(req);
-    const { productId, quantity = 1 } = req.body;
+    const { productId, quantity = 1, size = 'M' } = req.body;
 
     if (!productId) {
       return res.status(400).json({ success: false, error: 'productId is required' });
     }
 
-    const updatedCart = db.addToCart(sessionId, parseInt(productId, 10), parseInt(quantity, 10));
+    const updatedCart = db.addToCart(sessionId, parseInt(productId, 10), parseInt(quantity, 10), size);
     res.json({ success: true, message: 'Item added to cart', items: updatedCart });
   } catch (err) {
     console.error('Add to cart error:', err);
