@@ -95,8 +95,8 @@ assertTest('Percent Coupon MYNTRA10', myntra10Coupon.valid === true && myntra10C
 const lowOrderCoupon = db.validateCoupon('MYNTRA200', 499);
 assertTest('Coupon Minimum Order Check', lowOrderCoupon.valid === false, 'Blocked when under ₹799');
 
-const meeshoCompatCoupon = db.validateCoupon('MEESHONEW', 599);
-assertTest('Backward Compatible MEESHONEW Coupon', meeshoCompatCoupon.valid === true && meeshoCompatCoupon.discount === 150, '₹150 discount applied');
+const firstOrderCoupon = db.validateCoupon('FIRST100', 599);
+assertTest('First Order FIRST100 Coupon', firstOrderCoupon.valid === true && firstOrderCoupon.discount === 100, 'Flat ₹100 discount applied');
 
 // 5. Checkout & Order Persistence Test
 const testOrderData = {

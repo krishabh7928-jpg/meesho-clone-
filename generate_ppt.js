@@ -240,7 +240,7 @@ s4.addText('Database Tier\n(SQLite Embedded)', {
 });
 s4.addText([
   { text: '• SQLite Database: ', options: { bold: true } },
-  { text: 'Zero-config embedded relational store (`data/meesho.db`) via Node `DatabaseSync`.\n\n' },
+  { text: 'Zero-config embedded relational store (`data/fashion.db`) via Node `DatabaseSync`.\n\n' },
   { text: '• Normalized Tables: ', options: { bold: true } },
   { text: '5 relational tables with brand and sizes columns.\n\n' },
   { text: '• Dual-Mode Fallback: ', options: { bold: true } },
@@ -645,7 +645,7 @@ const vivaItems = [
   },
   {
     q: 'Q2. How is Dual-Mode Resilience implemented and why is it critical?',
-    a: 'On startup, the client asynchronously queries `/api/health`. If Node.js and Express are running, it syncs with the SQLite database (`data/meesho.db`). If the server is offline or the evaluator simply double-clicks `index.html`, it seamlessly falls back to `products_data.js` and `localStorage`. This ensures 100% uptime during college viva demonstrations.'
+    a: 'On startup, the client asynchronously queries `/api/health`. If Node.js and Express are running, it syncs with the SQLite database (`data/fashion.db`). If the server is offline or the evaluator simply double-clicks `index.html`, it seamlessly falls back to `products_data.js` and `localStorage`. This ensures 100% uptime during college viva demonstrations.'
   },
   {
     q: 'Q3. How does the Multi-Faceted Filter and Smart Search engine operate?',
@@ -721,7 +721,6 @@ s14.addText([
 
 // Output File Generation
 const outputPath = path.join(__dirname, 'Myntra_Fashion_BTech_Project_Presentation.pptx');
-const legacyPath = path.join(__dirname, 'Meesho_Clone_BTech_Project_Presentation.pptx');
 
 pptx.writeFile({ fileName: outputPath })
   .then(fileName => {
@@ -730,11 +729,6 @@ pptx.writeFile({ fileName: outputPath })
     console.log(`  📁 File Path: ${fileName}`);
     console.log(`  🎯 Total Slides: 14 Slides (including Live Screenshots)`);
     console.log(`======================================================\n`);
-    // Also save copy as legacy name so any external reference resolves
-    try {
-      fs.copyFileSync(outputPath, legacyPath);
-      console.log(`  📁 Synced Presentation to: ${legacyPath}`);
-    } catch (e) {}
   })
   .catch(err => {
     console.error('Error generating presentation:', err);

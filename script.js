@@ -22,7 +22,7 @@
   // 2. APPLICATION STATE MANAGEMENT
   // ==========================================================================
   function getSessionToken() {
-    let token = localStorage.getItem('myntra_session_token') || localStorage.getItem('meesho_session_token');
+    let token = localStorage.getItem('myntra_session_token');
     if (!token) {
       token = 'user_' + Math.random().toString(36).substring(2, 9);
       localStorage.setItem('myntra_session_token', token);
@@ -33,9 +33,9 @@
   const STATE = {
     products: PRODUCTS_DATA,
     filteredProducts: [...PRODUCTS_DATA],
-    cart: loadFromStorage('myntra_cart', loadFromStorage('meesho_cart', loadFromStorage('shopease_cart', []))),
-    wishlist: loadFromStorage('myntra_wishlist', loadFromStorage('meesho_wishlist', loadFromStorage('shopease_wishlist', []))),
-    orders: loadFromStorage('myntra_orders', loadFromStorage('meesho_orders', loadFromStorage('shopease_orders', []))),
+    cart: loadFromStorage('myntra_cart', loadFromStorage('shopease_cart', [])),
+    wishlist: loadFromStorage('myntra_wishlist', loadFromStorage('shopease_wishlist', [])),
+    orders: loadFromStorage('myntra_orders', loadFromStorage('shopease_orders', [])),
     activeCategory: 'All',
     activeBrand: 'All',
     activeSize: 'All',
@@ -51,13 +51,12 @@
     sessionId: getSessionToken()
   };
 
-  // Valid Myntra Promo Coupons (with backward-compatible aliases)
+  // Valid Myntra Promo Coupons
   const PROMO_COUPONS = {
     'MYNTRA200': { discount: 200, type: 'flat', minOrder: 799, desc: 'Flat ₹200 OFF on orders above ₹799' },
     'MYNTRA10': { discount: 10, type: 'percent', minOrder: 499, desc: 'Extra 10% OFF on all fashion orders' },
     'FESTIVE20': { discount: 20, type: 'percent', minOrder: 599, desc: 'Extra 20% OFF on Ethnic & Festive Wear' },
-    'MEESHONEW': { discount: 150, type: 'flat', minOrder: 499, desc: 'Flat ₹150 OFF on first order' },
-    'MEESHO100': { discount: 100, type: 'flat', minOrder: 299, desc: 'Flat ₹100 OFF on any order above ₹299' },
+    'FIRST100': { discount: 100, type: 'flat', minOrder: 499, desc: 'Flat ₹100 OFF on your first fashion order' },
     'FREEDEL': { discount: 40, type: 'delivery', minOrder: 0, desc: 'Free Delivery on any order' }
   };
 
@@ -820,8 +819,7 @@
     }
 
     saveToStorage('myntra_cart', STATE.cart);
-    saveToStorage('meesho_cart', STATE.cart); // Backwards compatibility
-    saveToStorage('shopease_cart', STATE.cart); // Backwards compatibility
+    saveToStorage('shopease_cart', STATE.cart); // Global app fallback
     updateCartBadges();
 
     // Async sync to SQLite Backend if connected
@@ -858,7 +856,6 @@
       }
       STATE.cart[itemIndex].quantity = newQty;
       saveToStorage('myntra_cart', STATE.cart);
-      saveToStorage('meesho_cart', STATE.cart);
       saveToStorage('shopease_cart', STATE.cart);
       updateCartBadges();
       renderCartDrawer();
@@ -877,7 +874,6 @@
     const item = STATE.cart.find(i => i.product.id === productId);
     STATE.cart = STATE.cart.filter(i => i.product.id !== productId);
     saveToStorage('myntra_cart', STATE.cart);
-    saveToStorage('meesho_cart', STATE.cart);
     saveToStorage('shopease_cart', STATE.cart);
     updateCartBadges();
     renderCartDrawer();
@@ -1102,7 +1098,6 @@
     }
 
     saveToStorage('myntra_wishlist', STATE.wishlist);
-    saveToStorage('meesho_wishlist', STATE.wishlist);
     saveToStorage('shopease_wishlist', STATE.wishlist);
     updateWishlistBadges();
 
@@ -1339,7 +1334,7 @@
 
     STATE.orders.unshift(newOrder);
     saveToStorage('myntra_orders', STATE.orders);
-    saveToStorage('meesho_orders', STATE.orders);
+    saveToStorage('shopease_orders', STATE.orders);
     saveToStorage('myntra_saved_address', newOrder.customer);
 
     // Save order in SQLite backend if connected
@@ -1370,7 +1365,6 @@
     STATE.cart = [];
     STATE.appliedCoupon = null;
     saveToStorage('myntra_cart', STATE.cart);
-    saveToStorage('meesho_cart', STATE.cart);
     saveToStorage('shopease_cart', STATE.cart);
     updateCartBadges();
 
@@ -1402,7 +1396,7 @@
         .catch(err => console.warn('Order history server fetch skipped:', err));
     }
 
-    const savedAddr = loadFromStorage('myntra_saved_address', loadFromStorage('meesho_saved_address', null));
+    const savedAddr = loadFromStorage('myntra_saved_address', loadFromStorage('shopease_saved_address', null));
     if (savedAddr && DOM.savedAddressPreview) {
       DOM.savedAddressPreview.innerHTML = `
         <strong>${savedAddr.name}</strong> (${savedAddr.phone})<br />
@@ -1753,6 +1747,24 @@
       });
     });
 
+    // Footer Department / Category Links
+    document.querySelectorAll('.footer-cat-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const cat = link.getAttribute('data-category');
+        if (cat) selectCategorySuggestion(cat);
+      });
+    });
+
+    // Track Order link in footer
+    const trackOrderLink = document.getElementById('track-order-link');
+    if (trackOrderLink) {
+      trackOrderLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        openAccountModal();
+      });
+    }
+
     // Top Brand Spotlight Tiles
     document.querySelectorAll('.brand-tile').forEach(tile => {
       tile.addEventListener('click', () => {
@@ -2030,7 +2042,7 @@
   }
 
   // ==========================================================================
-  // 14. PUBLIC API EXPOSURE (MYNTRA & MEESHO COMPATIBILITY)
+  // 14. PUBLIC API EXPOSURE (MYNTRA & SHOPEASE FASHION)
   // ==========================================================================
   const PUBLIC_API = {
     openProductModal,
@@ -2056,7 +2068,6 @@
   };
 
   window.Myntra = PUBLIC_API;
-  window.Meesho = PUBLIC_API; // Maintain backwards compatibility for existing tests & triggers
   window.ShopEase = PUBLIC_API;
 
   // ==========================================================================

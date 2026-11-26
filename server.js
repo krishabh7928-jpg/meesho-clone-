@@ -1,8 +1,8 @@
 /**
  * ============================================================================
- * Meesho Clone - Express REST API Server
+ * Myntra-Inspired Fashion Platform - Express REST API Server
  * Backend & Database Layer for B.Tech Project Demonstration
- * Technology: Node.js (v24), Express, SQLite (meesho.db)
+ * Technology: Node.js (v24), Express, SQLite (fashion.db)
  * Author: Senior Backend Engineer / B.Tech Project Showcase
  * ============================================================================
  */
@@ -223,7 +223,7 @@ app.post('/api/orders', (req, res) => {
 
     // Generate Unique Order ID
     const randomSuffix = Math.floor(10000 + Math.random() * 90000);
-    const orderId = `MEESHO-ORD-2026-${randomSuffix}`;
+    const orderId = `MYN-ORD-2026-${randomSuffix}`;
     const orderDate = new Date().toLocaleDateString('en-IN', {
       day: 'numeric',
       month: 'short',
@@ -293,9 +293,9 @@ app.get('*', (req, res) => {
 if (require.main === module) {
   app.listen(PORT, () => {
     console.log(`\n======================================================`);
-    console.log(`  🛍️  Meesho Clone Full-Stack Server Running`);
+    console.log(`  🛍️  Myntra Fashion Platform Full-Stack Server Running`);
     console.log(`  🌐  Local URL:   http://localhost:${PORT}`);
-    console.log(`  🗄️  Database:    SQLite (data/meesho.db)`);
+    console.log(`  🗄️  Database:    SQLite (data/fashion.db)`);
     console.log(`  ⚡  REST API:    http://localhost:${PORT}/api/health`);
     console.log(`======================================================\n`);
   });

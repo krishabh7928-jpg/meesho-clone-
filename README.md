@@ -32,7 +32,7 @@ It delivers an authentic Myntra shopping experience:
 The platform is engineered specifically for reliability during academic evaluations and viva defense:
 
 1. **Full-Stack Mode (Node.js + Express + SQLite Database):**
-   When executed via `npm start`, the client connects to an Express REST API backed by an embedded SQLite database (`data/meesho.db`) powered by Node.js native `DatabaseSync`.
+   When executed via `npm start`, the client connects to an Express REST API backed by an embedded SQLite database (`data/fashion.db`) powered by Node.js native `DatabaseSync`.
    - Probed via `/api/health`
    - Real-time badge in top bar: `🟢 Full-Stack Mode (SQLite)`
    - All searches, filters, cart operations, coupons, and orders execute against SQLite.
@@ -92,7 +92,7 @@ All high-resolution screenshots are located in the `screenshots/` directory:
 
 5. Confirm the green status badge in the top bar:  
    `🟢 Full-Stack Mode (SQLite)`  
-   All products, categories, filters, brands, cart operations, and checkout orders are processed directly through the SQLite database (`data/meesho.db`)!
+   All products, categories, filters, brands, cart operations, and checkout orders are processed directly through the SQLite database (`data/fashion.db`)!
 
 ---
 
@@ -119,7 +119,7 @@ ShopeEase/
 ├── server.js                                  # Express.js REST API server (Port 5000, CORS, JSON routing)
 ├── db.js                                      # SQLite database layer (Schema init, seeds, brand & size queries)
 ├── data/
-│   └── meesho.db                              # SQLite database file (products, orders, cart_items, coupons)
+│   └── fashion.db                             # SQLite database file (products, orders, cart_items, coupons)
 │
 ├── screenshots/                               # High-resolution screenshots of the working application
 │   ├── 01_desktop_home.png
@@ -146,7 +146,7 @@ ShopeEase/
 
 ## 🗄️ Database Design & Relational Schema
 
-The SQLite database (`data/meesho.db`) contains 5 relational tables:
+The SQLite database (`data/fashion.db`) contains 5 relational tables:
 
 ```
 +--------------------------------------------------------------------------+
@@ -264,7 +264,7 @@ node verify_all_improvements.js
 > **Answer:** Student web projects often fail during university evaluations due to backend crashes or database connection errors. In our architecture, the client asynchronously checks `/api/health` on load. If Express and SQLite are active, it runs full-stack. If the server is offline or the evaluator launches `index.html` directly, the app falls back seamlessly to `products_data.js` and browser `localStorage`. It never crashes, throws unhandled exceptions, or shows empty screens.
 
 ### Q3: Why did you use SQLite instead of MongoDB or MySQL?
-> **Answer:** SQLite is a serverless, zero-configuration relational database stored as a single file (`data/meesho.db`). It eliminates the need to install or run background database server daemons (like `mysqld` or `mongod`), ensuring 100% portability across different examination laptops while preserving standard SQL ACID transactional guarantees.
+> **Answer:** SQLite is a serverless, zero-configuration relational database stored as a single file (`data/fashion.db`). It eliminates the need to install or run background database server daemons (like `mysqld` or `mongod`), ensuring 100% portability across different examination laptops while preserving standard SQL ACID transactional guarantees.
 
 ### Q4: How does the Smart Multi-Token Search and Brand Priority algorithm work?
 > **Answer:** Incoming search queries are trimmed, converted to lowercase, and tokenized by whitespace. A product matches if all query tokens appear in its title, brand, category, tags, or description. We apply brand-priority scoring: if a query matches an authentic fashion brand name (e.g. `Roadster`, `HRX`), brand matches are prioritized and ranked at the top of both search results and autocomplete suggestions.

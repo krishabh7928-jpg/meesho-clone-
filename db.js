@@ -15,7 +15,7 @@ if (!fs.existsSync(DB_DIR)) {
   fs.mkdirSync(DB_DIR, { recursive: true });
 }
 
-const SQLITE_FILE = path.join(DB_DIR, 'meesho.db');
+const SQLITE_FILE = path.join(DB_DIR, 'fashion.db');
 const JSON_BACKUP_FILE = path.join(DB_DIR, 'myntra_store.json');
 
 // Comprehensive seed catalog (75 authentic fashion products across 5 categories)
@@ -25,8 +25,7 @@ const SEED_COUPONS = [
   { code: 'MYNTRA200', discount: 200, type: 'flat', min_order: 799, description: 'Flat ₹200 OFF on order above ₹799' },
   { code: 'MYNTRA10', discount: 10, type: 'percent', min_order: 499, description: 'Extra 10% OFF on all fashion orders' },
   { code: 'FESTIVE20', discount: 20, type: 'percent', min_order: 599, description: 'Extra 20% OFF on Ethnic & Festive Wear' },
-  { code: 'MEESHONEW', discount: 150, type: 'flat', min_order: 499, description: 'Flat ₹150 OFF on first order' },
-  { code: 'MEESHO100', discount: 100, type: 'flat', min_order: 299, description: 'Flat ₹100 OFF on any order above ₹299' },
+  { code: 'FIRST100', discount: 100, type: 'flat', min_order: 499, description: 'Flat ₹100 OFF on your first fashion order' },
   { code: 'FREEDEL', discount: 40, type: 'delivery', min_order: 0, description: 'Free Delivery on any order' }
 ];
 

@@ -420,8 +420,9 @@ ul {
 }
 
 .myntra-m-svg {
-  width: 40px;
-  height: 32px;
+  width: 42px;
+  height: 34px;
+  flex-shrink: 0;
 }
 
 .myntra-logo-text {

@@ -1,7 +1,7 @@
 {
-  "name": "meesho-clone-backend",
+  "name": "myntra-fashion-platform",
   "version": "1.0.0",
-  "description": "Meesho Clone - Full-Stack E-Commerce Web Application (Node.js, Express & SQLite)",
+  "description": "Myntra-Inspired Fashion E-Commerce Web Application (HTML5, CSS3, Vanilla JS, Express & SQLite)",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -9,7 +9,8 @@
     "generate-ppt": "node generate_ppt.js"
   },
   "keywords": [
-    "meesho",
+    "myntra",
+    "fashion",
     "ecommerce",
     "express",
     "sqlite",

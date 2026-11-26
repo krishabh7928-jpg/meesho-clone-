@@ -63,7 +63,7 @@ recordAudit('Mobile Meta', 'Viewport tag properly set', htmlContent.includes('na
 console.log('\n--- SECTION 2: SQLITE DATABASE TABLES & DATA INTEGRITY ---');
 
 const { DatabaseSync } = require('node:sqlite');
-const sqlite = new DatabaseSync(path.join(__dirname, 'data', 'meesho.db'));
+const sqlite = new DatabaseSync(path.join(__dirname, 'data', 'fashion.db'));
 
 // Check Tables
 const tables = sqlite.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'").all().map(t => t.name);

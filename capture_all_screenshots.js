@@ -120,14 +120,12 @@ const snapCartHtml = baseHtml.replace('<head>', `<head>
 </style>
 <script>
   localStorage.setItem('myntra_cart', JSON.stringify(${JSON.stringify(dummyCart)}));
-  localStorage.setItem('meesho_cart', JSON.stringify(${JSON.stringify(dummyCart)}));
   localStorage.setItem('myntra_applied_coupon', JSON.stringify({ code: 'MYNTRA200', discount: 200, type: 'flat' }));
-  localStorage.setItem('meesho_applied_coupon', JSON.stringify({ code: 'MYNTRA200', discount: 200, type: 'flat' }));
 </script>`).replace('</body>', `
 <script>
   window.addEventListener('load', () => {
     setTimeout(() => {
-      const api = window.Myntra || window.Meesho;
+      const api = window.Myntra || window.ShopEase;
       if (api && api.openCart) {
         api.openCart();
       }
@@ -142,7 +140,7 @@ const snapModalHtml = baseHtml.replace('</body>', `
 <script>
   window.addEventListener('load', () => {
     setTimeout(() => {
-      const api = window.Myntra || window.Meesho;
+      const api = window.Myntra || window.ShopEase;
       if (api && api.openProductModal) {
         api.openProductModal(1);
       }

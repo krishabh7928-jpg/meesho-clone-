@@ -151,8 +151,8 @@ assert('Order Retrieved from SQLite', savedOrder && savedOrder.customer.name ===
 const couponMyntra = db.validateCoupon('MYNTRA200', 899);
 assert('Coupon MYNTRA200 valid for order >= ₹799', couponMyntra.valid && couponMyntra.discount === 200);
 
-const couponCompat = db.validateCoupon('MEESHONEW', 599);
-assert('Coupon MEESHONEW backward compatible valid', couponCompat.valid && couponCompat.discount === 150);
+const couponFirst = db.validateCoupon('FIRST100', 599);
+assert('Coupon FIRST100 valid for order >= ₹499', couponFirst.valid && couponFirst.discount === 100);
 
 // Clean up test cart
 db.clearCart(testSession);
