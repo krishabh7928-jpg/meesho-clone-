@@ -1,4 +1,4 @@
-# Myntra-Inspired Fashion E-Commerce Web Application
+# Myntra-Inspired Fashion E-Commerce Website
 
 > **Project Type:** B.Tech Major / Minor Capstone Project Demonstration  
 > **Student Name:** Rishabh Kumar  
@@ -13,7 +13,7 @@
 
 ## 🌟 Project Overview
 
-**ShopeEase (Myntra-Inspired Fashion Platform)** is a production-grade, fully responsive full-stack fashion e-commerce web application inspired by India’s leading lifestyle shopping destination, **Myntra (myntra.com)**.
+**Myntra-Inspired Fashion E-Commerce Website** is a production-grade, fully responsive full-stack fashion e-commerce web application inspired by India’s leading lifestyle shopping destination, **Myntra (myntra.com)**.
 
 It delivers an authentic Myntra shopping experience:
 - **Visual Design & Palette:** Signature Myntra Coral/Pink (`#ff3f6c`), Charcoal Slate text (`#282c3f`), clean typography, and 3:4 portrait product cards.
@@ -109,7 +109,7 @@ All high-resolution screenshots are located in the `screenshots/` directory:
 ## 📁 Project Directory Structure
 
 ```
-ShopeEase/
+myntra-fashion-website/
 │
 ├── index.html                                 # Semantic HTML5 frontend markup & modal templates
 ├── style.css                                  # Myntra design system (#ff3f6c, CSS Grid, mobile dock)

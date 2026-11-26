@@ -1,6 +1,6 @@
 /**
  * ============================================================================
- * Myntra-Inspired Fashion E-Commerce Web Application
+ * Myntra-Inspired Fashion E-Commerce Website
  * Academic PowerPoint Presentation Generator
  * Generates: Myntra_Fashion_BTech_Project_Presentation.pptx
  * Technology: pptxgenjs
@@ -87,7 +87,7 @@ s1.addText([
   { text: '• Degree / Branch: ', options: { bold: true } },
   { text: 'Bachelor of Technology (B.Tech) - Computer Science & Engineering\n' },
   { text: '• Project Title: ', options: { bold: true } },
-  { text: 'ShopeEase: Myntra-Inspired Multi-Brand Fashion E-Commerce Platform with 3-Tier Architecture\n' },
+  { text: 'Myntra-Inspired Fashion E-Commerce Website: Full-Stack Platform with 3-Tier Architecture\n' },
   { text: '• Student Name: ', options: { bold: true } },
   { text: 'Rishabh Kumar\n' },
   { text: '• Technology Stack: ', options: { bold: true } },

@@ -33,9 +33,9 @@
   const STATE = {
     products: PRODUCTS_DATA,
     filteredProducts: [...PRODUCTS_DATA],
-    cart: loadFromStorage('myntra_cart', loadFromStorage('shopease_cart', [])),
-    wishlist: loadFromStorage('myntra_wishlist', loadFromStorage('shopease_wishlist', [])),
-    orders: loadFromStorage('myntra_orders', loadFromStorage('shopease_orders', [])),
+    cart: loadFromStorage('myntra_cart', []),
+    wishlist: loadFromStorage('myntra_wishlist', []),
+    orders: loadFromStorage('myntra_orders', []),
     activeCategory: 'All',
     activeBrand: 'All',
     activeSize: 'All',
@@ -819,7 +819,6 @@
     }
 
     saveToStorage('myntra_cart', STATE.cart);
-    saveToStorage('shopease_cart', STATE.cart); // Global app fallback
     updateCartBadges();
 
     // Async sync to SQLite Backend if connected
@@ -856,7 +855,6 @@
       }
       STATE.cart[itemIndex].quantity = newQty;
       saveToStorage('myntra_cart', STATE.cart);
-      saveToStorage('shopease_cart', STATE.cart);
       updateCartBadges();
       renderCartDrawer();
 
@@ -874,7 +872,6 @@
     const item = STATE.cart.find(i => i.product.id === productId);
     STATE.cart = STATE.cart.filter(i => i.product.id !== productId);
     saveToStorage('myntra_cart', STATE.cart);
-    saveToStorage('shopease_cart', STATE.cart);
     updateCartBadges();
     renderCartDrawer();
 
@@ -1098,7 +1095,6 @@
     }
 
     saveToStorage('myntra_wishlist', STATE.wishlist);
-    saveToStorage('shopease_wishlist', STATE.wishlist);
     updateWishlistBadges();
 
     if (STATE.isBackendConnected) {
@@ -1334,7 +1330,6 @@
 
     STATE.orders.unshift(newOrder);
     saveToStorage('myntra_orders', STATE.orders);
-    saveToStorage('shopease_orders', STATE.orders);
     saveToStorage('myntra_saved_address', newOrder.customer);
 
     // Save order in SQLite backend if connected
@@ -1365,7 +1360,6 @@
     STATE.cart = [];
     STATE.appliedCoupon = null;
     saveToStorage('myntra_cart', STATE.cart);
-    saveToStorage('shopease_cart', STATE.cart);
     updateCartBadges();
 
     showToast(`Order <strong>${orderId}</strong> confirmed! 🎉`, 'success');
@@ -1396,7 +1390,7 @@
         .catch(err => console.warn('Order history server fetch skipped:', err));
     }
 
-    const savedAddr = loadFromStorage('myntra_saved_address', loadFromStorage('shopease_saved_address', null));
+    const savedAddr = loadFromStorage('myntra_saved_address', null);
     if (savedAddr && DOM.savedAddressPreview) {
       DOM.savedAddressPreview.innerHTML = `
         <strong>${savedAddr.name}</strong> (${savedAddr.phone})<br />
@@ -2042,7 +2036,7 @@
   }
 
   // ==========================================================================
-  // 14. PUBLIC API EXPOSURE (MYNTRA & SHOPEASE FASHION)
+  // 14. PUBLIC API EXPOSURE (MYNTRA FASHION)
   // ==========================================================================
   const PUBLIC_API = {
     openProductModal,
@@ -2068,7 +2062,7 @@
   };
 
   window.Myntra = PUBLIC_API;
-  window.ShopEase = PUBLIC_API;
+  window.MyntraFashion = PUBLIC_API;
 
   // ==========================================================================
   // 15. DUAL-MODE BACKEND SYNC & INITIALIZATION

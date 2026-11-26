@@ -125,7 +125,7 @@ const snapCartHtml = baseHtml.replace('<head>', `<head>
 <script>
   window.addEventListener('load', () => {
     setTimeout(() => {
-      const api = window.Myntra || window.ShopEase;
+      const api = window.Myntra;
       if (api && api.openCart) {
         api.openCart();
       }
@@ -140,7 +140,7 @@ const snapModalHtml = baseHtml.replace('</body>', `
 <script>
   window.addEventListener('load', () => {
     setTimeout(() => {
-      const api = window.Myntra || window.ShopEase;
+      const api = window.Myntra;
       if (api && api.openProductModal) {
         api.openProductModal(1);
       }

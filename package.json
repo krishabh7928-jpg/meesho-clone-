@@ -1,7 +1,7 @@
 {
-  "name": "myntra-fashion-platform",
+  "name": "myntra-inspired-fashion-website",
   "version": "1.0.0",
-  "description": "Myntra-Inspired Fashion E-Commerce Web Application (HTML5, CSS3, Vanilla JS, Express & SQLite)",
+  "description": "Myntra-Inspired Fashion E-Commerce Website (HTML5, CSS3, Vanilla JS, Node.js, Express & SQLite)",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

@@ -1,6 +1,6 @@
 /**
  * ============================================================================
- * Myntra-Inspired Fashion Platform - Express REST API Server
+ * Myntra-Inspired Fashion E-Commerce Website - Express REST API Server
  * Backend & Database Layer for B.Tech Project Demonstration
  * Technology: Node.js (v24), Express, SQLite (fashion.db)
  * Author: Senior Backend Engineer / B.Tech Project Showcase
@@ -293,7 +293,7 @@ app.get('*', (req, res) => {
 if (require.main === module) {
   app.listen(PORT, () => {
     console.log(`\n======================================================`);
-    console.log(`  🛍️  Myntra Fashion Platform Full-Stack Server Running`);
+    console.log(`  🛍️  Myntra-Inspired Fashion E-Commerce Website Server Running`);
     console.log(`  🌐  Local URL:   http://localhost:${PORT}`);
     console.log(`  🗄️  Database:    SQLite (data/fashion.db)`);
     console.log(`  ⚡  REST API:    http://localhost:${PORT}/api/health`);
