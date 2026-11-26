@@ -6,7 +6,7 @@
 > **Academic Session:** 2026  
 > **Technology Stack:** HTML5, CSS3, Vanilla JavaScript (ES6+), Node.js, Express.js REST API, SQLite Embedded Database  
 > **Architecture:** 3-Tier Full-Stack Architecture with Resilient Dual-Mode Execution  
-> **Repository:** [krishabh7928-jpg/meesho-clone-](https://github.com/krishabh7928-jpg/meesho-clone-)  
+> **Repository:** [krishabh7928-jpg/myntra-fashion-ecommerce](https://github.com/krishabh7928-jpg/myntra-fashion-ecommerce)  
 > **Academic PPT:** [Myntra_Fashion_BTech_Project_Presentation.pptx](Myntra_Fashion_BTech_Project_Presentation.pptx)  
 
 ---
@@ -297,4 +297,4 @@ node verify_all_improvements.js
 - **Student:** Rishabh Kumar  
 - **Degree:** B.Tech in Computer Science & Engineering (CSE)  
 - **Year of Submission:** 2026  
-- **GitHub Repository:** [krishabh7928-jpg/meesho-clone-](https://github.com/krishabh7928-jpg/meesho-clone-)  
+- **GitHub Repository:** [krishabh7928-jpg/myntra-fashion-ecommerce](https://github.com/krishabh7928-jpg/myntra-fashion-ecommerce)  
