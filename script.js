@@ -16,7 +16,7 @@
     ? window.PRODUCTS_DATA
     : (typeof require !== 'undefined' ? require('./products_data').PRODUCTS_DATA : []);
 
-  const FALLBACK_IMAGE = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='500' viewBox='0 0 400 500'><rect fill='%23fff1f4' width='400' height='500'/><text fill='%23ff3f6c' font-family='sans-serif' font-size='26' font-weight='900' x='50%25' y='48%25' text-anchor='middle'>myntra</text><text fill='%23535766' font-family='sans-serif' font-size='14' x='50%25' y='55%25' text-anchor='middle'>Fashion Runway Collection</text></svg>";
+  const FALLBACK_IMAGE = "data:image/svg+xml;utf8,<svg xmlns=%27http://www.w3.org/2000/svg%27 width=%27400%27 height=%27500%27 viewBox=%270 0 400 500%27><rect fill=%27%23fff1f4%27 width=%27400%27 height=%27500%27/><text fill=%27%23ff3f6c%27 font-family=%27sans-serif%27 font-size=%2726%27 font-weight=%27900%27 x=%2750%25%27 y=%2748%25%27 text-anchor=%27middle%27>myntra</text><text fill=%27%23535766%27 font-family=%27sans-serif%27 font-size=%2714%27 x=%2750%25%27 y=%2755%25%27 text-anchor=%27middle%27>Fashion Runway Collection</text></svg>";
 
   // ==========================================================================
   // 2. APPLICATION STATE MANAGEMENT

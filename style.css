@@ -3218,6 +3218,29 @@ ul {
     justify-content: center;
   }
 
+  .myntra-insider-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 1.5rem 1.25rem;
+    gap: 1.25rem;
+  }
+
+  .coupon-display-box {
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 100%;
+  }
+
+  .toast-container {
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: 72px;
+  }
+
+  .toast {
+    max-width: 100%;
+  }
+
   .checkout-layout {
     grid-template-columns: 1fr;
   }
